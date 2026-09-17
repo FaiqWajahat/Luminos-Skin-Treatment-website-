@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,11 +33,12 @@ export function FaqsSection() {
             <div className="space-y-4">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-sm border border-[#E8DFD5]">
                 <Image
-                  src="/home-FAQ (2).png"
+                  src="/home-faq.png"
                   alt="Luminous Skin Consultation Lounge - Leeds"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover hover:scale-[1.02] transition-transform duration-700"
+                  priority={false}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#E8DFD5]/80 shadow-xs">
