@@ -1,9 +1,10 @@
-﻿"use client";
+"use client";
 
-import { CONTACT_CHANNELS } from "@/constants/contact-data";
+import { CONTACT_CHANNELS, SOCIAL_CHANNELS } from "@/constants/contact-data";
 import { Phone, MessageSquare, Mail, MapPin, ArrowUpRight } from "lucide-react";
 import { BadgePill } from "@/components/shared/badge-pill";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/animations";
+import { WhatsAppIcon, InstagramIcon, TikTokIcon, FacebookIcon } from "@/components/shared/social-icons";
 
 const ICONS = {
   Phone,
@@ -84,6 +85,63 @@ export function ContactMethods() {
             );
           })}
         </StaggerContainer>
+
+        {/* Social Presence Grid */}
+        <FadeIn delay={0.2}>
+          <div className="mt-12 pt-8 border-t border-[#E8DFD5] space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#EC9C9D]">
+                  Social & Community
+                </span>
+                <h3 className="text-lg sm:text-xl font-semibold text-[#1C1917] tracking-tight">
+                  Follow Luminous across our official channels
+                </h3>
+              </div>
+              <p className="text-xs text-[#78716C]">
+                Daily treatment stories, client skin transformations, and clinical advice
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-2">
+              {SOCIAL_CHANNELS.map((item) => {
+                const IconComponent =
+                  item.type === "whatsapp"
+                    ? WhatsAppIcon
+                    : item.type === "instagram"
+                    ? InstagramIcon
+                    : item.type === "tiktok"
+                    ? TikTokIcon
+                    : FacebookIcon;
+
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-4 rounded-2xl bg-white border border-[#E8DFD5] hover:border-[#EC9C9D] hover:shadow-xs transition-all duration-200 group flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-[#FAF8F5] border border-[#E8DFD5] text-[#1C1917] group-hover:text-[#EC9C9D] group-hover:border-[#EC9C9D]/30 flex items-center justify-center transition-colors">
+                        <IconComponent className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-[#1C1917] group-hover:text-[#EC9C9D] transition-colors">
+                          {item.name}
+                        </p>
+                        <p className="text-[10px] text-[#78716C] truncate max-w-[110px]">
+                          {item.handle}
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-[#A8A29E] group-hover:text-[#EC9C9D] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

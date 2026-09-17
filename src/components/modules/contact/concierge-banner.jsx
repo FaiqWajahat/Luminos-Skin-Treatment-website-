@@ -68,7 +68,7 @@ export function ConciergeBanner() {
                 </Link>
 
                 <a
-                  href="https://wa.me/447700900123?text=Hello%20Luminous%20Clinic,%20I%20would%20like%20to%20ask%20a%20quick%20question"
+                  href="https://tr.ee/zK8bgJAg4I"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white border border-[#E8DFD5] hover:border-[#EC9C9D]/50 text-[#1C1917] hover:bg-[#FAF8F5] shadow-xs transition-all group"

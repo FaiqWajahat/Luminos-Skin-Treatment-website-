@@ -291,7 +291,7 @@ export function BookingForm() {
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                     <a
-                      href={`https://wa.me/447700900123?text=Hello%20Luminous%20Clinic,%20I%20have%20booked%20reference%20${referenceId}`}
+                      href={`https://wa.me/447950774790?text=Hello%20Luminous%20Clinic,%20I%20have%20booked%20reference%20${referenceId}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-[#F0A5A2] via-[#EC9C9D] to-[#D97E80] shadow-sm hover:opacity-95 transition-all"

@@ -75,7 +75,7 @@ export function ContactHero() {
             </Link>
 
             <a
-              href="https://wa.me/447700900123?text=Hello%20Luminous%20Clinic,%20I%20would%20like%20to%20ask%20a%20quick%20question"
+              href="https://tr.ee/zK8bgJAg4I"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-medium text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 transition-all duration-300"

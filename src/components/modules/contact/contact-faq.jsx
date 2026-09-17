@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { CONTACT_FAQS } from "@/constants/contact-data";
@@ -89,7 +89,7 @@ export function ContactFAQ() {
               </p>
             </div>
             <a
-              href="https://wa.me/447700900123"
+              href="https://tr.ee/zK8bgJAg4I"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-white bg-[#1C1917] hover:bg-[#292524] transition-colors shrink-0"

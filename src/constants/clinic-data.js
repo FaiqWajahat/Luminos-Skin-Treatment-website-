@@ -10,17 +10,19 @@ export const CLINIC_INFO = {
   subTagline: "Personalised skin, facial and wellness treatments in Leeds.",
   location: "Leeds, West Yorkshire, United Kingdom",
   address: "Central Leeds Wellness Suite, Leeds, LS1",
-  email: "hello@luminous-skin.co.uk",
-  phone: "+44 (0) 113 892 0100",
+  email: "info@luminousskinclinic.co.uk",
+  phone: "+44 7950 774790",
   hours: [
     { days: "Monday - Friday", time: "9:30 AM - 6:30 PM" },
     { days: "Saturday", time: "10:00 AM - 5:00 PM" },
     { days: "Sunday", time: "By Appointment Only" },
   ],
   socials: {
-    instagram: "https://instagram.com",
-    facebook: "https://facebook.com",
-    tiktok: "https://tiktok.com",
+    whatsapp: "https://tr.ee/zK8bgJAg4I",
+    instagram: "https://tr.ee/wPOUAgbqjK",
+    tiktok: "https://tr.ee/T77hoYIgSw",
+    facebook: "https://tr.ee/K4h68VN--4",
+    linktree: "https://linktr.ee/luminousskinclinic",
   },
 };
 

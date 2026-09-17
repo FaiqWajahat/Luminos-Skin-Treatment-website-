@@ -125,14 +125,22 @@ export function ClinicLocation() {
                 <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E8DFD5] space-y-2">
                   <p className="text-xs font-semibold text-[#1C1917]">Direct Clinic Concierge</p>
                   <div className="space-y-1.5 text-xs text-[#78716C]">
-                    <p className="flex items-center gap-2">
+                    <a
+                      href={CLINIC_INFO.socials.whatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 hover:text-[#EC9C9D] transition-colors"
+                    >
                       <Phone className="w-3.5 h-3.5 text-[#EC9C9D]" />
-                      <span className="font-mono text-[#1C1917]">{CLINIC_INFO.phone}</span>
-                    </p>
-                    <p className="flex items-center gap-2">
+                      <span className="font-mono text-[#1C1917] hover:text-[#EC9C9D]">{CLINIC_INFO.phone} (WhatsApp)</span>
+                    </a>
+                    <a
+                      href={`mailto:${CLINIC_INFO.email}`}
+                      className="flex items-center gap-2 hover:text-[#EC9C9D] transition-colors"
+                    >
                       <Mail className="w-3.5 h-3.5 text-[#EC9C9D]" />
                       <span>{CLINIC_INFO.email}</span>
-                    </p>
+                    </a>
                   </div>
                 </div>
               </div>
