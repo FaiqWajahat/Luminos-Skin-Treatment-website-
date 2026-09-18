@@ -41,7 +41,7 @@ export function AboutCta() {
 
             {/* Subtitle */}
             <p className="text-sm sm:text-base text-[#57534E] leading-relaxed max-w-xl mx-auto pt-1">
-              Visit our calm central Leeds clinic suite for a thorough dermal assessment and bespoke clinical treatment crafted around your skin goals.
+              Visit our calm clinic suite near Elland Road Stadium in Beeston, Leeds for a thorough dermal assessment and bespoke clinical treatment crafted around your skin goals.
             </p>
 
             {/* Action Buttons */}
@@ -67,7 +67,7 @@ export function AboutCta() {
             <div className="pt-8 border-t border-[#E8DFD5]/70 mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[#78716C]">
               <div className="flex items-center justify-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-[#EC9C9D]" />
-                <span>Central Leeds Suite</span>
+                <span>Beeston, Leeds LS11</span>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#EC9C9D]" />

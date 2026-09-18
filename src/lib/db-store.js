@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import mongoose from "mongoose";
 import { connectToDatabase } from "./mongodb";
 import { User, Enquiry, Treatment, Result } from "@/models";
 import { TREATMENTS, RESULTS_CASE_STUDIES } from "@/constants/clinic-data";
@@ -88,7 +89,12 @@ function saveLocalStore(store) {
 // ─────────────────────────────────────────────
 // TREATMENTS
 // ─────────────────────────────────────────────
-export async function getTreatments() {
+export async function getTreatments({ page, limit, category } = {}) {
+  const isPaginated = Boolean(page || limit);
+  const pageNum = Math.max(1, parseInt(page, 10) || 1);
+  const limitNum = Math.max(1, parseInt(limit, 10) || 10);
+  const skip = (pageNum - 1) * limitNum;
+
   try {
     const conn = await connectToDatabase();
     if (conn) {
@@ -112,7 +118,35 @@ export async function getTreatments() {
         }));
         await Treatment.insertMany(seedData);
       }
-      const list = await Treatment.find().sort({ createdAt: -1 }).lean();
+
+      const query = {};
+      if (category && category.toLowerCase() !== "all") {
+        query.category = { $regex: new RegExp(`^${category.trim()}$`, "i") };
+      }
+
+      if (isPaginated) {
+        const total = await Treatment.countDocuments(query);
+        const list = await Treatment.find(query)
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limitNum)
+          .lean();
+        const treatments = list.map((item) => ({ ...item, _id: item._id.toString() }));
+        const totalPages = Math.ceil(total / limitNum) || 1;
+        return {
+          treatments,
+          pagination: {
+            total,
+            page: pageNum,
+            limit: limitNum,
+            totalPages,
+            hasPrevPage: pageNum > 1,
+            hasNextPage: pageNum < totalPages,
+          },
+        };
+      }
+
+      const list = await Treatment.find(query).sort({ createdAt: -1 }).lean();
       return list.map((item) => ({ ...item, _id: item._id.toString() }));
     }
   } catch (err) {
@@ -120,7 +154,31 @@ export async function getTreatments() {
   }
 
   const store = getLocalStore();
-  return store.treatments || [];
+  let list = store.treatments || [];
+  if (category && category.toLowerCase() !== "all") {
+    list = list.filter(
+      (t) => (t.category || "").trim().toLowerCase() === category.trim().toLowerCase()
+    );
+  }
+
+  if (isPaginated) {
+    const total = list.length;
+    const paginatedList = list.slice(skip, skip + limitNum);
+    const totalPages = Math.ceil(total / limitNum) || 1;
+    return {
+      treatments: paginatedList,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages,
+        hasPrevPage: pageNum > 1,
+        hasNextPage: pageNum < totalPages,
+      },
+    };
+  }
+
+  return list;
 }
 
 export async function createTreatment(data) {
@@ -193,7 +251,12 @@ export async function deleteTreatment(id) {
 // ─────────────────────────────────────────────
 // RESULTS / CASE STUDIES
 // ─────────────────────────────────────────────
-export async function getResults() {
+export async function getResults({ page, limit } = {}) {
+  const isPaginated = Boolean(page || limit);
+  const pageNum = Math.max(1, parseInt(page, 10) || 1);
+  const limitNum = Math.max(1, parseInt(limit, 10) || 10);
+  const skip = (pageNum - 1) * limitNum;
+
   try {
     const conn = await connectToDatabase();
     if (conn) {
@@ -211,6 +274,29 @@ export async function getResults() {
         }));
         await Result.insertMany(seed);
       }
+
+      if (isPaginated) {
+        const total = await Result.countDocuments();
+        const list = await Result.find()
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limitNum)
+          .lean();
+        const results = list.map((item) => ({ ...item, _id: item._id.toString() }));
+        const totalPages = Math.ceil(total / limitNum) || 1;
+        return {
+          results,
+          pagination: {
+            total,
+            page: pageNum,
+            limit: limitNum,
+            totalPages,
+            hasPrevPage: pageNum > 1,
+            hasNextPage: pageNum < totalPages,
+          },
+        };
+      }
+
       const list = await Result.find().sort({ createdAt: -1 }).lean();
       return list.map((item) => ({ ...item, _id: item._id.toString() }));
     }
@@ -219,7 +305,25 @@ export async function getResults() {
   }
 
   const store = getLocalStore();
-  return store.results || [];
+  const list = store.results || [];
+  if (isPaginated) {
+    const total = list.length;
+    const paginatedList = list.slice(skip, skip + limitNum);
+    const totalPages = Math.ceil(total / limitNum) || 1;
+    return {
+      results: paginatedList,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages,
+        hasPrevPage: pageNum > 1,
+        hasNextPage: pageNum < totalPages,
+      },
+    };
+  }
+
+  return list;
 }
 
 export async function createResult(data) {
@@ -244,19 +348,46 @@ export async function createResult(data) {
   return newResult;
 }
 
+export async function updateResult(id, data) {
+  let updatedDoc = null;
+  try {
+    const conn = await connectToDatabase();
+    if (conn && mongoose.Types.ObjectId.isValid(id)) {
+      const updated = await Result.findByIdAndUpdate(id, data, { new: true }).lean();
+      if (updated) updatedDoc = { ...updated, _id: updated._id.toString() };
+    }
+  } catch (err) {
+    console.warn("MongoDB fallback (updateResult):", err.message);
+  }
+
+  const store = getLocalStore();
+  if (!store.results) store.results = [];
+  const idx = store.results.findIndex((r) => r._id === id || r.id === id);
+  if (idx === -1) {
+    if (updatedDoc) {
+      store.results.unshift(updatedDoc);
+      saveLocalStore(store);
+      return updatedDoc;
+    }
+    return null;
+  }
+  store.results[idx] = { ...store.results[idx], ...data, ...(updatedDoc || {}), updatedAt: new Date().toISOString() };
+  saveLocalStore(store);
+  return store.results[idx];
+}
+
 export async function deleteResult(id) {
   try {
     const conn = await connectToDatabase();
-    if (conn) {
+    if (conn && mongoose.Types.ObjectId.isValid(id)) {
       await Result.findByIdAndDelete(id);
-      return true;
     }
   } catch (err) {
     console.warn("MongoDB fallback (deleteResult):", err.message);
   }
 
   const store = getLocalStore();
-  store.results = store.results.filter((r) => r._id !== id);
+  store.results = store.results.filter((r) => r._id !== id && r.id !== id);
   saveLocalStore(store);
   return true;
 }

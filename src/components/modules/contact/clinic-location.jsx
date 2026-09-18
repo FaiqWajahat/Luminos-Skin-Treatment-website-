@@ -32,13 +32,13 @@ export function ClinicLocation() {
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.2em] bg-[#EC9C9D]/10 text-[#EC9C9D] border border-[#EC9C9D]/20">
               <MapPin className="w-3.5 h-3.5" />
-              <span>Location & Visiting</span>
+              <span>Visit Us</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#1C1917] tracking-tight">
-              Finding Our Central Leeds Sanctuary
+              Finding Our Leeds Sanctuary
             </h2>
             <p className="text-sm sm:text-base text-[#78716C] leading-relaxed">
-              Situated in the heart of central Leeds LS1, our clinic offers a quiet, private sanctuary with effortless transit and secure parking.
+              We are located near Elland Road Stadium in Leeds, Beeston LS11. Our clinic offers a quiet, private sanctuary with effortless transit and convenient parking.
             </p>
           </div>
         </FadeIn>
@@ -62,7 +62,7 @@ export function ClinicLocation() {
                   </div>
 
                   <a
-                    href="https://maps.google.com/?q=Central+Leeds+LS1+4DY"
+                    href="https://maps.google.com/?q=Elland+Road+Stadium+Beeston+Leeds+LS11"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#1C1917] text-white hover:bg-black transition-colors"
@@ -76,7 +76,7 @@ export function ClinicLocation() {
                 <div className="relative flex-1 w-full min-h-[300px] bg-stone-100 overflow-hidden">
                   <iframe
                     title="Luminous Skin Clinic Leeds Location Map"
-                    src="https://maps.google.com/maps?q=Park%20Row%20Leeds%20LS1&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                    src="https://maps.google.com/maps?q=Elland%20Road%20Stadium%20Beeston%20Leeds%20LS11&t=&z=15&ie=UTF8&iwloc=&output=embed"
                     className="w-full h-full border-0 absolute inset-0"
                     loading="lazy"
                     allowFullScreen

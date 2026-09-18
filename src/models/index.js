@@ -41,7 +41,7 @@ const TreatmentSchema = new mongoose.Schema({
 const ResultSchema = new mongoose.Schema({
   title: { type: String, required: true },
   treatment: { type: String, required: true },
-  duration: { type: String, required: true },
+  duration: { type: String, default: "" },
   concern: { type: String, required: true },
   outcome: { type: String, required: true },
   imageBefore: { type: String, default: "" },

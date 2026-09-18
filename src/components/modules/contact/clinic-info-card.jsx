@@ -11,9 +11,9 @@ export function ClinicInfoCard() {
       <ImagePlaceholder
         aspect="video"
         category="Leeds Location"
-        label="Central Leeds Wellness Suite & Entrance Slot"
+        label="Beeston Wellness Suite & Entrance"
         icon="camera"
-        overlayCaption="Convenient access via Leeds City Centre rail & bus links"
+        overlayCaption="Convenient access near Elland Road Stadium, Leeds LS11"
       />
 
       <div className="luxury-card rounded-2xl p-6 sm:p-7 space-y-6">

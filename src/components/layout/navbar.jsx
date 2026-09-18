@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Calendar, Sparkles, ChevronRight } from "lucide-react";
 import { NAV_LINKS, CLINIC_INFO } from "@/constants/clinic-data";
-import { WhatsAppIcon, InstagramIcon, TikTokIcon, FacebookIcon } from "@/components/shared/social-icons";
+import { TikTokIcon, FacebookIcon } from "@/components/shared/social-icons";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,28 +70,8 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Right Action (Book Now CTA & Quick Socials) */}
-          <div className="hidden sm:flex items-center gap-2">
-            <a
-              href={CLINIC_INFO.socials.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Chat on WhatsApp"
-              title="Chat on WhatsApp"
-              className="w-8 h-8 rounded-xl bg-white border border-[#E8DFD5] hover:border-[#25D366] text-[#292524] hover:text-[#25D366] flex items-center justify-center transition-colors shadow-2xs"
-            >
-              <WhatsAppIcon className="w-4 h-4" />
-            </a>
-            <a
-              href={CLINIC_INFO.socials.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow on Instagram"
-              title="Follow on Instagram"
-              className="w-8 h-8 rounded-xl bg-white border border-[#E8DFD5] hover:border-[#E1306C] text-[#292524] hover:text-[#E1306C] flex items-center justify-center transition-colors shadow-2xs"
-            >
-              <InstagramIcon className="w-4 h-4" />
-            </a>
+          {/* Right Action (Book Now CTA) */}
+          <div className="hidden sm:flex items-center">
             <Link
               href="/booking"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#EAA59E] via-[#EC9C9D] to-[#D97E80] hover:brightness-105 shadow-xs hover:shadow-md transition-all active:scale-98"
@@ -145,25 +125,7 @@ export function Navbar() {
                 <span>Book Appointment</span>
               </Link>
 
-              <div className="grid grid-cols-4 gap-2 pt-1">
-                <a
-                  href={CLINIC_INFO.socials.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-2 px-1 rounded-xl bg-white border border-[#E8DFD5] text-[#25D366] flex flex-col items-center gap-1 text-[10px] font-medium"
-                >
-                  <WhatsAppIcon className="w-4 h-4" />
-                  <span>WhatsApp</span>
-                </a>
-                <a
-                  href={CLINIC_INFO.socials.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-2 px-1 rounded-xl bg-white border border-[#E8DFD5] text-[#E1306C] flex flex-col items-center gap-1 text-[10px] font-medium"
-                >
-                  <InstagramIcon className="w-4 h-4" />
-                  <span>Instagram</span>
-                </a>
+              <div className="grid grid-cols-2 gap-2 pt-1">
                 <a
                   href={CLINIC_INFO.socials.tiktok}
                   target="_blank"

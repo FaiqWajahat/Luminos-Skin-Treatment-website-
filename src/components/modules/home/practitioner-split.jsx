@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -10,16 +10,16 @@ const ease = [0.22, 1, 0.36, 1];
 
 const values = [
   {
-    title: "One-to-one attention",
-    desc: "Your appointment is strictly focused on your skin in a serene, private clinic environment.",
+    title: "5+ Years Leeds Lead Facialist",
+    desc: "Certified Beauty Therapist delivering safe, advanced, and effective treatments tailored to your skin.",
   },
   {
-    title: "Clear, honest recommendations",
-    desc: "We demystify clinical procedures so you understand exactly how treatments benefit your goal.",
+    title: "Calm, Kind & Friendly Experience",
+    desc: "Skincare is more than a treatment — it’s an experience of care, confidence, and restorative well-being.",
   },
   {
-    title: "Comfort-first experience",
-    desc: "High clinical standards without the sterile, intimidating atmosphere of standard medical clinics.",
+    title: "Visible Results from Session 1",
+    desc: "A holistic, non-invasive approach ensuring you leave fresher, smoother, and glowing inside and out.",
   },
 ];
 
@@ -42,15 +42,15 @@ export function PractitionerSplit() {
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-[#E8DFD5]">
                 <Image
                   src="/Practitioner-Split-img.png"
-                  alt="Certified Aesthetic Dermatology Practitioner - Luminous Leeds"
+                  alt="Madiha Naz (Madi) - Founder & Lead Facialist at Luminous Leeds"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover object-top hover:scale-[1.02] transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-xl border border-[#E8DFD5]/80 shadow-md">
-                  <p className="text-xs font-semibold text-[#1C1917]">Certified Lead Aesthetic Practitioner</p>
-                  <p className="text-[10px] text-[#78716C]">Advanced Dermal Therapy & Clinical Care · Leeds</p>
+                  <p className="text-xs font-semibold text-[#1C1917]">Madiha Naz (Madi)</p>
+                  <p className="text-[10px] text-[#78716C]">Founder & Certified Beauty Therapist · Leeds</p>
                 </div>
               </div>
             </div>
@@ -66,13 +66,13 @@ export function PractitionerSplit() {
               className="space-y-4"
             >
               <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#EC9C9D]">
-                Personal Care Matters
+                Meet The Founder · Luminous Leeds
               </span>
               <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1C1917] leading-tight">
-                Meet the care and precision behind your treatment.
+                Where beauty, science, and serenity come together.
               </h2>
               <p className="text-sm sm:text-base text-[#57534E] leading-relaxed">
-                Luminous was built around an ethos of attentive, unhurried care. We believe that radiant skin begins with truly understanding your unique biology, not pushing aggressive quick-fixes.
+                With over five years of experience as a certified Beauty Therapist and one of the best facialists in Leeds, Madiha Naz (Madi) blends science and relaxation to deliver visible, radiant results. Every session is thoughtfully designed to deliver visible results while providing a moment of pure relaxation.
               </p>
             </motion.div>
 
@@ -108,7 +108,7 @@ export function PractitionerSplit() {
                 href="/about"
                 className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-[#1C1917] hover:bg-[#292524] transition-colors"
               >
-                Read Our Full Approach
+                Read Madi’s Story & About Us
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>

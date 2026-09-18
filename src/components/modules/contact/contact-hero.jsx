@@ -48,7 +48,7 @@ export function ContactHero() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.22em] uppercase text-[#F0A5A2] bg-white/10 backdrop-blur-md border border-white/15 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-[#F0A5A2]" />
-            <span>Clinic Concierge · Central Leeds</span>
+            <span>Clinic Concierge · Leeds LS11</span>
           </div>
 
           {/* Editorial Headline */}
@@ -61,7 +61,7 @@ export function ContactHero() {
 
           {/* Concise Subtitle */}
           <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-xl mx-auto font-normal">
-            Whether you seek treatment advice, wish to speak directly with our clinicians, or are planning your visit to our central Leeds sanctuary, we are here with unhurried care.
+            Whether you seek treatment advice, wish to speak directly with our clinicians, or are planning your visit to our sanctuary near Elland Road Stadium in Beeston, we are here with unhurried care.
           </p>
 
           {/* Compact Actions */}
@@ -75,7 +75,7 @@ export function ContactHero() {
             </Link>
 
             <a
-              href="https://tr.ee/zK8bgJAg4I"
+              href="https://wa.me/447950774790?text=Hello%20Luminous%20Clinic,%20I%20would%20like%20to%20ask%20a%20quick%20question"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-medium text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 transition-all duration-300"
@@ -94,7 +94,7 @@ export function ContactHero() {
             <span className="w-1 h-1 rounded-full bg-white/30 hidden sm:block" />
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-[#F0A5A2]" />
-              <span className="text-neutral-300">Central Leeds LS1</span>
+              <span className="text-neutral-300">Beeston, Leeds LS11</span>
             </div>
           </div>
         </motion.div>

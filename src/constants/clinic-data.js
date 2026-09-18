@@ -9,7 +9,7 @@ export const CLINIC_INFO = {
   tagline: "Your Skin. Your Confidence. Your Glow.",
   subTagline: "Personalised skin, facial and wellness treatments in Leeds.",
   location: "Leeds, West Yorkshire, United Kingdom",
-  address: "Central Leeds Wellness Suite, Leeds, LS1",
+  address: "Near Elland Road Stadium, Beeston, Leeds, LS11",
   email: "info@luminousskinclinic.co.uk",
   phone: "+44 7950 774790",
   hours: [
@@ -18,11 +18,20 @@ export const CLINIC_INFO = {
     { days: "Sunday", time: "By Appointment Only" },
   ],
   socials: {
-    whatsapp: "https://tr.ee/zK8bgJAg4I",
-    instagram: "https://tr.ee/wPOUAgbqjK",
-    tiktok: "https://tr.ee/T77hoYIgSw",
-    facebook: "https://tr.ee/K4h68VN--4",
+    whatsapp: "https://wa.me/447950774790",
+    instagram: "https://www.instagram.com/luminouss_skin_clinic",
+    tiktok: "https://www.tiktok.com/@luminous_skin_clinic",
+    facebook: "https://www.facebook.com/share/1CYA2nkRLr/?mibextid=wwXIfr",
     linktree: "https://linktr.ee/luminousskinclinic",
+  },
+  founder: {
+    name: "Madiha Naz",
+    nickname: "Madi",
+    role: "Founder & Owner",
+    title: "Certified Beauty Therapist & Lead Facialist in Leeds",
+    experience: "Over 5+ Years Experience",
+    bio: "I’m Madi, the founder and owner of Luminous Skin business — a sanctuary where beauty, science, and serenity come together. With over five years of experience as a certified Beauty Therapist and one of the best facialists in Leeds, my passion lies in helping clients achieve naturally radiant, healthy skin through safe, advanced, and effective treatments. Known for my calm, kind, and friendly nature, I believe that skincare is more than a treatment — it’s an experience of care, confidence, and well-being. Every session is thoughtfully designed to deliver visible results while providing a moment of pure relaxation. At Luminous Skin Clinic, my goal is to create a welcoming space where every client feels valued, cared for, and leaves glowing — inside and out.",
+    aboutStory: "Welcome to Luminous Skin Clinic, where beauty meets serenity. More than just a salon, it’s your personal escape to self-care and skin wellness. With years of experience as a certified beauty therapist and one of the best facialists in Leeds, I blend science and relaxation to deliver visible, radiant results. Every treatment is designed to rejuvenate your skin, restore balance, and enhance your natural glow. Using advanced techniques and premium products, we offer a holistic approach to achieving youthful, luminous skin — without invasive procedures. Clients notice fresher, smoother, more radiant skin after their very first session. Step into calm sophistication and let your confidence shine — because at Luminous Skin Clinic, your skin deserves nothing less than perfection.",
   },
 };
 
@@ -686,7 +695,7 @@ export const FAQS = [
   {
     id: "faq-3",
     question: "Are appointments strictly private and one-to-one?",
-    answer: "Yes, 100%. Luminous operates exclusively by appointment in a calm, private wellness suite in central Leeds. There are no crowded waiting rooms or overlapping bookings; your time is dedicated entirely to you and your skin.",
+    answer: "Yes, 100%. Luminous operates exclusively by appointment in a calm, private wellness suite located near Elland Road Stadium in Beeston, Leeds LS11. There are no crowded waiting rooms or overlapping bookings; your time is dedicated entirely to you and your skin.",
   },
   {
     id: "faq-4",

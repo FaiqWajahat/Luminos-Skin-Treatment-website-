@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -45,20 +45,20 @@ export function AboutHero() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.22em] uppercase text-[#F0A5A2] bg-white/10 backdrop-blur-md border border-white/15 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-[#F0A5A2]" />
-            <span>Our Ethos · Luminous Leeds</span>
+            <span>Where Beauty Meets Serenity · Leeds</span>
           </div>
 
           {/* Catching Editorial Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-[3.35rem] font-semibold tracking-tight leading-[1.12] text-white">
-            Clinical Excellence. <br className="hidden sm:inline" />
+            Welcome to Luminous Skin Clinic, <br className="hidden sm:inline" />
             <em className="font-serif italic font-normal text-[#F0A5A2]">
-              Deeply Personal Care.
+              Where Beauty Meets Serenity.
             </em>
           </h1>
 
           {/* Concise Subtitle */}
-          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-xl mx-auto font-normal">
-            Founded on the principle that transformative skin health should feel calm, transparent, and unhurried in a private one-to-one Leeds sanctuary.
+          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl mx-auto font-normal">
+            More than just a salon, it’s your personal escape to self-care and skin wellness. Step into calm sophistication and let your confidence shine — because at Luminous Skin Clinic, your skin deserves nothing less than perfection.
           </p>
 
           {/* Compact Actions */}
@@ -84,12 +84,12 @@ export function AboutHero() {
           <div className="pt-6 border-t border-white/10 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-neutral-400">
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#F0A5A2]" />
-              <span className="text-neutral-300">1:1 Private Attention</span>
+              <span className="text-neutral-300">Certified Beauty Therapist</span>
             </div>
             <span className="w-1 h-1 rounded-full bg-white/30 hidden sm:block" />
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-[#F0A5A2]" />
-              <span className="text-neutral-300">Central Leeds Clinic</span>
+              <span className="text-neutral-300">Leeds Lead Facialist</span>
             </div>
           </div>
         </motion.div>

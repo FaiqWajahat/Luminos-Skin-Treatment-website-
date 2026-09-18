@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/luminous";
+let rawUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/luminous";
+if (rawUri.includes(".mongodb.net/?")) {
+  rawUri = rawUri.replace(".mongodb.net/?", ".mongodb.net/luminous?");
+} else if (rawUri.endsWith(".mongodb.net") || rawUri.endsWith(".mongodb.net/")) {
+  rawUri = rawUri.replace(/\/?$/, "/luminous");
+}
+const MONGODB_URI = rawUri;
 
 let cached = global.mongoose;
 if (!cached) {

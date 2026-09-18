@@ -1,15 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles, Lock, Mail, ArrowRight } from "lucide-react";
+import { Sparkles, Lock, Mail, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Load saved credentials from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("luminous_admin_credentials");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.email) setEmail(parsed.email);
+        if (parsed.password) setPassword(parsed.password);
+        setRememberMe(true);
+      }
+    } catch (err) {
+      console.warn("Could not read saved credentials:", err);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +45,17 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
+
+      // Save or remove credentials based on rememberMe checkbox
+      if (rememberMe) {
+        localStorage.setItem(
+          "luminous_admin_credentials",
+          JSON.stringify({ email, password })
+        );
+      } else {
+        localStorage.removeItem("luminous_admin_credentials");
+      }
+
       router.push("/admin");
     } catch {
       setError("Something went wrong");
@@ -68,6 +96,8 @@ export default function LoginPage() {
                 <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500" />
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="username email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@luminous.com"
@@ -82,14 +112,57 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
                   required
-                  className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-[#EC9C9D] focus:ring-1 focus:ring-[#EC9C9D]/40 transition-all"
+                  className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl pl-10 pr-11 py-3 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-[#EC9C9D] focus:ring-1 focus:ring-[#EC9C9D]/40 transition-all font-mono"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 p-1 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4 text-[#EC9C9D]" />
+                  ) : (
+                    <Eye className="w-4 h-4 text-neutral-400 hover:text-white" />
+                  )}
+                </button>
               </div>
+            </div>
+
+            {/* Remember Me / Save Credentials Option */}
+            <div className="flex items-center justify-between text-xs pt-1">
+              <label className="flex items-center gap-2 cursor-pointer select-none text-neutral-400 hover:text-neutral-300">
+                <input
+                  type="checkbox"
+                  name="remember"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-neutral-700 bg-[#0F0E0D] text-[#EC9C9D] accent-[#EC9C9D] focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                />
+                <span className="text-[11px]">Save username & password</span>
+              </label>
+
+              {email && password && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.removeItem("luminous_admin_credentials");
+                    setEmail("");
+                    setPassword("");
+                  }}
+                  className="text-[10px] text-neutral-500 hover:text-neutral-400 hover:underline"
+                >
+                  Clear saved
+                </button>
+              )}
             </div>
 
             {error && (

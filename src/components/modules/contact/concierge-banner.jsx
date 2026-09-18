@@ -44,7 +44,7 @@ export function ConciergeBanner() {
                   <span className="w-1 h-1 rounded-full bg-[#D7CCC8] hidden sm:block" />
                   <div className="flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-[#EC9C9D]" />
-                    <span className="text-[#1C1917] font-medium">Private LS1 suite</span>
+                    <span className="text-[#1C1917] font-medium">Private LS11 suite</span>
                   </div>
                 </div>
               </div>
@@ -68,7 +68,7 @@ export function ConciergeBanner() {
                 </Link>
 
                 <a
-                  href="https://tr.ee/zK8bgJAg4I"
+                  href="https://wa.me/447950774790?text=Hello%20Luminous%20Clinic,%20I%20would%20like%20to%20ask%20a%20quick%20question"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white border border-[#E8DFD5] hover:border-[#EC9C9D]/50 text-[#1C1917] hover:bg-[#FAF8F5] shadow-xs transition-all group"

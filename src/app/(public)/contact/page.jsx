@@ -1,21 +1,22 @@
 import { ContactView } from "@/components/modules/contact";
 
 export const metadata = {
-  title: "Contact & Location | Luminous Skin Clinic Leeds",
+  title: "Contact & Location | Luminous Skin Clinic Leeds | Beeston LS11",
   description:
-    "Get in touch with our Leeds clinical team for bespoke facial consultations, skin assessments, and appointment queries. View our central Leeds suite address, opening hours, transit directions, and contact channels.",
+    "Visit Luminous Skin Clinic located near Elland Road Stadium in Leeds, Beeston LS11. Get in touch for bespoke facial consultations, skin assessments, directions, and opening hours.",
   keywords: [
     "Luminous Skin Clinic contact",
     "Leeds facial clinic address",
-    "Skin consultation Leeds",
+    "Elland Road Leeds skin clinic",
+    "Beeston Leeds skin clinic",
     "Dermaplaning Leeds booking",
-    "Microneedling clinic LS1",
+    "Microneedling clinic LS11",
     "Leeds aesthetics enquiry",
   ],
   openGraph: {
     title: "Contact & Consultations | Luminous Skin Clinic Leeds",
     description:
-      "Get in touch with our Leeds clinical team. Private consultations, skin assessments, opening hours, and central Leeds directions.",
+      "Visit Luminous Skin Clinic located near Elland Road Stadium in Leeds, Beeston LS11. Private consultations, skin assessments, and opening hours.",
     type: "website",
   },
 };

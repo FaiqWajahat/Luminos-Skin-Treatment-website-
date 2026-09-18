@@ -33,7 +33,7 @@ export function FaqsSection() {
             <div className="space-y-4">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-sm border border-[#E8DFD5]">
                 <Image
-                  src="/home-faq.png"
+                  src="/home-01.jpeg"
                   alt="Luminous Skin Consultation Lounge - Leeds"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
@@ -41,18 +41,18 @@ export function FaqsSection() {
                   priority={false}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#E8DFD5]/80 shadow-xs">
+                {/* <div className="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#E8DFD5]/80 shadow-xs">
                   <p className="text-xs font-semibold text-[#1C1917]">Private Consultation Lounge</p>
                   <p className="text-[10px] text-[#78716C]">Central Leeds · Unhurried 1:1 Care</p>
-                </div>
+                </div> */}
               </div>
 
-              <div className="px-1 text-xs text-[#78716C] leading-relaxed">
+              {/* <div className="px-1 text-xs text-[#78716C] leading-relaxed">
                 <p className="font-medium text-[#443E38]">
                   Leeds City Centre Wellness Suite
                 </p>
                 <p>Private, unhurried consultations tailored strictly to your skin goals.</p>
-              </div>
+              </div> */}
             </div>
           </motion.div>
 

@@ -48,7 +48,7 @@ export function BookingHero() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.22em] uppercase text-[#F0A5A2] bg-white/10 backdrop-blur-md border border-white/15 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-[#F0A5A2]" />
-            <span>Online Reservation · Leeds LS1</span>
+            <span>Online Reservation · Leeds LS11</span>
           </div>
 
           {/* Editorial Headline */}
@@ -75,7 +75,7 @@ export function BookingHero() {
             </a>
 
             <a
-              href="https://tr.ee/zK8bgJAg4I"
+              href="https://wa.me/447950774790?text=Hello%20Luminous%20Clinic,%20I%20would%20like%20to%20enquire%20about%20booking"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-medium text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 transition-all duration-300"

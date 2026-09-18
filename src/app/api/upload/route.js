@@ -13,28 +13,38 @@ export async function POST(req) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // If Cloudinary credentials are not configured, fallback to base64 data url for instant dev usage
+    const mime = file.type || "image/jpeg";
+    const base64Fallback = `data:${mime};base64,${buffer.toString("base64")}`;
+
+    // If Cloudinary credentials are not configured, fallback to base64 data url
     if (!process.env.CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME === "your_cloud_name") {
-      const mime = file.type || "image/jpeg";
-      const base64 = `data:${mime};base64,${buffer.toString("base64")}`;
       return NextResponse.json({ 
-        url: base64,
+        url: base64Fallback,
         notice: "Cloudinary keys not set; saved as base64 fallback" 
       });
     }
 
-    const uploadResult = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "luminous_clinic", resource_type: "image" },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-      stream.end(buffer);
-    });
+    try {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "luminous_clinic", resource_type: "image" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(buffer);
+      });
 
-    return NextResponse.json({ url: uploadResult.secure_url });
+      return NextResponse.json({ url: uploadResult.secure_url });
+    } catch (cloudErr) {
+      console.warn("Cloudinary upload failed (using fallback data URL):", cloudErr.message || cloudErr);
+      return NextResponse.json({
+        url: base64Fallback,
+        warning: `Cloudinary error: ${cloudErr.message || "Upload forbidden"}. Saved image via fallback so your work is not lost.`,
+        cloudinaryError: cloudErr.message || String(cloudErr)
+      });
+    }
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json({ error: error.message || "Failed to upload image" }, { status: 500 });

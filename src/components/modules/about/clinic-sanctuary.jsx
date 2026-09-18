@@ -42,10 +42,10 @@ export function ClinicSanctuary() {
           <SectionHeader
             eyebrow="The Leeds Environment"
             title="A calm clinical sanctuary, designed for your comfort."
-            description="Explore our central Leeds wellness suite where medical-level hygiene meets warm sensory relaxation."
+            description="Explore our Beeston Leeds wellness suite where medical-level hygiene meets warm sensory relaxation."
           />
           <span className="text-xs font-serif italic text-[#EC9C9D] text-left md:text-right shrink-0">
-            Central Leeds Wellness Suite · Private Access
+            Beeston, Leeds LS11 · Private Access
           </span>
         </motion.div>
 
@@ -58,17 +58,17 @@ export function ClinicSanctuary() {
         >
           <div className="relative aspect-[16/9] sm:aspect-[21/9] min-h-[260px] rounded-3xl overflow-hidden shadow-xl border border-[#E8DFD5]">
             <Image
-              src="/about-The Leeds-Sanctuary.png"
+              src="/about-02.jpeg"
               alt="Luminous Skin Clinic Leeds Sanctuary and Treatment Room"
               fill
               sizes="100vw"
               className="object-cover hover:scale-[1.01] transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute bottom-5 left-5 right-5 sm:right-auto bg-white/90 backdrop-blur-md px-5 py-3 rounded-2xl border border-[#E8DFD5]/80 shadow-md">
+            {/* <div className="absolute bottom-5 left-5 right-5 sm:right-auto bg-white/90 backdrop-blur-md px-5 py-3 rounded-2xl border border-[#E8DFD5]/80 shadow-md">
               <p className="text-xs sm:text-sm font-semibold text-[#1C1917]">Private Treatment Sanctuary & Dermal Diagnostic Suite</p>
-              <p className="text-[11px] text-[#78716C]">Central Leeds · Temperature-regulated anatomical bed & HEPA air filtration</p>
-            </div>
+              <p className="text-[11px] text-[#78716C]">Near Elland Road Stadium, Leeds LS11 · Temperature-regulated anatomical bed & HEPA air filtration</p>
+            </div> */}
           </div>
         </motion.div>
 

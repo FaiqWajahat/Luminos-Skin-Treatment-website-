@@ -4,11 +4,20 @@ import { getTreatments, createTreatment } from "@/lib/db-store";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET() {
+export async function GET(req) {
   try {
-    const treatments = await getTreatments();
+    const { searchParams } = new URL(req.url);
+    const page = searchParams.get("page");
+    const limit = searchParams.get("limit");
+    const category = searchParams.get("category");
+
+    const result = await getTreatments({ page, limit, category });
+    const responseData = Array.isArray(result)
+      ? { treatments: result }
+      : { treatments: result.treatments, pagination: result.pagination };
+
     return NextResponse.json(
-      { treatments },
+      responseData,
       {
         headers: {
           "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",

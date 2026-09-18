@@ -45,7 +45,7 @@ export function HeroSection() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.24em] uppercase text-[#F0A5A2] bg-black/40 backdrop-blur-md border border-white/20 shadow-lg">
             <Sparkles className="w-3.5 h-3.5 text-[#EC9C9D]" />
-            <span>Central Leeds · Private Clinical Sanctuary</span>
+            <span>Leeds LS11 · Private Clinical Sanctuary</span>
           </div>
 
           {/* Catching Editorial Headline (Enlarged) */}
@@ -108,7 +108,7 @@ export function HeroSection() {
 
             <div className="flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-[#EC9C9D]" />
-              <span className="text-neutral-200">Central Leeds LS1</span>
+              <span className="text-neutral-200">Beeston, Leeds LS11</span>
             </div>
           </div>
         </motion.div>

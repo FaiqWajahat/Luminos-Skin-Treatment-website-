@@ -10,18 +10,18 @@ const ease = [0.22, 1, 0.36, 1];
 const CREDENTIALS = [
   {
     icon: Award,
-    title: "Fully Certified",
-    desc: "Advanced clinical dermaplaning, microneedling & infection control certified.",
+    title: "5+ Years Experience",
+    desc: "Certified Beauty Therapist & recognized as one of the leading facialists in Leeds.",
   },
   {
     icon: ShieldCheck,
-    title: "Fully Insured",
-    desc: "Comprehensive UK medical aesthetic malpractice & clinical indemnity cover.",
+    title: "Safe & Advanced Care",
+    desc: "Targeted, evidence-backed and non-invasive treatments for naturally radiant skin.",
   },
   {
     icon: Heart,
-    title: "Client-Led Pacing",
-    desc: "Every procedure is personalized and adjusted to your comfort threshold.",
+    title: "Calm, Kind & Friendly",
+    desc: "An attentive, welcoming atmosphere where every client feels valued and cared for.",
   },
 ];
 
@@ -44,15 +44,15 @@ export function PractitionerBio() {
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-[#E8DFD5]">
                 <Image
                   src="/about-founder.png"
-                  alt="Lead Aesthetic Practitioner - Luminous Skin Clinic Leeds"
+                  alt="Madiha Naz (Madi) - Founder & Lead Facialist at Luminous Skin Clinic Leeds"
                   fill
                   sizes="(max-width: 1024px) 100vw, 45vw"
                   className="object-cover object-top hover:scale-[1.02] transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-xl border border-[#E8DFD5]/80 shadow-md">
-                  <p className="text-xs font-semibold text-[#1C1917]">Clinical Skin Specialist</p>
-                  <p className="text-[10px] text-[#78716C]">Lead Practitioner · Luminous Leeds</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md px-4 py-3 rounded-xl border border-[#E8DFD5]/80 shadow-md">
+                  <p className="text-xs sm:text-sm font-semibold text-[#1C1917]">Madiha Naz (Madi)</p>
+                  <p className="text-[11px] text-[#78716C]">Founder & Certified Beauty Therapist · Leeds</p>
                 </div>
               </div>
             </div>
@@ -69,20 +69,31 @@ export function PractitionerBio() {
             >
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-[#EC9C9D] bg-[#EC9C9D]/10 border border-[#EC9C9D]/20">
                 <Sparkles className="w-3.5 h-3.5 text-[#EC9C9D]" />
-                <span>Practitioner In Residence</span>
+                <span>Founder & Lead Facialist</span>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1C1917] leading-tight">
-                Dedicated to clinical excellence and genuine, attentive care.
-              </h2>
+              <div>
+                <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1C1917] leading-tight">
+                  Meet Madiha Naz
+                </h2>
+                <p className="text-xs sm:text-sm font-medium text-[#EC9C9D] mt-1 tracking-wide">
+                  Founder & Owner · Certified Beauty Therapist & Leeds Lead Facialist
+                </p>
+              </div>
 
-              <p className="text-sm sm:text-base text-[#57534E] leading-relaxed">
-                With advanced certifications in clinical dermaplaning, automated microneedling collagen induction, and medical-grade wavelength phototherapy, every appointment is delivered with the highest standards of safety, sterile protocols, and aesthetic nuance.
-              </p>
+              <div className="space-y-3.5 text-sm sm:text-[15px] text-[#57534E] leading-relaxed">
+                <p>
+                  “I’m Madi, the founder and owner of Luminous Skin business — a sanctuary where beauty, science, and serenity come together. With over five years of experience as a certified Beauty Therapist and one of the best facialists in Leeds, my passion lies in helping clients achieve naturally radiant, healthy skin through safe, advanced, and effective treatments.”
+                </p>
 
-              <p className="text-sm text-[#78716C] leading-relaxed">
-                We believe that skin transformation is never one-size-fits-all. By dedicating our practice exclusively to private one-to-one bookings, you receive unhurried diagnostics and treatments specifically customized to your dermal needs.
-              </p>
+                <p>
+                  “Known for my calm, kind, and friendly nature, I believe that skincare is more than a treatment — it’s an experience of care, confidence, and well-being. Every session is thoughtfully designed to deliver visible results while providing a moment of pure relaxation.”
+                </p>
+
+                <p className="text-[#1C1917] font-medium">
+                  “At Luminous Skin Clinic, my goal is to create a welcoming space where every client feels valued, cared for, and leaves glowing — inside and out.”
+                </p>
+              </div>
             </motion.div>
 
             {/* Credentials 3-Card Grid */}

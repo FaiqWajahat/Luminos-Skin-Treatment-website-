@@ -1,9 +1,9 @@
 import { AboutView } from "@/components/modules/about";
 
 export const metadata = {
-  title: "About | Luminous Skin Clinic Leeds",
+  title: "About Us | Luminous Skin Clinic Leeds | Founder Madiha Naz",
   description:
-    "Learn about our ethos of attentive, one-to-one clinical care and bespoke aesthetic skin therapy in central Leeds.",
+    "Welcome to Luminous Skin Clinic Leeds, where beauty meets serenity. Founded by certified Beauty Therapist & Leeds Lead Facialist Madiha Naz (Madi).",
 };
 
 export default function AboutPage() {

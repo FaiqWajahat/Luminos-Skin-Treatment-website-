@@ -9,7 +9,7 @@ export const CONTACT_CHANNELS = [
     description: "Instant messaging for quick questions, photos, and appointment assistance.",
     value: "+44 7950 774790",
     actionLabel: "Chat on WhatsApp",
-    href: "https://tr.ee/zK8bgJAg4I",
+    href: "https://wa.me/447950774790",
     icon: "MessageSquare",
     badge: "Fastest Response",
     badgeVariant: "gold",
@@ -41,11 +41,11 @@ export const CONTACT_CHANNELS = [
   },
   {
     id: "visit",
-    title: "Private Wellness Suite",
-    description: "Central Leeds LS1 location with private, by-appointment one-to-one rooms.",
-    value: "Central Leeds Wellness Suite, LS1",
+    title: "Visit Us",
+    description: "We are located near Elland Road Stadium in Leeds, Beeston LS11 with private, by-appointment one-to-one rooms.",
+    value: "Near Elland Road Stadium, Beeston, Leeds, LS11",
     actionLabel: "Get Directions",
-    href: "https://maps.google.com/?q=Central+Leeds+LS1",
+    href: "https://maps.google.com/?q=Elland+Road+Stadium+Beeston+Leeds+LS11",
     icon: "MapPin",
     badge: "Open Today",
     badgeVariant: "gold",
@@ -57,28 +57,28 @@ export const SOCIAL_CHANNELS = [
   {
     name: "WhatsApp",
     handle: "+44 7950 774790",
-    href: "https://tr.ee/zK8bgJAg4I",
+    href: "https://wa.me/447950774790",
     description: "Instant messaging and booking assistance",
     type: "whatsapp",
   },
   {
     name: "Instagram",
     handle: "@luminouss_skin_clinic",
-    href: "https://tr.ee/wPOUAgbqjK",
+    href: "https://www.instagram.com/luminouss_skin_clinic",
     description: "Client results, stories and skincare tips",
     type: "instagram",
   },
   {
     name: "TikTok",
     handle: "@luminous_skin_clinic",
-    href: "https://tr.ee/T77hoYIgSw",
+    href: "https://www.tiktok.com/@luminous_skin_clinic",
     description: "Treatment tutorials and clinic walkthroughs",
     type: "tiktok",
   },
   {
     name: "Facebook",
     handle: "Luminous Skin Clinic",
-    href: "https://tr.ee/K4h68VN--4",
+    href: "https://www.facebook.com/share/1CYA2nkRLr/?mibextid=wwXIfr",
     description: "Community updates, reviews and announcements",
     type: "facebook",
   },
@@ -128,28 +128,28 @@ export const TIME_SLOT_PREFERENCES = [
 
 export const LEEDS_TRANSIT_INFO = [
   {
-    mode: "Train",
-    title: "Leeds Rail Station",
-    duration: "7 min walk",
-    details: "Exit via City Square. Head north along Park Row directly towards the Leeds Financial and Wellness Quarter.",
-  },
-  {
     mode: "Car & Parking",
-    title: "Q-Park The Light",
-    duration: "3 min walk",
-    details: "Safe, secure multi-storey parking available 24/7 at The Light (LS1 8TL). Clinic clients receive a discount ticket on request.",
+    title: "Elland Road & Beeston Parking",
+    duration: "Convenient Parking",
+    details: "Safe visitor and on-street parking available near Elland Road Stadium in Beeston (LS11) with swift motorway access via M621 (Junctions 1 & 2).",
   },
   {
     mode: "Bus",
-    title: "The Headrow & Infirmary St",
+    title: "Beeston & Elland Road Buses",
     duration: "2 min walk",
-    details: "All central Leeds bus routes stop within 200 metres of our private entrance.",
+    details: "Frequent buses from Leeds City Centre (routes 51, 52, 55, 65, 75, 86) stop within brief walking distance of our private entrance.",
+  },
+  {
+    mode: "Train",
+    title: "Leeds Rail Station",
+    duration: "8-10 min drive / taxi",
+    details: "A quick 8-10 minute taxi or direct connecting bus ride from Leeds City Rail Station directly to our Beeston sanctuary.",
   },
   {
     mode: "Accessibility",
     title: "Step-Free Access",
-    duration: "Direct Lift",
-    details: "The building features level street access and private elevator access directly to our clinic suite.",
+    duration: "Ground Floor",
+    details: "Level step-free entrance with accessible facilities designed for your comfort and convenience.",
   },
 ];
 
@@ -164,7 +164,7 @@ export const CONTACT_FAQS = [
     id: "faq-photos",
     question: "Can I send photographs of my skin for advice?",
     answer:
-      "Yes. You can message our WhatsApp Concierge (+44 7700 900123) with clear photos in natural light. All photos are handled with strict clinical confidentiality and GDPR compliance. Only certified practitioners review your photos to recommend appropriate treatments.",
+      "Yes. You can message our WhatsApp Concierge (+44 7950 774790) with clear photos in natural light. All photos are handled with strict clinical confidentiality and GDPR compliance. Only certified practitioners review your photos to recommend appropriate treatments.",
   },
   {
     id: "faq-free-phone",
@@ -176,7 +176,7 @@ export const CONTACT_FAQS = [
     id: "faq-parking",
     question: "Where is the best place to park when visiting the Leeds clinic?",
     answer:
-      "We recommend Q-Park The Light (LS1 8TL) or Trinity Leeds car park, both located within a 3–5 minute walk of our suite. If you require accessible step-free parking, please let us know when confirming your appointment.",
+      "Convenient visitor and on-street parking is readily available near Elland Road Stadium in Beeston (LS11), situated within a very short walk of our private clinic suite. If you require any accessibility guidance, please let us know in advance.",
   },
   {
     id: "faq-patch-test",

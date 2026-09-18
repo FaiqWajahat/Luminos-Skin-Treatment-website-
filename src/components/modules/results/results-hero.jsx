@@ -48,7 +48,7 @@ export function ResultsHero() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.22em] uppercase text-[#F0A5A2] bg-white/10 backdrop-blur-md border border-white/15 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-[#F0A5A2]" />
-            <span>Verified Transformations · Leeds LS1</span>
+            <span>Verified Transformations · Leeds LS11</span>
           </div>
 
           {/* Editorial Headline */}

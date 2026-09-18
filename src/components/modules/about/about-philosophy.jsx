@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -11,18 +11,18 @@ const ease = [0.22, 1, 0.36, 1];
 const steps = [
   {
     num: "01",
-    title: "Listen first, diagnose thoroughly",
-    desc: "Every face tells a unique biological story. We assess lifestyle, current homecare habits, and dermal barrier integrity before suggesting any treatment.",
+    title: "Science Blended with Deep Relaxation",
+    desc: "With years of experience as a certified beauty therapist and one of the best facialists in Leeds, we blend science and relaxation to deliver visible, radiant results.",
   },
   {
     num: "02",
-    title: "Transparent, evidence-based guidance",
-    desc: "We explain exactly how clinical modalities and active peptides interact with your skin matrix. No marketing gimmicks—pure dermatological clarity.",
+    title: "Rejuvenate, Balance & Enhance Natural Glow",
+    desc: "Every treatment is designed to rejuvenate your skin, restore balance, and enhance your natural glow using advanced techniques and premium products.",
   },
   {
     num: "03",
-    title: "Sustainable, progressive skin health",
-    desc: "We reject harsh, aggressive over-exfoliation and transient social trends. Our focus is reinforcing your natural lipid barrier for enduring radiance.",
+    title: "Visible Results from Your First Session",
+    desc: "We offer a holistic approach to achieving youthful, luminous skin without invasive procedures. Clients notice fresher, smoother, more radiant skin after their very first session.",
   },
 ];
 
@@ -42,13 +42,13 @@ export function AboutPhilosophy() {
               className="space-y-4"
             >
               <span className="text-xs font-semibold uppercase tracking-[0.24em] text-[#EC9C9D]">
-                Our Clinical Philosophy
+                About Us · Our Approach
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-semibold tracking-tight text-[#1C1917] leading-[1.18]">
-                Professional skincare designed to feel welcoming, never intimidating.
+                Where beauty meets serenity, and science meets relaxation.
               </h2>
               <p className="text-sm sm:text-base text-[#57534E] leading-relaxed">
-                Traditional clinics can often feel cold, rushed, or pressured. At Luminous, we created a peaceful sanctuary in central Leeds where clinical precision meets restorative, unhurried comfort.
+                Welcome to Luminous Skin Clinic, where beauty meets serenity. More than just a salon, it’s your personal escape to self-care and skin wellness in central Leeds. Step into calm sophistication and let your confidence shine — because at Luminous Skin Clinic, your skin deserves nothing less than perfection.
               </p>
             </motion.div>
 
@@ -91,17 +91,17 @@ export function AboutPhilosophy() {
               <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-[#F0A5A2]/20 to-transparent blur-2xl -z-10" />
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-[#E8DFD5]">
                 <Image
-                  src="/aboutpage-clinicalphilosophy.png"
+                  src="/about-01.jpeg"
                   alt="Luminous Leeds Treatment Sanctuary Suite & Atmosphere"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover hover:scale-[1.02] transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-xl border border-[#E8DFD5]/80 shadow-md">
+                {/* <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-xl border border-[#E8DFD5]/80 shadow-md">
                   <p className="text-xs font-semibold text-[#1C1917]">Private Treatment Suite</p>
                   <p className="text-[10px] text-[#78716C]">Central Leeds · Unhurried 1:1 Clinical Sanctuary</p>
-                </div>
+                </div> */}
               </div>
             </div>
           </motion.div>
