@@ -14,7 +14,7 @@ export function HeroSection() {
       {/* ── Background Layer with Real Clinic Photography ── */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/home-hero-secimg.png"
+          src="/about-01.jpeg"
           alt="Luminous Skin Clinic Leeds Private Treatment Sanctuary"
           fill
           priority
