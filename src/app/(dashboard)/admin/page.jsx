@@ -1,26 +1,57 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { MessageSquare, Sparkles, Images, Calendar, ArrowUpRight, Clock, CheckCircle2 } from "lucide-react";
+import { MessageSquare, Sparkles, Images, Calendar, ArrowUpRight, Clock, CheckCircle2, RefreshCw } from "lucide-react";
 
 export default function AdminOverviewPage() {
   const [data, setData] = useState({ enquiries: [], treatments: [], results: [] });
   const [loading, setLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const isMounted = useRef(true);
+
+  const fetchDashboardData = async (silent = false) => {
+    if (!silent) setIsSyncing(true);
+    try {
+      const [eq, tr, re] = await Promise.all([
+        fetch("/api/enquiries", { cache: "no-store" }).then((r) => r.json()),
+        fetch("/api/treatments", { cache: "no-store" }).then((r) => r.json()),
+        fetch("/api/results", { cache: "no-store" }).then((r) => r.json()),
+      ]);
+      if (isMounted.current) {
+        setData({
+          enquiries: eq.enquiries || [],
+          treatments: tr.treatments || [],
+          results: re.results || [],
+        });
+      }
+    } catch (err) {
+      console.warn("Dashboard sync error:", err);
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+        setIsSyncing(false);
+      }
+    }
+  };
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/enquiries").then((r) => r.json()),
-      fetch("/api/treatments").then((r) => r.json()),
-      fetch("/api/results").then((r) => r.json()),
-    ]).then(([eq, tr, re]) => {
-      setData({
-        enquiries: eq.enquiries || [],
-        treatments: tr.treatments || [],
-        results: re.results || [],
-      });
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    isMounted.current = true;
+    fetchDashboardData();
+
+    // Auto sync every 4 seconds in real-time
+    const interval = setInterval(() => {
+      fetchDashboardData(true);
+    }, 4000);
+
+    const onFocus = () => fetchDashboardData(true);
+    window.addEventListener("focus", onFocus);
+
+    return () => {
+      isMounted.current = false;
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+    };
   }, []);
 
   const newEnquiries = data.enquiries.filter((e) => e.status === "New").length;
@@ -57,14 +88,32 @@ export default function AdminOverviewPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-            Clinic Overview
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+              Clinic Overview
+            </h1>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="font-medium">Real-Time Live</span>
+            </div>
+          </div>
           <p className="text-xs text-neutral-400 mt-1">
-            Real-time enquiries, treatment pricing and patient before/after portfolio
+            Auto-syncing real-time enquiries, treatment pricing, and clinic activity
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => fetchDashboardData(false)}
+            disabled={isSyncing}
+            title="Manual sync now"
+            className="p-2.5 rounded-xl bg-[#161412] border border-neutral-800 text-neutral-400 hover:text-white hover:border-[#EC9C9D]/50 transition-colors cursor-pointer"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin text-[#EC9C9D]" : ""}`} />
+          </button>
           <Link
             href="/admin/treatments"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium bg-[#EC9C9D]/10 border border-[#EC9C9D]/20 text-[#F0A5A2] hover:bg-[#EC9C9D]/20 transition-colors"

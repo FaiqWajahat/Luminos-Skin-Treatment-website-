@@ -34,7 +34,7 @@ export function BookingForm() {
   const [loadingTreatments, setLoadingTreatments] = useState(true);
   const [existingEnquiries, setExistingEnquiries] = useState([]);
 
-  // Fetch live treatments & enquiries for real availability
+  // Fetch live treatments & enquiries with real-time sync
   useEffect(() => {
     fetch("/api/treatments")
       .then((r) => r.json())
@@ -46,14 +46,21 @@ export function BookingForm() {
       .catch((err) => console.warn("Using fallback treatments:", err))
       .finally(() => setLoadingTreatments(false));
 
-    fetch("/api/enquiries")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.enquiries) {
-          setExistingEnquiries(d.enquiries);
-        }
-      })
-      .catch((err) => console.warn("Could not fetch enquiries for availability:", err));
+    const loadEnquiries = () => {
+      fetch("/api/enquiries", { cache: "no-store" })
+        .then((r) => r.json())
+        .then((d) => {
+          if (d.enquiries) {
+            setExistingEnquiries(d.enquiries);
+          }
+        })
+        .catch((err) => console.warn("Could not fetch enquiries for availability:", err));
+    };
+
+    loadEnquiries();
+    // Real-time interval polling every 4 seconds so slot bookings are always fresh
+    const interval = setInterval(loadEnquiries, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   // Compute categories & group treatments
@@ -143,7 +150,7 @@ export function BookingForm() {
     }
 
     if (!formData.consent) {
-      errs.consent = "Please confirm clinical appointment consent & GDPR agreement.";
+      errs.consent = "Please confirm clinical appointment consent.";
     }
 
     setErrors(errs);
@@ -269,15 +276,27 @@ export function BookingForm() {
                         </span>
                       </div>
                       <div className="flex justify-between py-1">
-                        <span className="text-[#78716C]">Date & Time Slot:</span>
+                        <span className="text-[#78716C]">Date & 30-Min Slot:</span>
                         <span className="font-semibold text-[#EC9C9D]">
                           {submittedData.preferredDate} at {submittedData.timeSlot}
                         </span>
                       </div>
                       <div className="flex justify-between py-1">
-                        <span className="text-[#78716C]">Price:</span>
+                        <span className="text-[#78716C]">Total Price:</span>
                         <span className="font-serif font-bold text-[#1C1917]">
                           £{selectedTreatment.price}
+                        </span>
+                      </div>
+                      <div className="flex justify-between py-1 border-t border-[#E8DFD5]/60 pt-1.5">
+                        <span className="text-[#78716C]">Advance Deposit:</span>
+                        <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                          £10 Applicable (To secure slot)
+                        </span>
+                      </div>
+                      <div className="flex justify-between py-1">
+                        <span className="text-[#78716C]">Remaining Balance on Arrival:</span>
+                        <span className="font-serif font-bold text-[#1C1917]">
+                          £{Math.max(0, (Number(selectedTreatment.price) || 0) - 10)}
                         </span>
                       </div>
                       <div className="flex justify-between py-1">
@@ -286,6 +305,16 @@ export function BookingForm() {
                           {submittedData.phone}
                         </span>
                       </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-white border border-[#E8DFD5] text-xs text-[#57534E] space-y-1">
+                      <p className="font-semibold text-[#1C1917] flex items-center gap-1.5">
+                        <ShieldCheck className="w-4 h-4 text-[#EC9C9D]" />
+                        <span>£10 Advance Deposit Applicable</span>
+                      </p>
+                      <p className="text-[11px] leading-relaxed text-[#78716C]">
+                        Our clinic coordinator will contact you to confirm your £10 advance deposit details. The £10 is deducted directly from your treatment total on the day.
+                      </p>
                     </div>
                   </div>
 
@@ -449,7 +478,7 @@ export function BookingForm() {
                       required
                     >
                       <span>
-                        I confirm this booking request and consent to Luminous Skin Clinic storing my consultation details in accordance with UK GDPR.
+                        I confirm this booking request and consent to Luminous Skin Clinic storing my consultation details.
                       </span>
                     </CustomCheckbox>
                   </div>
@@ -476,7 +505,7 @@ export function BookingForm() {
 
                     <p className="text-[11px] text-center text-[#78716C] pt-2 flex items-center justify-center gap-1.5">
                       <ShieldCheck className="w-3.5 h-3.5 text-[#EC9C9D]" />
-                      <span>Zero upfront fee • Dedicated 1:1 Leeds sanctuary session</span>
+                      <span>£10 advance deposit applicable to secure appointment • Deducted from treatment total on the day</span>
                     </p>
                   </div>
                 </form>
@@ -515,20 +544,43 @@ export function BookingForm() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-[#78716C]">Chosen Slot:</span>
+                  <span className="text-[#78716C]">Chosen Slot (30m):</span>
                   <span className="font-semibold text-[#EC9C9D] font-mono">
                     {formData.timeSlot || "Select slot"}
                   </span>
                 </div>
 
-
-
                 <div className="flex items-center justify-between pt-1 border-t border-[#E8DFD5]/60">
-                  <span className="text-[#78716C]">Price:</span>
+                  <span className="text-[#78716C]">Total Price:</span>
                   <span className="font-serif font-bold text-base text-[#1C1917]">
                     £{selectedTreatment.price}
                   </span>
                 </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-[#78716C]">Advance Deposit:</span>
+                  <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                    £10 (Secures Slot)
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-[#78716C]">Balance on Arrival:</span>
+                  <span className="font-serif font-bold text-sm text-[#1C1917]">
+                    £{Math.max(0, (Number(selectedTreatment.price) || 0) - 10)}
+                  </span>
+                </div>
+              </div>
+
+              {/* £10 Advance Deposit Notice */}
+              <div className="p-3.5 rounded-2xl bg-[#EC9C9D]/10 border border-[#EC9C9D]/30 space-y-1">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#1C1917]">
+                  <ShieldCheck className="w-4 h-4 text-[#EC9C9D]" />
+                  <span>£10 Advance Deposit Applicable</span>
+                </div>
+                <p className="text-[11px] text-[#57534E] leading-relaxed">
+                  A £10 advance deposit is required to secure your 30-min appointment slot. This is deducted from your treatment total on the day.
+                </p>
               </div>
 
               {/* Clinic Location & Trust Points */}
