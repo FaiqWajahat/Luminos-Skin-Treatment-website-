@@ -182,15 +182,17 @@ export async function getTreatments({ page, limit, category } = {}) {
 }
 
 export async function createTreatment(data) {
+  const { _id, id: _tempId, ...createPayload } = data;
   let createdDoc = null;
   try {
     const conn = await connectToDatabase();
     if (conn) {
-      const created = await Treatment.create(data);
+      const created = await Treatment.create(createPayload);
       createdDoc = { ...created.toObject(), _id: created._id.toString() };
     }
   } catch (err) {
-    console.warn("MongoDB fallback (createTreatment):", err.message);
+    console.error("MongoDB error (createTreatment):", err.message);
+    throw err;
   }
 
   const store = getLocalStore();
@@ -206,15 +208,17 @@ export async function createTreatment(data) {
 }
 
 export async function updateTreatment(id, data) {
+  const { _id, id: _tempId, ...updatePayload } = data;
   let updatedDoc = null;
   try {
     const conn = await connectToDatabase();
     if (conn) {
-      const updated = await Treatment.findByIdAndUpdate(id, data, { new: true }).lean();
+      const updated = await Treatment.findByIdAndUpdate(id, updatePayload, { returnDocument: "after" }).lean();
       if (updated) updatedDoc = { ...updated, _id: updated._id.toString() };
     }
   } catch (err) {
-    console.warn("MongoDB fallback (updateTreatment):", err.message);
+    console.error("MongoDB error (updateTreatment):", err.message);
+    throw err;
   }
 
   const store = getLocalStore();
@@ -327,14 +331,16 @@ export async function getResults({ page, limit } = {}) {
 }
 
 export async function createResult(data) {
+  const { _id, id: _tempId, ...createPayload } = data;
   try {
     const conn = await connectToDatabase();
     if (conn) {
-      const created = await Result.create(data);
+      const created = await Result.create(createPayload);
       return { ...created.toObject(), _id: created._id.toString() };
     }
   } catch (err) {
-    console.warn("MongoDB fallback (createResult):", err.message);
+    console.error("MongoDB error (createResult):", err.message);
+    throw err;
   }
 
   const store = getLocalStore();
@@ -349,15 +355,17 @@ export async function createResult(data) {
 }
 
 export async function updateResult(id, data) {
+  const { _id, id: _tempId, ...updatePayload } = data;
   let updatedDoc = null;
   try {
     const conn = await connectToDatabase();
     if (conn && mongoose.Types.ObjectId.isValid(id)) {
-      const updated = await Result.findByIdAndUpdate(id, data, { new: true }).lean();
+      const updated = await Result.findByIdAndUpdate(id, updatePayload, { returnDocument: "after" }).lean();
       if (updated) updatedDoc = { ...updated, _id: updated._id.toString() };
     }
   } catch (err) {
-    console.warn("MongoDB fallback (updateResult):", err.message);
+    console.error("MongoDB error (updateResult):", err.message);
+    throw err;
   }
 
   const store = getLocalStore();
@@ -383,7 +391,8 @@ export async function deleteResult(id) {
       await Result.findByIdAndDelete(id);
     }
   } catch (err) {
-    console.warn("MongoDB fallback (deleteResult):", err.message);
+    console.error("MongoDB error (deleteResult):", err.message);
+    throw err;
   }
 
   const store = getLocalStore();

@@ -1,12 +1,10 @@
 import mongoose from "mongoose";
 
-let rawUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/luminous";
-if (rawUri.includes(".mongodb.net/?")) {
-  rawUri = rawUri.replace(".mongodb.net/?", ".mongodb.net/luminous?");
-} else if (rawUri.endsWith(".mongodb.net") || rawUri.endsWith(".mongodb.net/")) {
-  rawUri = rawUri.replace(/\/?$/, "/luminous");
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
 }
-const MONGODB_URI = rawUri;
 
 let cached = global.mongoose;
 if (!cached) {
@@ -14,23 +12,16 @@ if (!cached) {
 }
 
 export async function connectToDatabase() {
-  if (cached.conn) {
+  if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
   }
 
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 2500,
     };
 
-    cached.promise = mongoose
-      .connect(MONGODB_URI, opts)
-      .then((m) => m)
-      .catch((err) => {
-        console.warn("MongoDB connection notice:", err.message);
-        return null;
-      });
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => m);
   }
 
   try {
@@ -38,6 +29,8 @@ export async function connectToDatabase() {
   } catch (err) {
     cached.promise = null;
     cached.conn = null;
+    console.error("MongoDB connection error:", err.message);
+    throw err;
   }
 
   return cached.conn;

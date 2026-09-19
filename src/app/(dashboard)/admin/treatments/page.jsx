@@ -15,6 +15,14 @@ const emptyForm = {
 
 const ITEMS_PER_PAGE = 9;
 
+const formatImageSrc = (src) => {
+  if (!src) return "";
+  if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:") || src.startsWith("/")) {
+    return src;
+  }
+  return `data:image/jpeg;base64,${src}`;
+};
+
 export default function AdminTreatmentsPage() {
   const [treatments, setTreatments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,7 +53,7 @@ export default function AdminTreatmentsPage() {
     setEditing(t._id);
     setForm({
       ...t,
-      benefits: Array.isArray(t.benefits) ? t.benefits.join(", ") : t.benefits || "",
+      benefits: Array.isArray(t.benefits) ? t.benefits.join("\n") : t.benefits || "",
       price: String(t.price || ""),
       duration: String(t.duration || ""),
     });
@@ -66,11 +74,10 @@ export default function AdminTreatmentsPage() {
         body: data,
       });
       const json = await res.json();
-      if (json.url) {
-        setForm((prev) => ({ ...prev, image: json.url }));
-      } else {
-        alert(json.error || "Failed to process image");
+      if (!res.ok || !json.url) {
+        throw new Error(json.error || `Upload failed with status ${res.status}`);
       }
+      setForm((prev) => ({ ...prev, image: json.url }));
     } catch (err) {
       alert("Upload error: " + (err.message || "Failed to reach server"));
     } finally {
@@ -81,30 +88,53 @@ export default function AdminTreatmentsPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
+    let benefitsArray = [];
+    if (form.benefits) {
+      if (typeof form.benefits === "string") {
+        benefitsArray = form.benefits.includes("\n")
+          ? form.benefits.split("\n").map((b) => b.trim()).filter(Boolean)
+          : [form.benefits.trim()];
+      } else if (Array.isArray(form.benefits)) {
+        benefitsArray = form.benefits;
+      }
+    }
+
     const payload = {
       ...form,
       price: Number(form.price) || 0,
       duration: Number(form.duration) || 0,
-      benefits: form.benefits ? form.benefits.split(",").map((b) => b.trim()).filter(Boolean) : [],
+      benefits: benefitsArray,
       slug: form.slug || form.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
     };
 
-    if (editing) {
-      await fetch(`/api/treatments/${editing}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } else {
-      await fetch("/api/treatments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    try {
+      let res;
+      if (editing) {
+        res = await fetch(`/api/treatments/${editing}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await fetch("/api/treatments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json.error || "Failed to save treatment to database.");
+      }
+      alert(editing ? "Treatment updated successfully in database!" : "New treatment saved successfully in database!");
+      setShowForm(false);
+      fetchTreatments();
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("Error saving treatment: " + (err.message || "Failed to reach server"));
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    setShowForm(false);
-    fetchTreatments();
   };
 
   const promptDelete = (t) => {
@@ -164,7 +194,25 @@ export default function AdminTreatmentsPage() {
                 <div className="space-y-3">
                   {t.image && (
                     <div className="h-40 rounded-2xl overflow-hidden bg-neutral-900 relative">
-                      <img src={t.image} alt={t.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <img
+                        src={formatImageSrc(t.image)}
+                        alt={t.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                      <div className="absolute top-2 left-2 flex items-center gap-1">
+                        {t.image.startsWith("http") ? (
+                          <span className="text-[9px] font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full backdrop-blur-xs">
+                            ☁️ Cloudinary
+                          </span>
+                        ) : (
+                          <span className="text-[9px] font-medium bg-amber-950/80 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full backdrop-blur-xs">
+                            Local / Base64
+                          </span>
+                        )}
+                      </div>
                       {t.popular && (
                         <span className="absolute top-2 right-2 text-[9px] font-medium bg-[#EC9C9D] text-white px-2 py-0.5 rounded-full">
                           Popular
@@ -276,7 +324,14 @@ export default function AdminTreatmentsPage() {
                     <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
                   </label>
                   {form.image && (
-                    <img src={form.image} alt="Preview" className="w-10 h-10 rounded-lg object-cover border border-neutral-700" />
+                    <div className="relative">
+                      <img src={formatImageSrc(form.image)} alt="Preview" className="w-12 h-12 rounded-lg object-cover border border-neutral-700" />
+                      {form.image.startsWith("http") && (
+                        <span className="absolute -top-1.5 -right-1.5 text-[8px] bg-emerald-900/90 text-emerald-300 px-1 py-0.2 rounded border border-emerald-600/50">
+                          Cloud
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -288,9 +343,26 @@ export default function AdminTreatmentsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Benefits (comma-separated)</label>
-                <input value={form.benefits} onChange={(e) => update("benefits", e.target.value)} placeholder="Collagen Boost, Glow, Deep Hydration"
-                  className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">
+                    Treatment Details & Aftercare
+                  </label>
+                  <span className="text-[9px] text-neutral-500">Includes, protocol steps, aftercare instructions, etc.</span>
+                </div>
+                <textarea
+                  value={form.benefits}
+                  onChange={(e) => update("benefits", e.target.value)}
+                  rows={6}
+                  placeholder={`🍂 Treatment Includes:
+1. Personal Consultation & Skin Analysis
+2. Double Cleanse Ritual
+3. Treatment Steps
+
+✨ Aftercare:
+• Wear SPF 50 daily
+• Avoid direct sun exposure for 48 hours`}
+                  className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#EC9C9D] resize-y"
+                />
               </div>
 
               <div className="flex items-center gap-6 pt-2">
@@ -320,16 +392,6 @@ export default function AdminTreatmentsPage() {
           </div>
         </div>
       )}
-
-      <ConfirmDialog
-        isOpen={deleteDialog.isOpen}
-        title="Delete Treatment?"
-        message={`Are you sure you want to permanently delete "${deleteDialog.title}"? It will be removed from your catalog and pricing directory immediately.`}
-        confirmText="Delete Treatment"
-        loading={deleteDialog.loading}
-        onConfirm={handleConfirmDelete}
-        onClose={() => setDeleteDialog({ isOpen: false, id: null, title: "", loading: false })}
-      />
     </div>
   );
 }

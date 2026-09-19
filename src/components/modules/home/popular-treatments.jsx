@@ -12,6 +12,14 @@ import { ArrowRight } from "lucide-react";
 
 const ease = [0.22, 1, 0.36, 1];
 
+const formatImageSrc = (src) => {
+  if (!src) return "";
+  if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:") || src.startsWith("/")) {
+    return src;
+  }
+  return `data:image/jpeg;base64,${src}`;
+};
+
 export function PopularTreatments() {
   const [treatments, setTreatments] = useState(TREATMENTS);
   const [loading, setLoading] = useState(true);
@@ -80,9 +88,12 @@ export function PopularTreatments() {
                   {treatment.image ? (
                     <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-[#FAF8F5]">
                       <img
-                        src={treatment.image}
+                        src={formatImageSrc(treatment.image)}
                         alt={treatment.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          e.currentTarget.src = "/home-treatment-1.png";
+                        }}
                       />
                     </div>
                   ) : (

@@ -11,6 +11,20 @@ import { Pagination } from "@/components/shared/pagination";
 
 const ITEMS_PER_PAGE = 4;
 
+// Safe image formatter for Cloudinary, data URLs, or raw base64
+function formatImageSrc(src) {
+  if (!src) return "";
+  const s = src.trim();
+  if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("/") || s.startsWith("data:image/")) {
+    return s;
+  }
+  // If raw base64 without prefix
+  if (s.startsWith("/9j/") || s.startsWith("iVBORw") || s.length > 80) {
+    return `data:image/jpeg;base64,${s}`;
+  }
+  return s;
+}
+
 export function ResultsGallery() {
   const [results, setResults] = useState(RESULTS_CASE_STUDIES);
   const [loading, setLoading] = useState(true);
@@ -56,49 +70,67 @@ export function ResultsGallery() {
               staggerDelay={0.08}
               className="grid grid-cols-1 lg:grid-cols-2 gap-10"
             >
-              {paginatedResults.map((study) => (
-                <StaggerItem key={study._id || study.id}>
-                  <div className="luxury-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 h-full border border-[#E8DFD5] bg-white shadow-2xs">
-                    {/* Image Slots Split (Before / After) */}
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                      <div className="space-y-1.5">
-                        <span className="text-[10px] font-semibold text-[#78716C] uppercase tracking-wider block">
-                          Before Treatment
-                        </span>
-                        {study.imageBefore ? (
-                          <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 border border-[#E8DFD5]">
-                            <img src={study.imageBefore} alt="Before Treatment" className="w-full h-full object-cover" />
-                          </div>
-                        ) : (
-                          <ImagePlaceholder
-                            aspect="portrait"
-                            category="Clinical Baseline"
-                            label="Initial Assessment Slot"
-                            icon="camera"
-                            className="rounded-xl"
-                          />
-                        )}
-                      </div>
+              {paginatedResults.map((study) => {
+                const beforeUrl = formatImageSrc(study.imageBefore);
+                const afterUrl = formatImageSrc(study.imageAfter);
 
-                      <div className="space-y-1.5">
-                        <span className="text-[10px] font-semibold text-[#EC9C9D] uppercase tracking-wider block">
-                          After Protocol
-                        </span>
-                        {study.imageAfter ? (
-                          <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 border border-[#EC9C9D]/40">
-                            <img src={study.imageAfter} alt="After Protocol" className="w-full h-full object-cover" />
-                          </div>
-                        ) : (
-                          <ImagePlaceholder
-                            aspect="portrait"
-                            category="Clinical Outcome"
-                            label="Post-Care Result Slot"
-                            icon="sparkles"
-                            className="rounded-xl"
-                          />
-                        )}
+                return (
+                  <StaggerItem key={study._id || study.id}>
+                    <div className="luxury-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 h-full border border-[#E8DFD5] bg-white shadow-2xs">
+                      {/* Image Slots Split (Before / After) */}
+                      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                        <div className="space-y-1.5">
+                          <span className="text-[10px] font-semibold text-[#78716C] uppercase tracking-wider block">
+                            Before Treatment
+                          </span>
+                          {beforeUrl ? (
+                            <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 border border-[#E8DFD5]">
+                              <img
+                                src={beforeUrl}
+                                alt="Before Treatment"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <ImagePlaceholder
+                              aspect="portrait"
+                              category="Clinical Baseline"
+                              label="Initial Assessment Slot"
+                              icon="camera"
+                              className="rounded-xl"
+                            />
+                          )}
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <span className="text-[10px] font-semibold text-[#EC9C9D] uppercase tracking-wider block">
+                            After Protocol
+                          </span>
+                          {afterUrl ? (
+                            <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-neutral-900 border border-[#EC9C9D]/40">
+                              <img
+                                src={afterUrl}
+                                alt="After Protocol"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <ImagePlaceholder
+                              aspect="portrait"
+                              category="Clinical Outcome"
+                              label="Post-Care Result Slot"
+                              icon="sparkles"
+                              className="rounded-xl"
+                            />
+                          )}
+                        </div>
                       </div>
-                    </div>
 
                     {/* Case Study Meta */}
                     <div className="space-y-4 pt-2">
@@ -144,8 +176,9 @@ export function ResultsGallery() {
                     </div>
                   </div>
                 </StaggerItem>
-              ))}
-            </StaggerContainer>
+              );
+            })}
+          </StaggerContainer>
 
             {/* Pagination */}
             <Pagination

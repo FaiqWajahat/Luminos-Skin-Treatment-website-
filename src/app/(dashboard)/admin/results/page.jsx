@@ -5,6 +5,18 @@ import { Plus, Pencil, Trash2, X, Images, Upload, Camera } from "lucide-react";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Pagination } from "@/components/shared/pagination";
 
+function formatImageSrc(src) {
+  if (!src) return "";
+  const s = src.trim();
+  if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("/") || s.startsWith("data:image/")) {
+    return s;
+  }
+  if (s.startsWith("/9j/") || s.startsWith("iVBORw") || s.length > 80) {
+    return `data:image/jpeg;base64,${s}`;
+  }
+  return s;
+}
+
 const emptyForm = {
   title: "", treatment: "", concern: "",
   outcome: "", imageBefore: "", imageAfter: "", featured: true,
@@ -68,10 +80,10 @@ export default function AdminResultsPage() {
         body: data,
       });
       const json = await res.json();
-      if (json.url) {
+      if (res.ok && json.url) {
         setForm((prev) => ({ ...prev, [targetKey]: json.url }));
       } else {
-        alert(json.error || "Failed to process image");
+        alert(json.error || "Failed to upload to Cloudinary. Please verify your Cloudinary API keys and permissions.");
       }
     } catch (err) {
       alert("Upload error: " + (err.message || "Failed to reach server"));
@@ -85,27 +97,34 @@ export default function AdminResultsPage() {
     e.preventDefault();
     setSaving(true);
     try {
+      let res;
       if (editingId) {
-        await fetch(`/api/results/${editingId}`, {
+        res = await fetch(`/api/results/${editingId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
       } else {
-        await fetch("/api/results", {
+        res = await fetch("/api/results", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
       }
-    } catch (err) {
-      console.error("Save error:", err);
-    } finally {
-      setSaving(false);
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json.error || "Failed to save to database");
+      }
+      alert(editingId ? "Result updated successfully in database!" : "New case study saved successfully in database!");
       setShowForm(false);
       setEditingId(null);
       setForm(emptyForm);
       fetchResults();
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("Error saving to database: " + (err.message || "Failed to reach server"));
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -167,7 +186,14 @@ export default function AdminResultsPage() {
                 <div className="grid grid-cols-2 h-44 bg-neutral-900 border-b border-neutral-800">
                   <div className="relative border-r border-neutral-800 overflow-hidden flex items-center justify-center">
                     {r.imageBefore ? (
-                      <img src={r.imageBefore} alt="Before" className="w-full h-full object-cover" />
+                      <img
+                        src={formatImageSrc(r.imageBefore)}
+                        alt="Before"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
                     ) : (
                       <span className="text-[10px] text-neutral-600 uppercase tracking-widest font-mono">Before</span>
                     )}
@@ -177,7 +203,14 @@ export default function AdminResultsPage() {
                   </div>
                   <div className="relative overflow-hidden flex items-center justify-center">
                     {r.imageAfter ? (
-                      <img src={r.imageAfter} alt="After" className="w-full h-full object-cover" />
+                      <img
+                        src={formatImageSrc(r.imageAfter)}
+                        alt="After"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
                     ) : (
                       <span className="text-[10px] text-neutral-600 uppercase tracking-widest font-mono">After</span>
                     )}
@@ -286,10 +319,22 @@ export default function AdminResultsPage() {
               {/* Cloudinary File Uploads */}
               <div className="grid grid-cols-2 gap-4 pt-1">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Before Photo</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Before Photo</label>
+                    {form.imageBefore?.includes("cloudinary") && (
+                      <span className="text-[9px] text-emerald-400 font-mono">☁️ Cloudinary</span>
+                    )}
+                  </div>
                   {form.imageBefore ? (
                     <div className="relative h-28 rounded-xl overflow-hidden border border-neutral-700 group bg-neutral-900">
-                      <img src={form.imageBefore} alt="Before" className="w-full h-full object-cover" />
+                      <img
+                        src={formatImageSrc(form.imageBefore)}
+                        alt="Before"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <label className="p-1.5 rounded-lg bg-neutral-800 text-white hover:text-[#EC9C9D] cursor-pointer text-xs flex items-center gap-1 shadow">
                           <Upload className="w-3.5 h-3.5" />
@@ -299,7 +344,7 @@ export default function AdminResultsPage() {
                         <button
                           type="button"
                           onClick={() => update("imageBefore", "")}
-                          className="p-1.5 rounded-lg bg-red-900/80 text-white hover:bg-red-800 text-xs shadow"
+                          className="p-1.5 rounded-lg bg-red-900/80 text-white hover:bg-red-800 text-xs shadow cursor-pointer"
                           title="Remove image"
                         >
                           <X className="w-3.5 h-3.5" />
@@ -309,17 +354,29 @@ export default function AdminResultsPage() {
                   ) : (
                     <label className="flex flex-col items-center justify-center h-28 border border-dashed border-[#EC9C9D]/40 rounded-xl cursor-pointer hover:bg-[#EC9C9D]/5 transition-colors p-2 text-center">
                       <Upload className="w-4 h-4 text-[#EC9C9D] mb-1" />
-                      <span className="text-[10px] text-neutral-400">{uploadingBefore ? "Uploading..." : "Upload to Cloudinary"}</span>
+                      <span className="text-[10px] text-neutral-400">{uploadingBefore ? "Uploading to Cloudinary..." : "Upload Before Photo"}</span>
                       <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e.target.files?.[0], "imageBefore")} className="hidden" disabled={uploadingBefore} />
                     </label>
                   )}
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">After Photo</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">After Photo</label>
+                    {form.imageAfter?.includes("cloudinary") && (
+                      <span className="text-[9px] text-emerald-400 font-mono">☁️ Cloudinary</span>
+                    )}
+                  </div>
                   {form.imageAfter ? (
                     <div className="relative h-28 rounded-xl overflow-hidden border border-neutral-700 group bg-neutral-900">
-                      <img src={form.imageAfter} alt="After" className="w-full h-full object-cover" />
+                      <img
+                        src={formatImageSrc(form.imageAfter)}
+                        alt="After"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <label className="p-1.5 rounded-lg bg-neutral-800 text-white hover:text-[#EC9C9D] cursor-pointer text-xs flex items-center gap-1 shadow">
                           <Upload className="w-3.5 h-3.5" />
@@ -329,7 +386,7 @@ export default function AdminResultsPage() {
                         <button
                           type="button"
                           onClick={() => update("imageAfter", "")}
-                          className="p-1.5 rounded-lg bg-red-900/80 text-white hover:bg-red-800 text-xs shadow"
+                          className="p-1.5 rounded-lg bg-red-900/80 text-white hover:bg-red-800 text-xs shadow cursor-pointer"
                           title="Remove image"
                         >
                           <X className="w-3.5 h-3.5" />
@@ -339,7 +396,7 @@ export default function AdminResultsPage() {
                   ) : (
                     <label className="flex flex-col items-center justify-center h-28 border border-dashed border-[#EC9C9D]/40 rounded-xl cursor-pointer hover:bg-[#EC9C9D]/5 transition-colors p-2 text-center">
                       <Upload className="w-4 h-4 text-[#EC9C9D] mb-1" />
-                      <span className="text-[10px] text-neutral-400">{uploadingAfter ? "Uploading..." : "Upload to Cloudinary"}</span>
+                      <span className="text-[10px] text-neutral-400">{uploadingAfter ? "Uploading to Cloudinary..." : "Upload After Photo"}</span>
                       <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e.target.files?.[0], "imageAfter")} className="hidden" disabled={uploadingAfter} />
                     </label>
                   )}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const FALLBACK_IMAGES = {
   // All Clinic Facials
@@ -33,13 +33,23 @@ const FALLBACK_IMAGES = {
   "eyebrow-shaping-tinting-face-threading": "/home-treatment-1.png",
 };
 
+const formatImageSrc = (src) => {
+  if (!src) return "";
+  if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:") || src.startsWith("/")) {
+    return src;
+  }
+  return `data:image/jpeg;base64,${src}`;
+};
+
 export function TreatmentCard({ treatment }) {
-  const imageSrc =
+  const rawImage =
     treatment.image && treatment.image.trim() !== ""
       ? treatment.image
       : FALLBACK_IMAGES[treatment.slug] ||
         FALLBACK_IMAGES[treatment.id] ||
         "/home-treatment-1.png";
+
+  const imageSrc = formatImageSrc(rawImage);
 
   return (
     <article className="luxury-card rounded-2xl overflow-hidden flex flex-col justify-between h-full w-full bg-white border border-[#E8DFD5] shadow-xs hover:shadow-md hover:border-[#EC9C9D]/50 transition-all duration-300">
@@ -82,18 +92,22 @@ export function TreatmentCard({ treatment }) {
             {treatment.shortDescription || treatment.tagline}
           </p>
 
-          {/* Benefits bullets with fixed min-height for uniform card length */}
-          <ul className="space-y-1.5 pt-3 border-t border-[#E8DFD5]/70 min-h-[4.5rem]">
-            {(treatment.benefits && treatment.benefits.length > 0
-              ? treatment.benefits.slice(0, 3)
-              : ["Clinical grade tailored protocol", "Certified medical aesthetician care"]
-            ).map((benefit, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-xs text-[#78716C]">
-                <Check className="w-3.5 h-3.5 text-[#EC9C9D] shrink-0 mt-0.5" />
-                <span className="line-clamp-1">{benefit}</span>
-              </li>
-            ))}
-          </ul>
+          {/* Treatment Details & Aftercare as written */}
+          {treatment.benefits && (Array.isArray(treatment.benefits) ? treatment.benefits.length > 0 : Boolean(treatment.benefits)) && (
+            <div className="space-y-1 pt-3 border-t border-[#E8DFD5]/70 text-xs text-[#78716C]">
+              {Array.isArray(treatment.benefits) ? (
+                treatment.benefits.map((line, idx) => (
+                  <div key={idx} className="leading-relaxed">
+                    {line}
+                  </div>
+                ))
+              ) : (
+                <div className="leading-relaxed whitespace-pre-line">
+                  {treatment.benefits}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Pricing & CTA pinned strictly to bottom */}
