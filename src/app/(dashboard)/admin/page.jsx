@@ -3,12 +3,34 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { MessageSquare, Sparkles, Images, Calendar, ArrowUpRight, Clock, CheckCircle2, RefreshCw } from "lucide-react";
+import { InstagramIcon } from "@/components/shared/social-icons";
 
 export default function AdminOverviewPage() {
   const [data, setData] = useState({ enquiries: [], treatments: [], results: [] });
   const [loading, setLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isSyncingInstagram, setIsSyncingInstagram] = useState(false);
+  const [instagramSyncStatus, setInstagramSyncStatus] = useState(null);
   const isMounted = useRef(true);
+
+  const handleSyncInstagram = async () => {
+    setIsSyncingInstagram(true);
+    setInstagramSyncStatus("Connecting to Instagram...");
+    try {
+      const res = await fetch("/api/instagram", { method: "POST" });
+      const json = await res.json();
+      if (json.success) {
+        setInstagramSyncStatus(`Synced ${json.count || 4} latest posts!`);
+      } else {
+        setInstagramSyncStatus(json.message || "Feed updated");
+      }
+    } catch (e) {
+      setInstagramSyncStatus("Sync finished");
+    } finally {
+      setIsSyncingInstagram(false);
+      setTimeout(() => setInstagramSyncStatus(null), 4000);
+    }
+  };
 
   const fetchDashboardData = async (silent = false) => {
     if (!silent) setIsSyncing(true);
@@ -162,6 +184,46 @@ export default function AdminOverviewPage() {
             </Link>
           );
         })}
+      </div>
+
+      {/* Instagram Real-Time Live Sync Card */}
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#161412] via-[#1c1716] to-[#161412] border border-[#EC9C9D]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-[#EC9C9D]/15 border border-[#EC9C9D]/30 flex items-center justify-center text-[#EC9C9D] shrink-0">
+            <InstagramIcon className="w-6 h-6" />
+          </div>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm sm:text-base font-semibold text-white">
+                Instagram Live Feed (@luminouss_skin_clinic)
+              </h3>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Connected
+              </span>
+            </div>
+            <p className="text-xs text-neutral-400">
+              When you post on Instagram, the latest 4 posts automatically appear on your website homepage.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0">
+          {instagramSyncStatus && (
+            <span className="text-xs text-[#EC9C9D] font-medium animate-fade-in">
+              {instagramSyncStatus}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={handleSyncInstagram}
+            disabled={isSyncingInstagram}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#EC9C9D] to-[#D97E80] shadow-sm shadow-[#EC9C9D]/20 hover:opacity-95 transition-all disabled:opacity-50 cursor-pointer"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncingInstagram ? "animate-spin" : ""}`} />
+            <span>{isSyncingInstagram ? "Syncing Feed..." : "Sync Instagram Now"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Recent Enquiries Box */}

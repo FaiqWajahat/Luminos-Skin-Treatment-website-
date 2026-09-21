@@ -49,7 +49,19 @@ const ResultSchema = new mongoose.Schema({
   featured: { type: Boolean, default: true },
 }, { timestamps: true });
 
+const InstagramPostSchema = new mongoose.Schema({
+  postId: { type: String, required: true, unique: true },
+  permalink: { type: String, required: true },
+  mediaUrl: { type: String, required: true },
+  caption: { type: String, default: "" },
+  dateStr: { type: String, default: "" },
+  mediaType: { type: String, enum: ["IMAGE", "VIDEO", "CAROUSEL_ALBUM"], default: "IMAGE" },
+  timestamp: { type: Date, default: Date.now },
+  order: { type: Number, default: 0 },
+}, { timestamps: true });
+
 export const User = mongoose.models.User || mongoose.model("User", UserSchema);
 export const Enquiry = mongoose.models.Enquiry || mongoose.model("Enquiry", EnquirySchema);
 export const Treatment = mongoose.models.Treatment || mongoose.model("Treatment", TreatmentSchema);
 export const Result = mongoose.models.Result || mongoose.model("Result", ResultSchema);
+export const InstagramPost = mongoose.models.InstagramPost || mongoose.model("InstagramPost", InstagramPostSchema);
