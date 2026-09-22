@@ -1,4 +1,5 @@
 import { ContactView } from "@/components/modules/contact";
+import { getContent } from "@/lib/db-store";
 
 export const metadata = {
   title: "Contact & Location | Luminous Skin Clinic Leeds | Beeston LS11",
@@ -21,6 +22,9 @@ export const metadata = {
   },
 };
 
-export default function ContactPage() {
-  return <ContactView />;
+export default async function ContactPage() {
+  const content = await getContent("homepage");
+  const data = content?.data || {};
+
+  return <ContactView data={data} />;
 }

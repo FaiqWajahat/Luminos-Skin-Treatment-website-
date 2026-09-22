@@ -5,8 +5,9 @@ import { CONTACT_FAQS } from "@/constants/contact-data";
 import { Plus, Minus, HelpCircle, MessageCircle } from "lucide-react";
 import { FadeIn } from "@/components/shared/animations";
 
-export function ContactFAQ() {
-  const [openId, setOpenId] = useState(CONTACT_FAQS[0]?.id || null);
+export function ContactFAQ({ faqs }) {
+  const displayFaqs = faqs?.length > 0 ? faqs : CONTACT_FAQS;
+  const [openId, setOpenId] = useState(displayFaqs[0]?.id || null);
 
   const toggleFaq = (id) => {
     setOpenId((prev) => (prev === id ? null : id));
@@ -31,7 +32,7 @@ export function ContactFAQ() {
         </FadeIn>
 
         <div className="space-y-3">
-          {CONTACT_FAQS.map((faq, idx) => {
+          {displayFaqs.map((faq, idx) => {
             const isOpen = openId === faq.id;
 
             return (

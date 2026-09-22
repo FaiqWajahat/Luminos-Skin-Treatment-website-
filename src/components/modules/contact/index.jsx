@@ -7,7 +7,7 @@ import { ConciergeBanner } from "./concierge-banner";
 import { ClinicLocation } from "./clinic-location";
 import { ContactFAQ } from "./contact-faq";
 
-export function ContactView() {
+export function ContactView({ data = {} }) {
   return (
     <div className="flex flex-col min-h-screen bg-[#FAF8F5]">
       {/* 1. Hero & Trust Metrics */}
@@ -26,7 +26,7 @@ export function ContactView() {
       <ClinicLocation />
 
       {/* 6. Contact & Visit FAQs */}
-      <ContactFAQ />
+      <ContactFAQ faqs={data.faqs} />
     </div>
   );
 }

@@ -35,6 +35,18 @@ export function BookingForm() {
   const [existingEnquiries, setExistingEnquiries] = useState([]);
 
   // Fetch live treatments & enquiries with real-time sync
+  const loadEnquiries = async () => {
+    try {
+      const r = await fetch("/api/enquiries", { cache: "no-store" });
+      const d = await r.json();
+      if (d.enquiries) {
+        setExistingEnquiries(d.enquiries);
+      }
+    } catch (err) {
+      console.warn("Could not fetch enquiries for availability:", err);
+    }
+  };
+
   useEffect(() => {
     fetch("/api/treatments")
       .then((r) => r.json())
@@ -45,17 +57,6 @@ export function BookingForm() {
       })
       .catch((err) => console.warn("Using fallback treatments:", err))
       .finally(() => setLoadingTreatments(false));
-
-    const loadEnquiries = () => {
-      fetch("/api/enquiries", { cache: "no-store" })
-        .then((r) => r.json())
-        .then((d) => {
-          if (d.enquiries) {
-            setExistingEnquiries(d.enquiries);
-          }
-        })
-        .catch((err) => console.warn("Could not fetch enquiries for availability:", err));
-    };
 
     loadEnquiries();
     // Real-time interval polling every 4 seconds so slot bookings are always fresh
@@ -90,21 +91,35 @@ export function BookingForm() {
     d.setDate(d.getDate() + 1);
     // If tomorrow is Sunday, skip to Monday
     if (d.getDay() === 0) d.setDate(d.getDate() + 1);
-    return d.toISOString().split("T")[0];
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   }, []);
 
   // Primary Cascaded State
-  const [selectedCategory, setSelectedCategory] = useState("All Clinic Facials");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    treatmentSlug: "rejuvenating-facial",
+    treatmentSlug: "",
     preferredDate: tomorrowStr,
-    timeSlot: "10:30 AM",
+    timeSlot: "",
     message: "",
     consent: false,
   });
+
+  useEffect(() => {
+    if (categories.length > 0 && !selectedCategory) {
+      const firstCat = categories[0];
+      setSelectedCategory(firstCat);
+      const available = treatmentsByCategory[firstCat];
+      if (available && available.length > 0 && !formData.treatmentSlug) {
+        setFormData((prev) => ({ ...prev, treatmentSlug: available[0].slug }));
+      }
+    }
+  }, [categories, treatmentsByCategory, selectedCategory, formData.treatmentSlug]);
 
   // Keep treatment selection synced when category changes
   const handleCategoryChange = (cat) => {
@@ -121,7 +136,8 @@ export function BookingForm() {
   const [referenceId, setReferenceId] = useState("");
 
   const selectedTreatment = useMemo(() => {
-    return treatmentsList.find((t) => t.slug === formData.treatmentSlug) || treatmentsList[0];
+    if (!formData.treatmentSlug) return treatmentsList[0] || {};
+    return treatmentsList.find((t) => t.slug === formData.treatmentSlug) || treatmentsList[0] || {};
   }, [treatmentsList, formData.treatmentSlug]);
 
   const validate = () => {
@@ -170,7 +186,7 @@ export function BookingForm() {
     const generatedId = `LUM-BK-${Math.floor(10000 + Math.random() * 90000)}`;
 
     try {
-      await fetch("/api/enquiries", {
+      const response = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -186,14 +202,24 @@ export function BookingForm() {
         }),
       });
 
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.error || "This slot is no longer available. Please select another slot.");
+        await loadEnquiries();
+        return;
+      }
+
       setReferenceId(generatedId);
       setSubmittedData({ ...formData, treatmentTitle: selectedTreatment?.title });
-      toast.success("Appointment request received! Your slot is being confirmed.");
+      toast.success("Appointment reserved! Your slot has been secured.");
+      await loadEnquiries();
     } catch (err) {
       console.warn("Booking submitted locally with reference:", err);
       setReferenceId(generatedId);
       setSubmittedData({ ...formData, treatmentTitle: selectedTreatment?.title });
       toast.success("Appointment reference generated!");
+      await loadEnquiries();
     } finally {
       setIsSubmitting(false);
     }
@@ -213,9 +239,9 @@ export function BookingForm() {
       name: "",
       email: "",
       phone: "",
-      treatmentSlug: "rejuvenating-facial",
+      treatmentSlug: treatmentsByCategory[selectedCategory]?.[0]?.slug || "",
       preferredDate: tomorrowStr,
-      timeSlot: "10:30 AM",
+      timeSlot: "",
       message: "",
       consent: false,
     });
@@ -276,7 +302,7 @@ export function BookingForm() {
                         </span>
                       </div>
                       <div className="flex justify-between py-1">
-                        <span className="text-[#78716C]">Date & 30-Min Slot:</span>
+                        <span className="text-[#78716C]">Date & Time Slot:</span>
                         <span className="font-semibold text-[#EC9C9D]">
                           {submittedData.preferredDate} at {submittedData.timeSlot}
                         </span>
@@ -383,8 +409,18 @@ export function BookingForm() {
                   <CustomDatePicker
                     selectedDate={formData.preferredDate}
                     onSelectDate={(dateStr) => {
-                      setFormData({ ...formData, preferredDate: dateStr });
-                      if (errors.preferredDate) setErrors({ ...errors, preferredDate: undefined });
+                      setFormData((prev) => ({
+                        ...prev,
+                        preferredDate: dateStr,
+                        timeSlot: "", // Reset slot when date changes
+                      }));
+                      if (errors.preferredDate || errors.timeSlot) {
+                        setErrors((prev) => ({
+                          ...prev,
+                          preferredDate: undefined,
+                          timeSlot: undefined,
+                        }));
+                      }
                     }}
                   />
 
@@ -544,7 +580,7 @@ export function BookingForm() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-[#78716C]">Chosen Slot (30m):</span>
+                  <span className="text-[#78716C]">Chosen Slot:</span>
                   <span className="font-semibold text-[#EC9C9D] font-mono">
                     {formData.timeSlot || "Select slot"}
                   </span>
@@ -579,7 +615,7 @@ export function BookingForm() {
                   <span>£10 Advance Deposit Applicable</span>
                 </div>
                 <p className="text-[11px] text-[#57534E] leading-relaxed">
-                  A £10 advance deposit is required to secure your 30-min appointment slot. This is deducted from your treatment total on the day.
+                  A £10 advance deposit is required to secure your appointment slot. This is deducted from your treatment total on the day.
                 </p>
               </div>
 

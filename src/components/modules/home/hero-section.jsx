@@ -7,14 +7,20 @@ import { Calendar, ArrowRight, Star, ShieldCheck, MapPin, Sparkles } from "lucid
 
 const ease = [0.22, 1, 0.36, 1];
 
-export function HeroSection() {
+export function HeroSection({
+  image = "/about-01.jpeg",
+  title = "Clinical Precision.",
+  titleHighlight = "Effortlessly Luminous.",
+  subtitle = "Bespoke one-to-one skin therapies designed to reveal your healthiest complexion. From restorative facials and collagen induction to targeted phototherapy—tailored purely to your skin.",
+  highlight = "Leeds LS11 · Private Clinical Sanctuary",
+}) {
   return (
     <section className="relative min-h-[90vh] lg:min-h-[94vh] flex items-center justify-center overflow-hidden">
       
       {/* ── Background Layer with Real Clinic Photography ── */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/about-01.jpeg"
+          src={image || "/about-01.jpeg"}
           alt="Luminous Skin Clinic Leeds Private Treatment Sanctuary"
           fill
           priority
@@ -45,20 +51,20 @@ export function HeroSection() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.24em] uppercase text-[#F0A5A2] bg-black/40 backdrop-blur-md border border-white/20 shadow-lg">
             <Sparkles className="w-3.5 h-3.5 text-[#EC9C9D]" />
-            <span>Leeds LS11 · Private Clinical Sanctuary</span>
+            <span>{highlight}</span>
           </div>
 
           {/* Catching Editorial Headline (Enlarged) */}
           <h1 className="text-5xl sm:text-7xl lg:text-[5.25rem] xl:text-[6rem] font-semibold tracking-tight leading-[1.04] text-white drop-shadow-xl">
-            Clinical Precision. <br className="hidden sm:inline" />
+            {title} <br className="hidden sm:inline" />
             <em className="font-serif italic font-normal text-[#EC9C9D]">
-              Effortlessly Luminous.
+              {titleHighlight}
             </em>
           </h1>
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg lg:text-xl text-neutral-200 leading-relaxed max-w-2xl mx-auto font-normal drop-shadow-sm">
-            Bespoke one-to-one skin therapies designed to reveal your healthiest complexion. From restorative facials and collagen induction to targeted phototherapy—tailored purely to your skin.
+            {subtitle}
           </p>
 
           {/* Centralized Action Buttons */}

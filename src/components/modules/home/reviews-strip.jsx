@@ -12,7 +12,15 @@ import "swiper/css/navigation";
 
 import { REVIEWS } from "@/constants/clinic-data";
 import { SectionHeader } from "@/components/shared/section-header";
-import { ArrowRight, ChevronLeft, ChevronRight, Quote, ExternalLink, CheckCircle2, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Quote,
+  ExternalLink,
+  CheckCircle2,
+  ShieldCheck,
+} from "lucide-react";
 import { FadeIn } from "@/components/shared/animations";
 
 const TRUSTPILOT_URL =
@@ -66,7 +74,9 @@ export function ReviewsStrip() {
                       <TrustpilotStar key={i} filled={true} />
                     ))}
                   </div>
-                  <span className="text-[11px] font-bold text-white ml-1">4.9 / 5.0</span>
+                  <span className="text-[11px] font-bold text-white ml-1">
+                    4.9 / 5.0
+                  </span>
                 </div>
               </div>
 
@@ -135,7 +145,8 @@ export function ReviewsStrip() {
           pagination={{
             clickable: true,
             el: ".reviews-custom-pagination",
-            bulletClass: "inline-block w-2.5 h-2.5 rounded-full bg-neutral-700 mx-1 cursor-pointer transition-all duration-300",
+            bulletClass:
+              "inline-block w-2.5 h-2.5 rounded-full bg-neutral-700 mx-1 cursor-pointer transition-all duration-300",
             bulletActiveClass: "!w-7 !bg-[#EC9C9D] !rounded-full",
           }}
           breakpoints={{
@@ -156,11 +167,11 @@ export function ReviewsStrip() {
               spaceBetween: 28,
             },
           }}
-          className="pb-10"
+          className="pb-10 [&_.swiper-wrapper]:items-stretch [&_.swiper-slide]:!h-auto"
         >
           {REVIEWS.map((rev) => (
-            <SwiperSlide key={rev.id} className="h-auto">
-              <div className="h-full p-6 sm:p-7 rounded-3xl bg-neutral-900/95 border border-neutral-800 hover:border-[#EC9C9D]/60 hover:shadow-2xl hover:shadow-[#EC9C9D]/5 transition-all duration-300 flex flex-col justify-between group">
+            <SwiperSlide key={rev.id} className="!flex">
+              <div className="w-full h-full p-6 sm:p-7 rounded-3xl bg-neutral-900/95 border border-neutral-800 hover:border-[#EC9C9D]/60 hover:shadow-2xl hover:shadow-[#EC9C9D]/5 transition-all duration-300 flex flex-col justify-between group">
                 <div className="space-y-4">
                   {/* Top Bar: Stars + Trustpilot Tag */}
                   <div className="flex items-center justify-between gap-2">
@@ -209,13 +220,23 @@ export function ReviewsStrip() {
                 <div className="pt-4 mt-6 border-t border-neutral-800/80 flex items-center justify-between text-xs">
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-semibold text-white tracking-tight">{rev.author}</h4>
-                      <span className="text-[10px] text-neutral-500 font-mono" title={`Trustpilot Consumer ID: ${rev.consumerId}`}>
-                        ID: {rev.consumerId ? rev.consumerId.slice(0, 6) + "..." : rev.id.slice(0, 6)}
+                      <h4 className="font-semibold text-white tracking-tight">
+                        {rev.author}
+                      </h4>
+                      <span
+                        className="text-[10px] text-neutral-500 font-mono"
+                        title={`Trustpilot Consumer ID: ${rev.consumerId}`}
+                      >
+                        ID:{" "}
+                        {rev.consumerId
+                          ? rev.consumerId.slice(0, 6) + "..."
+                          : rev.id.slice(0, 6)}
                       </span>
                     </div>
                     <div className="text-[11px] text-neutral-400">
-                      {rev.date} {rev.experiencedDate && `(Visited: ${rev.experiencedDate})`}
+                      {rev.date}{" "}
+                      {rev.experiencedDate &&
+                        `(Visited: ${rev.experiencedDate})`}
                     </div>
                   </div>
 

@@ -7,14 +7,20 @@ import { Calendar, ArrowRight, ShieldCheck, MapPin, Sparkles } from "lucide-reac
 
 const ease = [0.22, 1, 0.36, 1];
 
-export function AboutHero() {
+export function AboutHero({
+  image = "/about-hero-img.png",
+  title = "Welcome to Luminous Skin Clinic,",
+  titleHighlight = "Where Beauty Meets Serenity.",
+  subtitle = "More than just a salon, it’s your personal escape to self-care and skin wellness. Step into calm sophistication and let your confidence shine — because at Luminous Skin Clinic, your skin deserves nothing less than perfection.",
+  highlight = "Where Beauty Meets Serenity · Leeds"
+}) {
   return (
     <section className="relative min-h-[48vh] lg:min-h-[52vh] py-16 lg:py-20 flex items-center justify-center overflow-hidden">
       
       {/* ── Background Layer with Real Clinic Photography ── */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/about-hero-img.png"
+          src={image || "/about-hero-img.png"}
           alt="Luminous Skin Clinic Leeds Sanctuary and Reception"
           fill
           priority
@@ -45,20 +51,20 @@ export function AboutHero() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.22em] uppercase text-[#F0A5A2] bg-white/10 backdrop-blur-md border border-white/15 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-[#F0A5A2]" />
-            <span>Where Beauty Meets Serenity · Leeds</span>
+            <span>{highlight}</span>
           </div>
 
           {/* Catching Editorial Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-[3.35rem] font-semibold tracking-tight leading-[1.12] text-white">
-            Welcome to Luminous Skin Clinic, <br className="hidden sm:inline" />
+            {title} <br className="hidden sm:inline" />
             <em className="font-serif italic font-normal text-[#F0A5A2]">
-              Where Beauty Meets Serenity.
+              {titleHighlight}
             </em>
           </h1>
 
           {/* Concise Subtitle */}
           <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl mx-auto font-normal">
-            More than just a salon, it’s your personal escape to self-care and skin wellness. Step into calm sophistication and let your confidence shine — because at Luminous Skin Clinic, your skin deserves nothing less than perfection.
+            {subtitle}
           </p>
 
           {/* Compact Actions */}

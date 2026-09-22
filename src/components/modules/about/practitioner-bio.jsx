@@ -25,7 +25,14 @@ const CREDENTIALS = [
   },
 ];
 
-export function PractitionerBio() {
+export function PractitionerBio({ data = {} }) {
+  const {
+    founderImage = "/about-founder.png",
+    founderName = "Madiha Naz (Madi)",
+    founderTitle = "Founder & Owner · Certified Beauty Therapist & Leeds Lead Facialist",
+    founderBio = "“I’m Madi, the founder and owner of Luminous Skin business — a sanctuary where beauty, science, and serenity come together. With over five years of experience as a certified Beauty Therapist and one of the best facialists in Leeds, my passion lies in helping clients achieve naturally radiant, healthy skin through safe, advanced, and effective treatments.”\n\n“Known for my calm, kind, and friendly nature, I believe that skincare is more than a treatment — it’s an experience of care, confidence, and well-being. Every session is thoughtfully designed to deliver visible results while providing a moment of pure relaxation.”\n\n“At Luminous Skin Clinic, my goal is to create a welcoming space where every client feels valued, cared for, and leaves glowing — inside and out.”"
+  } = data;
+
   return (
     <section className="py-20 lg:py-28 bg-[#F5F0EB]/60 border-y border-[#E8DFD5] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,16 +50,16 @@ export function PractitionerBio() {
               <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-[#F0A5A2]/25 to-transparent blur-xl -z-10" />
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-[#E8DFD5]">
                 <Image
-                  src="/about-founder.png"
-                  alt="Madiha Naz (Madi) - Founder & Lead Facialist at Luminous Skin Clinic Leeds"
+                  src={founderImage || "/about-founder.png"}
+                  alt={`${founderName} - ${founderTitle}`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 45vw"
                   className="object-cover object-top hover:scale-[1.02] transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md px-4 py-3 rounded-xl border border-[#E8DFD5]/80 shadow-md">
-                  <p className="text-xs sm:text-sm font-semibold text-[#1C1917]">Madiha Naz (Madi)</p>
-                  <p className="text-[11px] text-[#78716C]">Founder & Certified Beauty Therapist · Leeds</p>
+                  <p className="text-xs sm:text-sm font-semibold text-[#1C1917]">{founderName}</p>
+                  <p className="text-[11px] text-[#78716C] line-clamp-1" title={founderTitle}>{founderTitle}</p>
                 </div>
               </div>
             </div>
@@ -74,25 +81,17 @@ export function PractitionerBio() {
 
               <div>
                 <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1C1917] leading-tight">
-                  Meet Madiha Naz
+                  Meet {founderName.split(' ')[0]}
                 </h2>
                 <p className="text-xs sm:text-sm font-medium text-[#EC9C9D] mt-1 tracking-wide">
-                  Founder & Owner · Certified Beauty Therapist & Leeds Lead Facialist
+                  {founderTitle}
                 </p>
               </div>
 
               <div className="space-y-3.5 text-sm sm:text-[15px] text-[#57534E] leading-relaxed">
-                <p>
-                  “I’m Madi, the founder and owner of Luminous Skin business — a sanctuary where beauty, science, and serenity come together. With over five years of experience as a certified Beauty Therapist and one of the best facialists in Leeds, my passion lies in helping clients achieve naturally radiant, healthy skin through safe, advanced, and effective treatments.”
-                </p>
-
-                <p>
-                  “Known for my calm, kind, and friendly nature, I believe that skincare is more than a treatment — it’s an experience of care, confidence, and well-being. Every session is thoughtfully designed to deliver visible results while providing a moment of pure relaxation.”
-                </p>
-
-                <p className="text-[#1C1917] font-medium">
-                  “At Luminous Skin Clinic, my goal is to create a welcoming space where every client feels valued, cared for, and leaves glowing — inside and out.”
-                </p>
+                {founderBio.split('\n').filter(p => p.trim()).map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
               </div>
             </motion.div>
 

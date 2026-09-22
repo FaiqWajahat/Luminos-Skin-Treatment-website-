@@ -9,10 +9,16 @@ import { InstagramFeed } from "./instagram-feed";
 import { FaqsSection } from "./faqs-section";
 import { ConsultationCta } from "./consultation-cta";
 
-export function HomeView() {
+export function HomeView({ data = {} }) {
   return (
     <div className="flex flex-col">
-      <HeroSection />
+      <HeroSection 
+        image={data.heroImage} 
+        title={data.heroTitle}
+        titleHighlight={data.heroTitleHighlight}
+        subtitle={data.heroSubtitle}
+        highlight={data.heroHighlight}
+      />
       <TrustStrip />
       <ConcernsGrid />
       <PopularTreatments />
@@ -20,7 +26,7 @@ export function HomeView() {
       <ClinicExperience />
       <ReviewsStrip />
       <InstagramFeed />
-      <FaqsSection />
+      <FaqsSection faqs={data.faqs} image={data.consultantLoungeImage} />
       <ConsultationCta />
     </div>
   );

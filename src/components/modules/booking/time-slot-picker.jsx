@@ -42,23 +42,26 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
     const dateObj = new Date(year, month - 1, day);
     const isSaturday = dateObj.getDay() === 6;
 
-    // Deterministic booked slots based on date string hash (to simulate live clinic demand)
-    // plus real enquiries from database!
-    let dateHash = 0;
-    for (let i = 0; i < selectedDate.length; i++) {
-      dateHash = (dateHash << 5) - dateHash + selectedDate.charCodeAt(i);
-      dateHash |= 0;
-    }
+    // Collect all booked slots for the selected date (excluding Cancelled)
+    const bookedSet = new Set();
+    existingEnquiries.forEach((eq) => {
+      const status = (eq.status || "").trim().toLowerCase();
+      if (eq.preferredDate === selectedDate && status !== "cancelled") {
+        if (eq.timeSlot) {
+          const slotStr = eq.timeSlot.trim().toLowerCase();
+          bookedSet.add(slotStr);
+          // Also strip AM/PM for cross-matching e.g. "09:30 AM" vs "09:30"
+          const clean = slotStr.replace(/\s*(am|pm)/i, "").trim();
+          if (clean) bookedSet.add(clean);
+        }
+      }
+    });
 
-    // Identify DB booked slots for this date
-    const bookedInDb = new Set(
-      existingEnquiries
-        .filter((eq) => eq.preferredDate === selectedDate && eq.status !== "Cancelled")
-        .map((eq) => eq.timeSlot)
-    );
+    return CLINICAL_SLOTS.map((slot) => {
+      const labelLower = slot.label.trim().toLowerCase();
+      const idLower = slot.id.trim().toLowerCase();
 
-    return CLINICAL_SLOTS.map((slot, idx) => {
-      // Saturday rules: 10:00 AM to 5:00 PM
+      // Saturday operating hours rules
       if (isSaturday) {
         if (slot.id === "09:30") {
           return { ...slot, isAvailable: false, reason: "Opens 10:00 AM on Sat" };
@@ -68,14 +71,8 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
         }
       }
 
-      // Check if booked in DB
-      if (bookedInDb.has(slot.label) || bookedInDb.has(slot.id)) {
-        return { ...slot, isAvailable: false, reason: "Already Booked" };
-      }
-
-      // Deterministic realistic booked slots (e.g. some slots booked)
-      const isSimulatedBooked = Math.abs(dateHash + idx * 7) % 5 === 0;
-      if (isSimulatedBooked) {
+      // Check if booked in database
+      if (bookedSet.has(labelLower) || bookedSet.has(idLower)) {
         return { ...slot, isAvailable: false, reason: "Already Booked" };
       }
 
@@ -95,21 +92,18 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <label className="text-xs sm:text-sm font-semibold text-[#1C1917] flex items-center gap-1.5 flex-wrap">
           <Clock className="w-4 h-4 text-[#EC9C9D]" />
-          <span>Step 4: Choose 30-Minute Session Slot</span>
+          <span>Step 4: Choose Session Time</span>
           <span className="text-[#EC9C9D] font-bold text-sm">*</span>
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-[#EC9C9D] bg-[#EC9C9D]/10 px-2 py-0.5 rounded-full border border-[#EC9C9D]/20">
-            30 Mins Each
-          </span>
         </label>
 
-        <div className="flex items-center gap-3 text-[11px]">
+        <div className="flex items-center gap-4 text-[11px]">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="text-[#78716C]">Available</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-stone-300" />
-            <span className="text-[#78716C]">Booked / Full</span>
+            <span className="w-2 h-2 rounded-full bg-rose-400" />
+            <span className="text-[#78716C] line-through">Booked</span>
           </div>
         </div>
       </div>
@@ -127,73 +121,88 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
                 : "text-[#78716C] hover:text-[#1C1917]"
             }`}
           >
-            {period === "All" ? "All 30-Min Slots" : `${period} (30m)`}
+            {period === "All" ? "All Time Slots" : period}
           </button>
         ))}
       </div>
 
       {/* Time Slots Matrix */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-h-[340px] overflow-y-auto pr-1">
-        {displayedSlots.map((slot) => {
-          const isSelected = selectedSlot === slot.label;
-          const isBooked = !slot.isAvailable;
+        {displayedSlots.length === 0 ? (
+          <div className="col-span-full py-8 text-center text-sm text-[#78716C]">
+            No available slots for this selection.
+          </div>
+        ) : (
+          displayedSlots.map((slot) => {
+            const isSelected = selectedSlot === slot.label;
+            const isBooked = !slot.isAvailable && slot.reason === "Already Booked";
+            const isClosed = !slot.isAvailable && !isBooked;
 
-          return (
-            <button
-              key={slot.id}
-              type="button"
-              disabled={isBooked}
-              onClick={() => onSelectSlot(slot.label)}
-              className={`p-3 rounded-2xl border text-left transition-all duration-200 relative flex flex-col justify-between min-h-[82px] ${
-                isBooked
-                  ? "bg-stone-50 border-[#E8DFD5] opacity-50 cursor-not-allowed"
-                  : isSelected
-                  ? "bg-gradient-to-r from-[#EAA59E] via-[#EC9C9D] to-[#D97E80] text-white border-[#EC9C9D] shadow-md shadow-[#EC9C9D]/25 scale-[1.02] cursor-pointer"
-                  : "bg-white border-[#E8DFD5] hover:border-[#EC9C9D] hover:bg-[#FAF8F5] cursor-pointer text-[#1C1917]"
-              }`}
-            >
-              <div className="flex items-center justify-between w-full">
-                <span
-                  className={`text-sm font-mono font-bold ${
-                    isSelected ? "text-white" : isBooked ? "text-neutral-400 line-through" : "text-[#1C1917]"
-                  }`}
-                >
-                  {slot.label}
-                </span>
+            return (
+              <button
+                key={slot.id}
+                type="button"
+                disabled={!slot.isAvailable}
+                onClick={() => {
+                  if (slot.isAvailable) {
+                    onSelectSlot(slot.label);
+                  }
+                }}
+                className={`p-3.5 rounded-2xl border text-left transition-all duration-200 relative flex flex-col justify-between min-h-[76px] ${
+                  isSelected
+                    ? "bg-gradient-to-r from-[#EAA59E] via-[#EC9C9D] to-[#D97E80] text-white border-[#EC9C9D] shadow-md shadow-[#EC9C9D]/25 scale-[1.02] cursor-pointer"
+                    : isBooked
+                    ? "bg-rose-50/50 border-rose-200/60 text-rose-400 opacity-75 cursor-not-allowed"
+                    : isClosed
+                    ? "bg-stone-100/60 border-stone-200/60 text-stone-300 opacity-50 cursor-not-allowed"
+                    : "bg-white border-[#E8DFD5] hover:border-[#EC9C9D] hover:bg-[#FAF8F5] cursor-pointer text-[#1C1917]"
+                }`}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span
+                    className={`text-sm font-mono font-bold tracking-tight ${
+                      isSelected
+                        ? "text-white"
+                        : isBooked
+                        ? "text-rose-400 line-through decoration-rose-400/80 decoration-2"
+                        : isClosed
+                        ? "text-stone-300 line-through"
+                        : "text-[#1C1917]"
+                    }`}
+                  >
+                    {slot.label}
+                  </span>
 
-                {isBooked ? (
-                  <span className="text-[9px] font-semibold text-neutral-400 bg-neutral-100 px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                    <Lock className="w-2.5 h-2.5" />
-                    <span>Booked</span>
-                  </span>
-                ) : isSelected ? (
-                  <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-white">
-                    <Check className="w-3 h-3" />
-                  </span>
-                ) : (
-                  <span className="text-[9px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60">
-                    Open
-                  </span>
-                )}
-              </div>
+                  {isSelected && (
+                    <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-white">
+                      <Check className="w-3 h-3" />
+                    </span>
+                  )}
+                </div>
 
-              <div className="pt-2 flex items-center justify-between text-[10px]">
-                <span
-                  className={`px-1.5 py-0.5 rounded ${
-                    isSelected
-                      ? "bg-white/20 text-white font-medium"
-                      : "bg-[#FAF8F5] border border-[#E8DFD5] text-[#EC9C9D] font-semibold"
-                  }`}
-                >
-                  30 mins
-                </span>
-                <span className={isSelected ? "text-white/80" : "text-[#78716C]"}>
-                  {slot.period}
-                </span>
-              </div>
-            </button>
-          );
-        })}
+                <div className="pt-1.5 flex items-center justify-between text-[10px]">
+                  <span
+                    className={
+                      isSelected
+                        ? "text-white/80 font-medium"
+                        : isBooked
+                        ? "text-rose-300 font-medium"
+                        : "text-[#78716C] font-medium"
+                    }
+                  >
+                    {slot.period}
+                  </span>
+                  {isBooked && (
+                    <span className="text-[9.5px] text-rose-400/90 font-medium">Booked</span>
+                  )}
+                  {isClosed && (
+                    <span className="text-[9.5px] text-stone-400">Closed</span>
+                  )}
+                </div>
+              </button>
+            );
+          })
+        )}
       </div>
     </div>
   );

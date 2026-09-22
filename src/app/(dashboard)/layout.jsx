@@ -16,6 +16,7 @@ import {
   PanelLeft,
   ExternalLink,
   Shield,
+  FileText,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -24,6 +25,7 @@ const navItems = [
   { label: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
   { label: "Treatments", href: "/admin/treatments", icon: Sparkles },
   { label: "Results", href: "/admin/results", icon: Images },
+  { label: "Pages", href: "/admin/content", icon: FileText },
   { label: "Admin Users", href: "/admin/users", icon: Users },
 ];
 

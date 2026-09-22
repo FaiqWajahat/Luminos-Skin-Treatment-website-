@@ -16,7 +16,10 @@ export function CustomDatePicker({ selectedDate, onSelectDate }) {
       const dayOfWeek = d.getDay(); // 0 = Sunday, 1 = Monday, ...
       const isSunday = dayOfWeek === 0;
 
-      const dateString = d.toISOString().split("T")[0];
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const dateNum = String(d.getDate()).padStart(2, "0");
+      const dateString = `${year}-${month}-${dateNum}`;
       const dayName = d.toLocaleDateString("en-GB", { weekday: "short" });
       const dayNumber = d.getDate();
       const monthName = d.toLocaleDateString("en-GB", { month: "short" });

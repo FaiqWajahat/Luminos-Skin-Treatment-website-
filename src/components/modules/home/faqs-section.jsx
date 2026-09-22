@@ -10,8 +10,9 @@ import { Plus, Minus } from "lucide-react";
 
 const ease = [0.22, 1, 0.36, 1];
 
-export function FaqsSection() {
+export function FaqsSection({ faqs, image }) {
   const [openIndex, setOpenIndex] = useState(0); // first item open by default
+  const displayFaqs = faqs?.length > 0 ? faqs : FAQS;
 
   const toggleFaq = (idx) => {
     setOpenIndex(openIndex === idx ? null : idx);
@@ -33,7 +34,7 @@ export function FaqsSection() {
             <div className="space-y-4">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-sm border border-[#E8DFD5]">
                 <Image
-                  src="/home-01.jpeg"
+                  src={image || "/home-01.jpeg"}
                   alt="Luminous Skin Consultation Lounge - Leeds"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
@@ -73,7 +74,7 @@ export function FaqsSection() {
 
             {/* Clean, Simple Accordion List */}
             <div className="divide-y divide-[#E8DFD5] border-y border-[#E8DFD5]">
-              {FAQS.map((faq, idx) => {
+              {displayFaqs.map((faq, idx) => {
                 const isOpen = openIndex === idx;
 
                 return (

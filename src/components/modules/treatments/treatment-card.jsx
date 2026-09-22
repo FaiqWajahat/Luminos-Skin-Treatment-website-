@@ -93,21 +93,27 @@ export function TreatmentCard({ treatment }) {
           </p>
 
           {/* Treatment Details & Aftercare as written */}
-          {treatment.benefits && (Array.isArray(treatment.benefits) ? treatment.benefits.length > 0 : Boolean(treatment.benefits)) && (
-            <div className="space-y-1 pt-3 border-t border-[#E8DFD5]/70 text-xs text-[#78716C]">
-              {Array.isArray(treatment.benefits) ? (
-                treatment.benefits.map((line, idx) => (
-                  <div key={idx} className="leading-relaxed">
-                    {line}
-                  </div>
-                ))
-              ) : (
-                <div className="leading-relaxed whitespace-pre-line">
-                  {treatment.benefits}
+          {treatment.benefits &&
+            (Array.isArray(treatment.benefits)
+              ? treatment.benefits.length > 0
+              : Boolean(treatment.benefits)) && (
+              <div className="pt-3 border-t border-[#E8DFD5]/70">
+                <div className="space-y-1 text-xs text-[#78716C]">
+                  {Array.isArray(treatment.benefits) ? (
+                    treatment.benefits.map((line, idx) => (
+                      <p key={idx} className="leading-relaxed flex items-start gap-1.5">
+                        <span className="text-[#EC9C9D] shrink-0 mt-0.5">•</span>
+                        <span>{line.replace(/^[•\-\*]\s*/, "")}</span>
+                      </p>
+                    ))
+                  ) : (
+                    <div className="leading-relaxed whitespace-pre-line">
+                      {treatment.benefits}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
         </div>
 
         {/* Pricing & CTA pinned strictly to bottom */}
