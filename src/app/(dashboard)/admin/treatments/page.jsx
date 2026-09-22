@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, X, Sparkles, Upload, Clock, DollarSign } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Sparkles, Upload, Clock, DollarSign, Search } from "lucide-react";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Pagination } from "@/components/shared/pagination";
 
@@ -26,6 +26,8 @@ const formatImageSrc = (src) => {
 export default function AdminTreatmentsPage() {
   const [treatments, setTreatments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,6 +44,21 @@ export default function AdminTreatmentsPage() {
   };
 
   useEffect(() => { fetchTreatments(); }, []);
+
+  const filteredTreatments = treatments.filter((t) => {
+    const matchesSearch =
+      !search.trim() ||
+      t.title?.toLowerCase().includes(search.toLowerCase()) ||
+      t.category?.toLowerCase().includes(search.toLowerCase()) ||
+      t.shortDescription?.toLowerCase().includes(search.toLowerCase()) ||
+      t.tagline?.toLowerCase().includes(search.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === "All" ||
+      (t.category || "").trim().toLowerCase() === selectedCategory.trim().toLowerCase();
+
+    return matchesSearch && matchesCategory;
+  });
 
   const openAdd = () => {
     setEditing(null);
@@ -161,32 +178,67 @@ export default function AdminTreatmentsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Header & Actions Toolbar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
             Treatment Catalog
           </h1>
-          <p className="text-xs text-neutral-400 mt-0.5">Add, edit pricing, and upload images to Cloudinary</p>
+          <p className="text-xs text-neutral-400 mt-0.5">Search catalog, edit pricing, and upload images to Cloudinary</p>
         </div>
-        <button
-          onClick={openAdd}
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-[#EC9C9D] via-[#F0A5A2] to-[#D97E80] text-white text-xs font-medium px-4 py-2.5 rounded-xl shadow-md shadow-[#EC9C9D]/20 hover:opacity-95 transition-all"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>New Treatment</span>
-        </button>
+
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Search Input Bar */}
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+            <input
+              type="text"
+              placeholder="Search treatments..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="bg-[#161412] border border-neutral-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-[#EC9C9D]/60 w-44 sm:w-56 transition-colors"
+            />
+          </div>
+
+          {/* Category Filter Dropdown */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => {
+              setSelectedCategory(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="bg-[#161412] border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#EC9C9D]/60 appearance-none cursor-pointer"
+          >
+            <option value="All">All Categories</option>
+            {CATEGORIES.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+
+          <button
+            onClick={openAdd}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#EC9C9D] via-[#F0A5A2] to-[#D97E80] text-white text-xs font-medium px-4 py-2.5 rounded-xl shadow-md shadow-[#EC9C9D]/20 hover:opacity-95 transition-all cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Treatment</span>
+          </button>
+        </div>
       </div>
 
       {/* Grid */}
       {loading ? (
         <div className="py-16 text-center text-xs text-neutral-500">Loading catalog...</div>
-      ) : treatments.length === 0 ? (
-        <div className="py-16 text-center text-xs text-neutral-500">No treatments in catalog yet. Click above to add.</div>
+      ) : filteredTreatments.length === 0 ? (
+        <div className="py-16 text-center text-xs text-neutral-500">
+          {search ? `No treatments found matching "${search}".` : "No treatments in catalog yet. Click above to add."}
+        </div>
       ) : (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {treatments.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((t) => (
+            {filteredTreatments.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((t) => (
               <div
                 key={t._id || t.id}
                 className="bg-[#161412] border border-neutral-800/80 rounded-3xl p-5 space-y-3 hover:border-[#EC9C9D]/30 transition-all group flex flex-col justify-between"
@@ -257,8 +309,8 @@ export default function AdminTreatmentsPage() {
           {/* Pagination */}
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(treatments.length / ITEMS_PER_PAGE) || 1}
-            totalItems={treatments.length}
+            totalPages={Math.ceil(filteredTreatments.length / ITEMS_PER_PAGE) || 1}
+            totalItems={filteredTreatments.length}
             itemsPerPage={ITEMS_PER_PAGE}
             onPageChange={setCurrentPage}
             theme="dark"
