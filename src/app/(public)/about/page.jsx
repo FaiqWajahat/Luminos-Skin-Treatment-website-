@@ -1,6 +1,9 @@
 import { AboutView } from "@/components/modules/about";
 import { getContent } from "@/lib/db-store";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "About Us | Luminous Skin Clinic Leeds | Founder Madiha Naz",
   description:

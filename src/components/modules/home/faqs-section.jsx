@@ -33,14 +33,22 @@ export function FaqsSection({ faqs, image }) {
           >
             <div className="space-y-4">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-sm border border-[#E8DFD5]">
-                <Image
-                  src={image || "/home-01.jpeg"}
-                  alt="Luminous Skin Consultation Lounge - Leeds"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover hover:scale-[1.02] transition-transform duration-700"
-                  priority={false}
-                />
+                {image?.startsWith("data:") ? (
+                  <img
+                    src={image}
+                    alt="Luminous Skin Consultation Lounge - Leeds"
+                    className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-700"
+                  />
+                ) : (
+                  <Image
+                    src={image || "/home-01.jpeg"}
+                    alt="Luminous Skin Consultation Lounge - Leeds"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-cover hover:scale-[1.02] transition-transform duration-700"
+                    priority={false}
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 {/* <div className="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#E8DFD5]/80 shadow-xs">
                   <p className="text-xs font-semibold text-[#1C1917]">Private Consultation Lounge</p>

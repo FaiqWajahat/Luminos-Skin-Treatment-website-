@@ -45,11 +45,14 @@ export default function PagesContentAdmin() {
         body: JSON.stringify({ type, data }),
       });
 
-      if (!res.ok) throw new Error("Failed to save content");
-      alert("Changes saved successfully!");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to save content");
+
+      alert(`${activeTab === "homepage" ? "Homepage" : "About Page"} content saved successfully!`);
+      await fetchContent(type);
     } catch (err) {
-      console.error(err);
-      alert("Error saving: " + err.message);
+      console.error("Save error:", err);
+      alert("Error saving content: " + (err.message || "Failed to save"));
     } finally {
       setIsSaving(false);
     }
@@ -79,7 +82,7 @@ export default function PagesContentAdmin() {
     });
   };
 
-  // ── Image Uploads ──
+  // ── Image Uploads to Cloudinary ──
   const handleImageUpload = async (e, field) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -94,8 +97,12 @@ export default function PagesContentAdmin() {
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Failed to upload image");
-      const { url } = await res.json();
+      const json = await res.json();
+      if (!res.ok || !json.url) {
+        throw new Error(json.error || `Upload failed with status ${res.status}`);
+      }
+
+      const url = json.url;
 
       if (field === "consultantLoungeImage") {
         setHomeData((prev) => ({ ...prev, [field]: url }));
@@ -108,9 +115,10 @@ export default function PagesContentAdmin() {
           setAboutData((prev) => ({ ...prev, [field]: url }));
         }
       }
+      alert("Image uploaded to Cloudinary successfully! Click 'Save Changes' to apply.");
     } catch (err) {
-      console.error(err);
-      alert("Error uploading image");
+      console.error("Cloudinary upload error:", err);
+      alert("Image Upload Error: " + (err.message || "Failed to upload to Cloudinary"));
     } finally {
       setUploadingImage(null);
     }

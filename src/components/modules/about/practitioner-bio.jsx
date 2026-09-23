@@ -49,13 +49,21 @@ export function PractitionerBio({ data = {} }) {
             <div className="relative">
               <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-[#F0A5A2]/25 to-transparent blur-xl -z-10" />
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-[#E8DFD5]">
-                <Image
-                  src={founderImage || "/about-founder.png"}
-                  alt={`${founderName} - ${founderTitle}`}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                  className="object-cover object-top hover:scale-[1.02] transition-transform duration-700"
-                />
+                {founderImage?.startsWith("data:") ? (
+                  <img
+                    src={founderImage}
+                    alt={`${founderName} - ${founderTitle}`}
+                    className="w-full h-full object-cover object-top hover:scale-[1.02] transition-transform duration-700"
+                  />
+                ) : (
+                  <Image
+                    src={founderImage || "/about-founder.png"}
+                    alt={`${founderName} - ${founderTitle}`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 45vw"
+                    className="object-cover object-top hover:scale-[1.02] transition-transform duration-700"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md px-4 py-3 rounded-xl border border-[#E8DFD5]/80 shadow-md">
                   <p className="text-xs sm:text-sm font-semibold text-[#1C1917]">{founderName}</p>

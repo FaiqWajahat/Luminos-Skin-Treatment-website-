@@ -720,6 +720,7 @@ export async function getContent(type) {
 }
 
 export async function updateContent(type, data) {
+  let updatedDoc = null;
   try {
     const conn = await connectToDatabase();
     if (conn) {
@@ -728,7 +729,7 @@ export async function updateContent(type, data) {
         { data },
         { new: true, upsert: true, returnDocument: "after" },
       ).lean();
-      if (updated) return { ...updated, _id: updated._id.toString() };
+      if (updated) updatedDoc = { ...updated, _id: updated._id.toString() };
     }
   } catch (err) {
     console.warn("MongoDB fallback (updateContent):", err.message);
@@ -738,20 +739,20 @@ export async function updateContent(type, data) {
   if (!store.content) store.content = [];
   const idx = store.content.findIndex((c) => c.type === type);
 
-  const payload = {
+  const payload = updatedDoc || {
     type,
     data,
     updatedAt: new Date().toISOString(),
   };
 
   if (idx === -1) {
-    payload._id = "content-" + type;
-    payload.createdAt = new Date().toISOString();
+    if (!payload._id) payload._id = "content-" + type;
+    if (!payload.createdAt) payload.createdAt = new Date().toISOString();
     store.content.push(payload);
   } else {
     store.content[idx] = { ...store.content[idx], ...payload };
   }
 
   saveLocalStore(store);
-  return store.content.find((c) => c.type === type);
+  return store.content.find((c) => c.type === type) || payload;
 }

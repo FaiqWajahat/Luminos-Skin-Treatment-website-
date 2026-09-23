@@ -19,15 +19,23 @@ export function AboutHero({
       
       {/* ── Background Layer with Real Clinic Photography ── */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src={image || "/about-hero-img.png"}
-          alt="Luminous Skin Clinic Leeds Sanctuary and Reception"
-          fill
-          priority
-          quality={90}
-          sizes="100vw"
-          className="object-cover object-center scale-[1.01]"
-        />
+        {image?.startsWith("data:") ? (
+          <img
+            src={image}
+            alt="Luminous Skin Clinic Leeds Sanctuary and Reception"
+            className="w-full h-full object-cover object-center scale-[1.01]"
+          />
+        ) : (
+          <Image
+            src={image || "/about-hero-img.png"}
+            alt="Luminous Skin Clinic Leeds Sanctuary and Reception"
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover object-center scale-[1.01]"
+          />
+        )}
 
         {/* Professional Multi-Stop Dark Scrim Overlay for ultra-sharp text contrast */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#12100F]/95 via-[#141211]/65 to-[#171514]/50 backdrop-blur-[0.5px]" />

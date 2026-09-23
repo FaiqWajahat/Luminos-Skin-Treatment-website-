@@ -1536,5 +1536,72 @@
       "createdAt": "2026-09-16T18:33:45.663Z",
       "updatedAt": "2026-09-16T18:33:45.679Z"
     }
+  ],
+  "content": [
+    {
+      "_id": "6ab25d541a5cdcfd1c27081c",
+      "type": "homepage",
+      "data": {
+        "faqs": [
+          {
+            "id": "faq-1",
+            "question": "How do I know which treatment is right for my skin concern?",
+            "answer": "You do not need to diagnose yourself or know the clinical treatment name before visiting. During your initial one-to-one consultation at our Leeds clinic, we assess your skin barrier, daily routine, and personal goals to recommend the most suitable, effective treatment protocol."
+          },
+          {
+            "id": "faq-2",
+            "question": "Is there any downtime after treatments like dermaplaning or microneedling?",
+            "answer": "Our signature rejuvenating facials and dermaplaning require zero downtime—you can step straight out with an instant luminous glow. For microneedling, slight erythema (rosy flushing) is normal and typically subsides within 12–24 hours as natural collagen synthesis begins."
+          },
+          {
+            "id": "faq-3",
+            "question": "Are appointments strictly private and one-to-one?",
+            "answer": "Yes, 100%. Luminous operates exclusively by appointment in a calm, private wellness suite located near Elland Road Stadium in Beeston, Leeds LS11. There are no crowded waiting rooms or overlapping bookings; your time is dedicated entirely to you and your skin."
+          },
+          {
+            "id": "faq-4",
+            "question": "How should I prepare my skin before my appointment?",
+            "answer": "We advise pausing active exfoliants (such as AHAs, BHAs, glycolic peels, and retinoids) for 3 to 5 days prior to clinical treatments. Avoid direct UV tanning, and arrive hydrated. We always perform a thorough double-cleanse at the start of every treatment."
+          },
+          {
+            "id": "faq-5",
+            "question": "How many sessions are recommended for optimal, lasting results?",
+            "answer": "Treatments like dermaplaning, LED phototherapy, and hydrating facials offer immediate visible radiance after just one session. For concerns like acne scarring, pigmentation, or uneven texture, a tailored course of 3 to 6 sessions produces compounding, long-lasting transformation."
+          },
+          {
+            "id": "faq-6",
+            "question": "What is your clinic cancellation and rescheduling policy?",
+            "answer": "We kindly request at least 24 hours advance notice for cancellations or appointment adjustments. This allows us to accommodate clients on our Leeds waiting list. Rescheduling can be easily completed online or by contacting us directly."
+          }
+        ],
+        "heroImage": "https://res.cloudinary.com/x4j3r8wq/image/upload/v1790176404/luminous_clinic/kzaqlzy3jbagu8nwybkd.jpg",
+        "consultantLoungeImage": "https://res.cloudinary.com/x4j3r8wq/image/upload/v1790176311/luminous_clinic/psw9nsmd1mrmowm98lau.png",
+        "heroTitle": "Personalised skincare treatments designed ",
+        "heroTitleHighlight": "to help you look fresher, brighter and more confident every day.",
+        "heroSubtitle": "Bespoke one-to-one skin therapies designed to reveal your healthiest complexion. From restorative facials and collagen induction to targeted phototherapy—tailored purely to your skin.",
+        "heroHighlight": "Leeds LS11 · Private Clinical  structury"
+      },
+      "__v": 0,
+      "createdAt": "2026-09-22T10:49:56.946Z",
+      "updatedAt": "2026-09-23T15:13:28.038Z"
+    },
+    {
+      "_id": "6ab25d541a5cdcfd1c27081d",
+      "type": "aboutpage",
+      "data": {
+        "founderName": "Madiha Naz",
+        "founderTitle": "Clinic Founder & Senior Skin Specialist",
+        "founderImage": "https://res.cloudinary.com/x4j3r8wq/image/upload/v1790076016/luminous_clinic/h7x4ahq9oc2zxrt2phno.png",
+        "founderBio": "“I’m Madi, the founder and owner of Luminous Skin business — a sanctuary where beauty, science, and serenity come together. With over five years of experience as a certified Beauty Therapist and one of the best facialists in Leeds, my passion lies in helping clients achieve naturally radiant, healthy skin through safe, advanced, and effective treatments.”\n\n“Known for my calm, kind, and friendly nature, I believe that skincare is more than a treatment — it’s an experience of care, confidence, and well-being. Every session is thoughtfully designed to deliver visible results while providing a moment of pure relaxation.”\n\n“At Luminous Skin Clinic, my goal is to create a welcoming space where every client feels valued, cared for, and leaves glowing — inside and out.",
+        "heroTitle": "Welcome to Luminous Skin Clinic,",
+        "heroTitleHighlight": "Where Beauty Meets Serenity.",
+        "heroSubtitle": "More than just a salon, it’s your personal escape to self-care and skin wellness. Step into calm sophistication and let your confidence shine — because at Luminous Skin Clinic, your skin deserves nothing less than perfecti",
+        "heroImage": "https://res.cloudinary.com/x4j3r8wq/image/upload/v1790176480/luminous_clinic/fxenooclxqcu482sxlpw.png",
+        "heroHighlight": "Where Beauty Meets Serenity · "
+      },
+      "__v": 0,
+      "createdAt": "2026-09-22T10:49:56.949Z",
+      "updatedAt": "2026-09-23T15:14:51.152Z"
+    }
   ]
 }

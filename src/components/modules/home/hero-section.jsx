@@ -19,15 +19,23 @@ export function HeroSection({
       
       {/* ── Background Layer with Real Clinic Photography ── */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src={image || "/about-01.jpeg"}
-          alt="Luminous Skin Clinic Leeds Private Treatment Sanctuary"
-          fill
-          priority
-          quality={90}
-          sizes="100vw"
-          className="object-cover object-center scale-[1.01]"
-        />
+        {image?.startsWith("data:") ? (
+          <img
+            src={image}
+            alt="Luminous Skin Clinic Leeds Private Treatment Sanctuary"
+            className="w-full h-full object-cover object-center scale-[1.01]"
+          />
+        ) : (
+          <Image
+            src={image || "/about-01.jpeg"}
+            alt="Luminous Skin Clinic Leeds Private Treatment Sanctuary"
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover object-center scale-[1.01]"
+          />
+        )}
 
         {/* Sophisticated Multi-Stop Dark Scrim Overlay (ensures maximum text clarity while showcasing the room) */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#12100F]/95 via-[#141211]/60 to-[#171514]/45 backdrop-blur-[0.5px]" />
@@ -54,8 +62,8 @@ export function HeroSection({
             <span>{highlight}</span>
           </div>
 
-          {/* Catching Editorial Headline (Enlarged) */}
-          <h1 className="text-5xl sm:text-7xl lg:text-[5.25rem] xl:text-[6rem] font-semibold tracking-tight leading-[1.04] text-white drop-shadow-xl">
+          {/* Editorial Headline */}
+          <h1 className="text-3xl sm:text-5xl lg:text-[3.75rem] font-semibold tracking-tight leading-[1.12] text-white drop-shadow-md">
             {title} <br className="hidden sm:inline" />
             <em className="font-serif italic font-normal text-[#EC9C9D]">
               {titleHighlight}
@@ -63,7 +71,7 @@ export function HeroSection({
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg lg:text-xl text-neutral-200 leading-relaxed max-w-2xl mx-auto font-normal drop-shadow-sm">
+          <p className="text-sm sm:text-base lg:text-lg text-neutral-200 leading-relaxed max-w-2xl mx-auto font-normal drop-shadow-xs">
             {subtitle}
           </p>
 

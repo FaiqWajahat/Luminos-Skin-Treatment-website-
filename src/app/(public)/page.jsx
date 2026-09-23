@@ -1,6 +1,9 @@
 import { HomeView } from "@/components/modules/home";
 import { getContent } from "@/lib/db-store";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "Luminous Skin Clinic Leeds | Personalised Skin & Wellness",
   description:
