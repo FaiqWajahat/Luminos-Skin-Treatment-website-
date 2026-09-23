@@ -104,3 +104,16 @@ const ContentSchema = new mongoose.Schema(
 
 export const Content =
   mongoose.models.Content || mongoose.model("Content", ContentSchema);
+
+const BlockedSlotSchema = new mongoose.Schema(
+  {
+    date: { type: String, required: true },
+    slot: { type: String, required: true }, // "FULL_DAY", "09:30 AM", or custom "05:15 PM"
+    reason: { type: String, default: "Admin Blocked" },
+    type: { type: String, enum: ["FULL_DAY", "SLOT"], default: "SLOT" },
+  },
+  { timestamps: true },
+);
+
+export const BlockedSlot =
+  mongoose.models.BlockedSlot || mongoose.model("BlockedSlot", BlockedSlotSchema);

@@ -3,7 +3,32 @@
 import { useState, useMemo } from "react";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Check } from "lucide-react";
 
-export function CustomDatePicker({ selectedDate, onSelectDate }) {
+export function CustomDatePicker({ selectedDate, onSelectDate, existingEnquiries = [], blockedSlots = [] }) {
+  // Collect dates that have full day blocks
+  const fullDayBlockedSet = useMemo(() => {
+    const set = new Set();
+    existingEnquiries.forEach((eq) => {
+      const status = (eq.status || "").trim().toLowerCase();
+      if (status !== "cancelled" && eq.preferredDate && eq.timeSlot) {
+        const slotLower = eq.timeSlot.trim().toLowerCase();
+        if (slotLower === "full_day" || slotLower.includes("full day") || slotLower.includes("clinic closed")) {
+          set.add(eq.preferredDate);
+        }
+      }
+    });
+
+    blockedSlots.forEach((b) => {
+      if (b.date && b.slot) {
+        const slotLower = b.slot.trim().toLowerCase();
+        if (slotLower === "full_day" || slotLower.includes("full day") || b.type === "FULL_DAY") {
+          set.add(b.date);
+        }
+      }
+    });
+
+    return set;
+  }, [existingEnquiries, blockedSlots]);
+
   // Generate next 18 days (Mon-Sat, skipping Sunday which is closed)
   const days = useMemo(() => {
     const list = [];
@@ -54,31 +79,39 @@ export function CustomDatePicker({ selectedDate, onSelectDate }) {
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
         {days.slice(0, 7).map((day) => {
           const isSelected = selectedDate === day.dateString;
+          const isFullDayBlocked = fullDayBlockedSet.has(day.dateString);
           const isDisabled = day.isSunday;
 
           return (
             <button
               key={day.dateString}
               type="button"
-              disabled={isDisabled}
               onClick={() => onSelectDate(day.dateString)}
               className={`p-3 rounded-2xl border text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-between min-h-[90px] relative ${
                 isDisabled
                   ? "opacity-40 cursor-not-allowed bg-stone-100 border-[#E8DFD5]"
+                  : isFullDayBlocked
+                  ? "bg-amber-500/10 border-amber-500/40 text-amber-900"
                   : isSelected
                   ? "bg-gradient-to-b from-[#F0A5A2] via-[#EC9C9D] to-[#D97E80] text-white border-[#EC9C9D] shadow-md shadow-[#EC9C9D]/20 scale-[1.02]"
                   : "bg-white border-[#E8DFD5] hover:border-[#EC9C9D] hover:bg-[#FAF8F5] text-[#1C1917]"
               }`}
             >
-              {day.isToday && !isSelected && !isDisabled && (
+              {day.isToday && !isSelected && !isDisabled && !isFullDayBlocked && (
                 <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-bold uppercase tracking-wider bg-[#EC9C9D] text-white px-1.5 py-0.2 rounded-full">
                   Today
                 </span>
               )}
 
+              {isFullDayBlocked && !isSelected && (
+                <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[8px] font-bold uppercase tracking-wider bg-amber-600 text-white px-1.5 py-0.2 rounded-full">
+                  Closed
+                </span>
+              )}
+
               <span
                 className={`text-[11px] font-semibold uppercase tracking-wider ${
-                  isSelected ? "text-white/90" : "text-[#78716C]"
+                  isSelected ? "text-white/90" : isFullDayBlocked ? "text-amber-800" : "text-[#78716C]"
                 }`}
               >
                 {day.dayName}
@@ -86,7 +119,7 @@ export function CustomDatePicker({ selectedDate, onSelectDate }) {
 
               <span
                 className={`text-xl sm:text-2xl font-serif font-bold ${
-                  isSelected ? "text-white" : "text-[#1C1917]"
+                  isSelected ? "text-white" : isFullDayBlocked ? "text-amber-900" : "text-[#1C1917]"
                 }`}
               >
                 {day.dayNumber}
@@ -94,10 +127,16 @@ export function CustomDatePicker({ selectedDate, onSelectDate }) {
 
               <span
                 className={`text-[10px] uppercase font-medium ${
-                  isSelected ? "text-white/80" : isDisabled ? "text-neutral-400" : "text-[#78716C]"
+                  isSelected
+                    ? "text-white/80"
+                    : isDisabled
+                    ? "text-neutral-400"
+                    : isFullDayBlocked
+                    ? "text-amber-700 font-bold"
+                    : "text-[#78716C]"
                 }`}
               >
-                {isDisabled ? "Closed" : day.monthName}
+                {isDisabled ? "Closed" : isFullDayBlocked ? "Closed" : day.monthName}
               </span>
             </button>
           );
@@ -112,7 +151,7 @@ export function CustomDatePicker({ selectedDate, onSelectDate }) {
           min={new Date().toISOString().split("T")[0]}
           value={selectedDate}
           onChange={(e) => onSelectDate(e.target.value)}
-          className="text-xs font-semibold text-[#1C1917] bg-white border border-[#E8DFD5] rounded-xl px-3 py-1.5 focus:border-[#EC9C9D] outline-none cursor-pointer hover:border-[#EC9C9D]/60 transition-colors"
+          className="text-xs font-mono font-semibold text-[#1C1917] bg-white border border-[#E8DFD5] rounded-full px-5 py-2 focus:border-[#EC9C9D] outline-none cursor-pointer hover:border-[#EC9C9D]/80 transition-all shadow-xs"
         />
       </div>
     </div>

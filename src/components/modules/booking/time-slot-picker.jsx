@@ -30,8 +30,32 @@ const CLINICAL_SLOTS = [
   { id: "18:00", label: "06:00 PM", period: "Evening", duration: "30 min" },
 ];
 
-export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, existingEnquiries = [] }) {
+export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, existingEnquiries = [], blockedSlots = [] }) {
   const [activePeriod, setActivePeriod] = useState("All");
+
+  // Check if whole day is blocked by admin (via enquiries OR dedicated blockedSlots)
+  const isFullDayBlocked = useMemo(() => {
+    if (!selectedDate) return false;
+
+    const hasEnquiryFullDay = existingEnquiries.some((eq) => {
+      const status = (eq.status || "").trim().toLowerCase();
+      if (eq.preferredDate === selectedDate && status !== "cancelled") {
+        const slotStr = (eq.timeSlot || "").trim().toLowerCase();
+        return slotStr === "full_day" || slotStr.includes("full day") || slotStr.includes("clinic closed");
+      }
+      return false;
+    });
+
+    const hasBlockedSlotFullDay = blockedSlots.some((b) => {
+      if (b.date === selectedDate) {
+        const s = (b.slot || "").trim().toLowerCase();
+        return s === "full_day" || s.includes("full day") || b.type === "FULL_DAY";
+      }
+      return false;
+    });
+
+    return hasEnquiryFullDay || hasBlockedSlotFullDay;
+  }, [selectedDate, existingEnquiries, blockedSlots]);
 
   // Determine availability for each slot for the chosen date
   const slotsWithAvailability = useMemo(() => {
@@ -42,22 +66,58 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
     const dateObj = new Date(year, month - 1, day);
     const isSaturday = dateObj.getDay() === 6;
 
-    // Collect all booked slots for the selected date (excluding Cancelled)
+    // Collect all booked / blocked slots for the selected date
     const bookedSet = new Set();
+    const customBlockedSlots = [];
+
+    // 1. From existingEnquiries
     existingEnquiries.forEach((eq) => {
       const status = (eq.status || "").trim().toLowerCase();
       if (eq.preferredDate === selectedDate && status !== "cancelled") {
         if (eq.timeSlot) {
-          const slotStr = eq.timeSlot.trim().toLowerCase();
-          bookedSet.add(slotStr);
-          // Also strip AM/PM for cross-matching e.g. "09:30 AM" vs "09:30"
-          const clean = slotStr.replace(/\s*(am|pm)/i, "").trim();
+          const slotStr = eq.timeSlot.trim();
+          const slotLower = slotStr.toLowerCase();
+          bookedSet.add(slotLower);
+          const clean = slotLower.replace(/\s*(am|pm)/i, "").trim();
           if (clean) bookedSet.add(clean);
         }
       }
     });
 
-    return CLINICAL_SLOTS.map((slot) => {
+    // 2. From dedicated blockedSlots
+    blockedSlots.forEach((b) => {
+      if (b.date === selectedDate) {
+        if (b.slot) {
+          const slotStr = b.slot.trim();
+          const slotLower = slotStr.toLowerCase();
+          bookedSet.add(slotLower);
+          const clean = slotLower.replace(/\s*(am|pm)/i, "").trim();
+          if (clean) bookedSet.add(clean);
+
+          // If custom slot not in default list, add custom slot item
+          if (
+            slotLower !== "full_day" &&
+            !slotLower.includes("full day") &&
+            !CLINICAL_SLOTS.some((cs) => cs.label.toLowerCase() === slotLower || cs.id.toLowerCase() === clean)
+          ) {
+            customBlockedSlots.push({
+              id: slotStr,
+              label: slotStr,
+              period: slotLower.includes("pm") ? "Evening" : "Morning",
+              duration: "30 min",
+              isAvailable: false,
+              reason: b.reason || "Admin Blocked",
+            });
+          }
+        }
+      }
+    });
+
+    const baseList = CLINICAL_SLOTS.map((slot) => {
+      if (isFullDayBlocked) {
+        return { ...slot, isAvailable: false, reason: "Clinic Closed" };
+      }
+
       const labelLower = slot.label.trim().toLowerCase();
       const idLower = slot.id.trim().toLowerCase();
 
@@ -78,7 +138,9 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
 
       return { ...slot, isAvailable: true };
     });
-  }, [selectedDate, existingEnquiries]);
+
+    return [...baseList, ...customBlockedSlots];
+  }, [selectedDate, existingEnquiries, isFullDayBlocked]);
 
   // Filter slots by selected period
   const displayedSlots = useMemo(() => {
@@ -103,10 +165,22 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-rose-400" />
-            <span className="text-[#78716C] line-through">Booked</span>
+            <span className="text-[#78716C] line-through">Booked / Closed</span>
           </div>
         </div>
       </div>
+
+      {isFullDayBlocked && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 space-y-1 animate-fadeIn">
+          <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-amber-800">
+            <Lock className="w-4 h-4 text-amber-600" />
+            <span>Clinic Closed / Full Day Blocked on {selectedDate}</span>
+          </div>
+          <p className="text-xs text-amber-700 leading-relaxed">
+            The clinic is closed or fully reserved on this date. Please choose another date above to view available consultation slots.
+          </p>
+        </div>
+      )}
 
       {/* Period Filter Tabs */}
       <div className="flex items-center gap-1.5 p-1 bg-[#F5F0EB]/60 border border-[#E8DFD5] rounded-xl overflow-x-auto">

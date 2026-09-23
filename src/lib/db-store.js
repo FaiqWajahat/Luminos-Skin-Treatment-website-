@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import mongoose from "mongoose";
 import { connectToDatabase } from "./mongodb";
-import { User, Enquiry, Treatment, Result, Content } from "@/models";
+import { User, Enquiry, Treatment, Result, Content, BlockedSlot } from "@/models";
 import {
   TREATMENTS,
   RESULTS_CASE_STUDIES,
@@ -755,4 +755,69 @@ export async function updateContent(type, data) {
 
   saveLocalStore(store);
   return store.content.find((c) => c.type === type) || payload;
+}
+
+// ─────────────────────────────────────────────
+// BLOCKED SLOTS / CLINIC CLOSURES
+// ─────────────────────────────────────────────
+export async function getBlockedSlots() {
+  try {
+    const conn = await connectToDatabase();
+    if (conn) {
+      const list = await BlockedSlot.find().sort({ createdAt: -1 }).lean();
+      return list.map((item) => ({ ...item, _id: item._id.toString() }));
+    }
+  } catch (err) {
+    console.warn("MongoDB query fallback (getBlockedSlots):", err.message);
+  }
+
+  const store = getLocalStore();
+  return store.blockedSlots || [];
+}
+
+export async function createBlockedSlot(data) {
+  let createdDoc = null;
+  try {
+    const conn = await connectToDatabase();
+    if (conn) {
+      const created = await BlockedSlot.create(data);
+      createdDoc = { ...created.toObject(), _id: created._id.toString() };
+    }
+  } catch (err) {
+    console.warn("MongoDB error (createBlockedSlot):", err.message);
+  }
+
+  const store = getLocalStore();
+  if (!store.blockedSlots) store.blockedSlots = [];
+  const newItem = createdDoc || {
+    _id: "blk-" + Date.now() + "-" + Math.random().toString(36).substring(2, 6),
+    ...data,
+    createdAt: new Date().toISOString(),
+  };
+
+  store.blockedSlots.unshift(newItem);
+  saveLocalStore(store);
+  return newItem;
+}
+
+export async function deleteBlockedSlot(id) {
+  try {
+    const conn = await connectToDatabase();
+    if (conn) {
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        await BlockedSlot.findByIdAndDelete(id);
+      } else {
+        await BlockedSlot.deleteOne({ _id: id });
+      }
+    }
+  } catch (err) {
+    console.warn("MongoDB error (deleteBlockedSlot):", err.message);
+  }
+
+  const store = getLocalStore();
+  if (store.blockedSlots) {
+    store.blockedSlots = store.blockedSlots.filter((b) => b._id !== id);
+    saveLocalStore(store);
+  }
+  return { success: true };
 }

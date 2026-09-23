@@ -184,12 +184,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          <div className="p-3 bg-neutral-900/60 border border-neutral-800 rounded-xl text-center">
-            <p className="text-[11px] text-neutral-400">
-              Default credentials: <span className="text-[#F0A5A2] font-mono">admin@luminous.com</span> / <span className="text-[#F0A5A2] font-mono">luminous123</span>
-            </p>
-          </div>
         </div>
       </div>
     </div>

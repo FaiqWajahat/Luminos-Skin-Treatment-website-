@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getEnquiries, createEnquiry } from "@/lib/db-store";
+import { getEnquiries, createEnquiry, getBlockedSlots } from "@/lib/db-store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -34,9 +34,41 @@ export async function POST(req) {
       );
     }
 
-    // Check existing enquiries for slot conflicts
-    const existing = await getEnquiries();
     const slotNorm = timeSlot.trim().toLowerCase();
+
+    // 1. Check blocked slots collection (admin closures & custom slot blocks)
+    const blockedSlots = await getBlockedSlots();
+
+    const isBlockedByAdmin = blockedSlots.some((b) => {
+      if (b.date === preferredDate) {
+        const bSlotNorm = (b.slot || "").trim().toLowerCase();
+        if (bSlotNorm === "full_day" || bSlotNorm.includes("full day") || b.type === "FULL_DAY") {
+          return "FULL_DAY";
+        }
+        if (bSlotNorm === slotNorm) return "SLOT";
+        const clean1 = slotNorm.replace(/\s*(am|pm)/i, "").trim();
+        const clean2 = bSlotNorm.replace(/\s*(am|pm)/i, "").trim();
+        if (clean1 && clean2 && clean1 === clean2) return "SLOT";
+      }
+      return false;
+    });
+
+    if (isBlockedByAdmin === "FULL_DAY") {
+      return NextResponse.json(
+        { error: `The clinic is closed / fully blocked on ${preferredDate}. No appointments are available for this date.` },
+        { status: 409 }
+      );
+    }
+
+    if (isBlockedByAdmin === "SLOT") {
+      return NextResponse.json(
+        { error: `The ${timeSlot} slot on ${preferredDate} has been blocked by clinic admin. Please select another slot.` },
+        { status: 409 }
+      );
+    }
+
+    // 2. Check existing client enquiries for slot conflicts
+    const existing = await getEnquiries();
 
     const isConflict = existing.some((eq) => {
       const eqStatus = (eq.status || "New").trim().toLowerCase();

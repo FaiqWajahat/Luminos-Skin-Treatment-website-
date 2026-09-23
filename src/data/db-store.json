@@ -1419,6 +1419,78 @@
   ],
   "enquiries": [
     {
+      "referenceId": "LUM-BK-32938",
+      "name": "Dai Gay",
+      "email": "xoxox@mailinator.com",
+      "phone": "+1 (231) 753-3717",
+      "treatmentTitle": "Lymphatic Wood Sculpt Massage",
+      "timeframe": "two-weeks",
+      "preferredDate": "2026-09-25",
+      "timeSlot": "12:00 PM",
+      "message": "[Sensitive skin barrier] ",
+      "skinPhoto": "",
+      "status": "New",
+      "notes": "",
+      "_id": "6ab400148819a3cde232a6af",
+      "createdAt": "2026-09-23T16:36:36.990Z",
+      "updatedAt": "2026-09-23T16:36:36.990Z",
+      "__v": 0
+    },
+    {
+      "referenceId": "LUM-BK-31191",
+      "name": "Dai Gay",
+      "email": "xoxox@mailinator.com",
+      "phone": "+1 (231) 753-3717",
+      "treatmentTitle": "Dermaplaning Treatment ",
+      "timeframe": "two-weeks",
+      "preferredDate": "2026-09-25",
+      "timeSlot": "11:30 AM",
+      "message": "Dolor facere rerum hic in voluptate enim possimus voluptatem aut aut",
+      "skinPhoto": "",
+      "status": "New",
+      "notes": "",
+      "_id": "6ab3fffc8819a3cde232a6ae",
+      "createdAt": "2026-09-23T16:36:12.079Z",
+      "updatedAt": "2026-09-23T16:36:12.079Z",
+      "__v": 0
+    },
+    {
+      "referenceId": "LUM-BLK-11468",
+      "name": "Admin Reserved Slot",
+      "email": "admin@luminous.com",
+      "phone": "+44 7950 774790",
+      "treatmentTitle": "Full Day Clinic Closure",
+      "timeframe": "two-weeks",
+      "preferredDate": "2026-09-29",
+      "timeSlot": "FULL_DAY",
+      "message": "Slot manually reserved/blocked via Admin Panel.",
+      "skinPhoto": "",
+      "status": "Confirmed",
+      "notes": "",
+      "_id": "6ab3fd518819a3cde232a6ad",
+      "createdAt": "2026-09-23T16:24:49.757Z",
+      "updatedAt": "2026-09-23T16:24:49.757Z",
+      "__v": 0
+    },
+    {
+      "referenceId": "LUM-BLK-89393",
+      "name": "Admin Reserved Slot",
+      "email": "admin@luminous.com",
+      "phone": "+44 7950 774790",
+      "treatmentTitle": "Clinic Private Slot Block",
+      "timeframe": "two-weeks",
+      "preferredDate": "2026-09-26",
+      "timeSlot": "03:30 PM",
+      "message": "Slot manually reserved/blocked via Admin Panel.",
+      "skinPhoto": "",
+      "status": "Confirmed",
+      "notes": "",
+      "_id": "6ab3f8fc8819a3cde232a6ac",
+      "createdAt": "2026-09-23T16:06:20.971Z",
+      "updatedAt": "2026-09-23T16:06:20.971Z",
+      "__v": 0
+    },
+    {
       "referenceId": "LUM-BK-96225",
       "name": "Leandra Franklin",
       "email": "pyjonav@mailinator.com",
@@ -1602,6 +1674,58 @@
       "__v": 0,
       "createdAt": "2026-09-22T10:49:56.949Z",
       "updatedAt": "2026-09-23T15:14:51.152Z"
+    }
+  ],
+  "blockedSlots": [
+    {
+      "date": "2026-10-13",
+      "slot": "FULL_DAY",
+      "reason": "Admin Blocked",
+      "type": "FULL_DAY",
+      "_id": "6ab404278819a3cde232a6b4",
+      "createdAt": "2026-09-23T16:53:59.292Z",
+      "updatedAt": "2026-09-23T16:53:59.292Z",
+      "__v": 0
+    },
+    {
+      "date": "2026-08-31",
+      "slot": "FULL_DAY",
+      "reason": "Admin Blocked",
+      "type": "FULL_DAY",
+      "_id": "6ab4040b8819a3cde232a6b3",
+      "createdAt": "2026-09-23T16:53:31.956Z",
+      "updatedAt": "2026-09-23T16:53:31.956Z",
+      "__v": 0
+    },
+    {
+      "date": "2026-08-31",
+      "slot": "FULL_DAY",
+      "reason": "Admin Blocked",
+      "type": "FULL_DAY",
+      "_id": "6ab403f68819a3cde232a6b2",
+      "createdAt": "2026-09-23T16:53:10.257Z",
+      "updatedAt": "2026-09-23T16:53:10.257Z",
+      "__v": 0
+    },
+    {
+      "date": "2026-09-24",
+      "slot": "FULL_DAY",
+      "reason": "Admin Blocked",
+      "type": "FULL_DAY",
+      "_id": "6ab400708819a3cde232a6b1",
+      "createdAt": "2026-09-23T16:38:08.274Z",
+      "updatedAt": "2026-09-23T16:38:08.274Z",
+      "__v": 0
+    },
+    {
+      "date": "2026-09-25",
+      "slot": "05:00 PM",
+      "reason": "Admin Blocked",
+      "type": "SLOT",
+      "_id": "6ab4003d8819a3cde232a6b0",
+      "createdAt": "2026-09-23T16:37:17.642Z",
+      "updatedAt": "2026-09-23T16:37:17.642Z",
+      "__v": 0
     }
   ]
 }

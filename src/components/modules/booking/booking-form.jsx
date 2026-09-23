@@ -33,17 +33,21 @@ export function BookingForm() {
   const [treatmentsList, setTreatmentsList] = useState(TREATMENTS);
   const [loadingTreatments, setLoadingTreatments] = useState(true);
   const [existingEnquiries, setExistingEnquiries] = useState([]);
+  const [blockedSlots, setBlockedSlots] = useState([]);
 
-  // Fetch live treatments & enquiries with real-time sync
+  // Fetch live treatments, enquiries, and blocked slots with real-time sync
   const loadEnquiries = async () => {
     try {
-      const r = await fetch("/api/enquiries", { cache: "no-store" });
-      const d = await r.json();
-      if (d.enquiries) {
-        setExistingEnquiries(d.enquiries);
-      }
+      const [r1, r2] = await Promise.all([
+        fetch("/api/enquiries", { cache: "no-store" }),
+        fetch("/api/blocked-slots", { cache: "no-store" }),
+      ]);
+      const d1 = await r1.json();
+      const d2 = await r2.json();
+      if (d1.enquiries) setExistingEnquiries(d1.enquiries);
+      if (d2.blockedSlots) setBlockedSlots(d2.blockedSlots);
     } catch (err) {
-      console.warn("Could not fetch enquiries for availability:", err);
+      console.warn("Could not fetch enquiries / blocked slots for availability:", err);
     }
   };
 
@@ -109,6 +113,38 @@ export function BookingForm() {
     message: "",
     consent: false,
   });
+
+  // Load saved contact details from localStorage on mount
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("luminous_client_info");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && (parsed.name || parsed.email || parsed.phone)) {
+            setFormData((prev) => ({
+              ...prev,
+              name: parsed.name || prev.name,
+              email: parsed.email || prev.email,
+              phone: parsed.phone || prev.phone,
+            }));
+          }
+        }
+      }
+    } catch (err) {
+      // Ignore local storage errors
+    }
+  }, []);
+
+  const saveClientInfo = (info) => {
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("luminous_client_info", JSON.stringify(info));
+      }
+    } catch (err) {
+      // Ignore local storage errors
+    }
+  };
 
   useEffect(() => {
     if (categories.length > 0 && !selectedCategory) {
@@ -235,10 +271,27 @@ export function BookingForm() {
   const handleReset = () => {
     setSubmittedData(null);
     setReferenceId("");
+    let savedContact = { name: formData.name, email: formData.email, phone: formData.phone };
+    try {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("luminous_client_info");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed) {
+            savedContact = {
+              name: parsed.name || formData.name,
+              email: parsed.email || formData.email,
+              phone: parsed.phone || formData.phone,
+            };
+          }
+        }
+      }
+    } catch (e) {}
+
     setFormData({
-      name: "",
-      email: "",
-      phone: "",
+      name: savedContact.name || "",
+      email: savedContact.email || "",
+      phone: savedContact.phone || "",
       treatmentSlug: treatmentsByCategory[selectedCategory]?.[0]?.slug || "",
       preferredDate: tomorrowStr,
       timeSlot: "",
@@ -408,6 +461,8 @@ export function BookingForm() {
                   {/* 3. Custom Date Picker */}
                   <CustomDatePicker
                     selectedDate={formData.preferredDate}
+                    existingEnquiries={existingEnquiries}
+                    blockedSlots={blockedSlots}
                     onSelectDate={(dateStr) => {
                       setFormData((prev) => ({
                         ...prev,
@@ -433,6 +488,7 @@ export function BookingForm() {
                       if (errors.timeSlot) setErrors({ ...errors, timeSlot: undefined });
                     }}
                     existingEnquiries={existingEnquiries}
+                    blockedSlots={blockedSlots}
                   />
 
                   {/* 5. Client Information (All Custom Inputs) */}
@@ -452,8 +508,13 @@ export function BookingForm() {
                         required
                         value={formData.name}
                         onChange={(e) => {
-                          setFormData({ ...formData, name: e.target.value });
-                          if (errors.name) setErrors({ ...errors, name: undefined });
+                          const val = e.target.value;
+                          setFormData((prev) => {
+                            const updated = { ...prev, name: val };
+                            saveClientInfo({ name: updated.name, email: updated.email, phone: updated.phone });
+                            return updated;
+                          });
+                          if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
                         }}
                         error={errors.name}
                       />
@@ -466,8 +527,13 @@ export function BookingForm() {
                         required
                         value={formData.email}
                         onChange={(e) => {
-                          setFormData({ ...formData, email: e.target.value });
-                          if (errors.email) setErrors({ ...errors, email: undefined });
+                          const val = e.target.value;
+                          setFormData((prev) => {
+                            const updated = { ...prev, email: val };
+                            saveClientInfo({ name: updated.name, email: updated.email, phone: updated.phone });
+                            return updated;
+                          });
+                          if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
                         }}
                         error={errors.email}
                       />
@@ -482,8 +548,13 @@ export function BookingForm() {
                       required
                       value={formData.phone}
                       onChange={(e) => {
-                        setFormData({ ...formData, phone: e.target.value });
-                        if (errors.phone) setErrors({ ...errors, phone: undefined });
+                        const val = e.target.value;
+                        setFormData((prev) => {
+                          const updated = { ...prev, phone: val };
+                          saveClientInfo({ name: updated.name, email: updated.email, phone: updated.phone });
+                          return updated;
+                        });
+                        if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
                       }}
                       error={errors.phone}
                     />
