@@ -4,6 +4,7 @@ import { ConcernsGrid } from "./concerns-grid";
 import { PopularTreatments } from "./popular-treatments";
 import { ClinicalProtocol } from "./clinical-protocol";
 import { ClinicExperience } from "./clinic-experience";
+import { ClinicVideos } from "./clinic-videos";
 import { ReviewsStrip } from "./reviews-strip";
 import { InstagramFeed } from "./instagram-feed";
 import { FaqsSection } from "./faqs-section";
@@ -24,6 +25,7 @@ export function HomeView({ data = {} }) {
       <PopularTreatments />
       <ClinicalProtocol />
       <ClinicExperience />
+      <ClinicVideos videos={data.videos} />
       <ReviewsStrip />
       <InstagramFeed />
       <FaqsSection faqs={data.faqs} image={data.consultantLoungeImage} />
