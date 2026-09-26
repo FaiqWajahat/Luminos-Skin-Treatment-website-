@@ -16,32 +16,32 @@ import {
 const DEFAULT_VIDEOS = [
   {
     id: "vid-1",
-    title: "Bespoke Facial Therapy",
-    subtitle: "Deep Cleanse & Hydration",
+    title: "LED Light Treatment",
+    subtitle: "Phototherapy Protocol",
     url: "https://res.cloudinary.com/x4j3r8wq/video/upload/v1790335442/video-01.mp4",
   },
   {
     id: "vid-2",
-    title: "Collagen & Barrier Repair",
-    subtitle: "Advanced Skin Protocol",
+    title: "Deep Cleansing",
+    subtitle: "Pore Purification & Hydration",
     url: "https://res.cloudinary.com/x4j3r8wq/video/upload/v1790335686/vedio-2.mp4",
   },
   {
     id: "vid-3",
-    title: "Laser & Radiance Therapy",
-    subtitle: "Targeted Skin Glow",
+    title: "Microneedling",
+    subtitle: "Collagen Induction Therapy",
     url: "https://res.cloudinary.com/x4j3r8wq/video/upload/v1790335714/vedio-3.mp4",
   },
   {
     id: "vid-4",
-    title: "Clinical Exfoliation Protocol",
-    subtitle: "Luminous Complexion",
+    title: "Spa Facial",
+    subtitle: "Restorative Skin Wellness",
     url: "https://res.cloudinary.com/x4j3r8wq/video/upload/v1790335726/vedio-4.mp4",
   },
   {
     id: "vid-5",
-    title: "Sanctuary Lounge Experience",
-    subtitle: "Leeds 1:1 Private Suite",
+    title: "Lymphatic Facial Massage",
+    subtitle: "Contouring & Detox Protocol",
     url: "https://res.cloudinary.com/x4j3r8wq/video/upload/v1790335738/vedio-5.mp4",
   },
 ];

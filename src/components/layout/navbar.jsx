@@ -37,15 +37,15 @@ export function Navbar() {
         <div className="flex items-center justify-between">
           {/* Clinic Brand */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs group-hover:scale-105 transition-transform duration-300 border border-[#E8DFD5] bg-white flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs group-hover:scale-105 transition-transform duration-300 border border-[#E8DFD5] bg-white flex items-center justify-center shrink-0">
               <img src="/logo.jpeg" alt="Luminous Skin Clinic" className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col">
-              <span className="font-semibold text-base tracking-tight text-[#1C1917] group-hover:text-[#EC9C9D] transition-colors">
+              <span className="font-semibold text-base tracking-tight text-[#1C1917] group-hover:text-[#EC9C9D] transition-colors leading-tight">
                 {CLINIC_INFO.shortName}
               </span>
-              <span className="text-[11px] text-[#78716C] tracking-wider uppercase font-medium">
-                Skin Clinic · Leeds
+              <span className="text-[10px] sm:text-xs text-[#EC9C9D] font-medium tracking-tight mt-0.5">
+                🌸~Luminosity is the essence of BEAUT🌸
               </span>
             </div>
           </Link>

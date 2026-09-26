@@ -66,8 +66,10 @@ export function PractitionerBio({ data = {} }) {
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md px-4 py-3 rounded-xl border border-[#E8DFD5]/80 shadow-md">
-                  <p className="text-xs sm:text-sm font-semibold text-[#1C1917]">{founderName}</p>
-                  <p className="text-[11px] text-[#78716C] line-clamp-1" title={founderTitle}>{founderTitle}</p>
+                  <p className="text-xs sm:text-sm font-semibold text-[#1C1917]">Madiha Naz</p>
+                  <p className="text-[11px] font-medium text-[#EC9C9D] leading-tight mt-0.5">
+                    A Certified Beauty Therapist and BEST Facialist in Leeds
+                  </p>
                 </div>
               </div>
             </div>
@@ -89,11 +91,8 @@ export function PractitionerBio({ data = {} }) {
 
               <div>
                 <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1C1917] leading-tight">
-                  Meet {founderName.split(' ')[0]}
+                  Meet Madiha
                 </h2>
-                <p className="text-xs sm:text-sm font-medium text-[#EC9C9D] mt-1 tracking-wide">
-                  {founderTitle}
-                </p>
               </div>
 
               <div className="space-y-3.5 text-sm sm:text-[15px] text-[#57534E] leading-relaxed">

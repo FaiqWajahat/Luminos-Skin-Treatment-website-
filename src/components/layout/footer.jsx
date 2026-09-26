@@ -27,15 +27,15 @@ export function Footer() {
           {/* Brand & Ethos */}
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl overflow-hidden border border-neutral-800 bg-white flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl overflow-hidden border border-neutral-800 bg-white flex items-center justify-center shrink-0">
                 <img src="/logo.jpeg" alt="Luminous Skin Clinic" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col">
-                <span className="font-semibold text-lg tracking-tight text-white">
+                <span className="font-semibold text-lg tracking-tight text-white leading-tight">
                   {CLINIC_INFO.name}
                 </span>
-                <span className="text-xs text-[#EAA59E] tracking-wider uppercase font-medium">
-                  {CLINIC_INFO.location}
+                <span className="text-xs text-[#EC9C9D] font-medium tracking-tight mt-1">
+                  🌸~Luminosity is the essence of BEAUT🌸
                 </span>
               </div>
             </div>

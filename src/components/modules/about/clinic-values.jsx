@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "framer-motion";
 import { SectionHeader } from "@/components/shared/section-header";
@@ -9,24 +9,12 @@ const ease = [0.22, 1, 0.36, 1];
 const VALUES = [
   {
     num: "01",
-    icon: ShieldCheck,
-    title: "Barrier-First Dermatology",
-    desc: "We prioritize lipid barrier health above all else. Real skin radiance comes from a resilient, balanced stratum corneum, not from aggressive, damaging over-exfoliation.",
-  },
-  {
-    num: "02",
-    icon: Sparkles,
-    title: "Evidence-Backed Therapies",
-    desc: "Every modality we practice—from targeted LED wavelengths to surgical dermaplaning—is grounded in proven dermatology science with documented efficacy.",
-  },
-  {
-    num: "03",
     icon: Scale,
     title: "Complete Price Transparency",
     desc: "No surprise add-ons, hidden consultation fees, or high-pressure product sales. Every price is openly published before you book.",
   },
   {
-    num: "04",
+    num: "02",
     icon: HeartHandshake,
     title: "One-to-One Private Sanctuary",
     desc: "Your appointment is strictly one-to-one. You receive our undivided attention in a serene Leeds clinic suite designed for complete mental and dermal rest.",
@@ -53,8 +41,8 @@ export function ClinicValues() {
           />
         </motion.div>
 
-        {/* 4 Values Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 2 Values Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-6">
           {VALUES.map((val, idx) => {
             const Icon = val.icon;
             return (
