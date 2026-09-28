@@ -1,5 +1,4 @@
 import { HeroSection } from "./hero-section";
-import { TrustStrip } from "./trust-strip";
 import { ConcernsGrid } from "./concerns-grid";
 import { PopularTreatments } from "./popular-treatments";
 import { ClinicalProtocol } from "./clinical-protocol";
@@ -20,7 +19,6 @@ export function HomeView({ data = {} }) {
         subtitle={data.heroSubtitle}
         highlight={data.heroHighlight}
       />
-      <TrustStrip />
       <ConcernsGrid />
       <PopularTreatments />
       <ClinicalProtocol />

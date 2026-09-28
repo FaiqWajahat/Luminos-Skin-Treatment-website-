@@ -5,10 +5,10 @@ import { Plus, Pencil, Trash2, X, Sparkles, Upload, Clock, DollarSign, Search } 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Pagination } from "@/components/shared/pagination";
 
-const CATEGORIES = ["All Clinic Facials", "Facial Skin Treatments", "Massage Therapy"];
+const CATEGORIES = ["Facial Skin Treatments", "Massage Therapy", "All Other Treatments"];
 
 const emptyForm = {
-  title: "", slug: "", category: "All Clinic Facials", price: "", duration: "",
+  title: "", slug: "", category: "Facial Skin Treatments", price: "", duration: "",
   tagline: "", shortDescription: "", fullDescription: "", benefits: "",
   idealFor: "", image: "", popular: false, active: true,
 };

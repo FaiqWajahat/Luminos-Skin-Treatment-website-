@@ -73,7 +73,9 @@ export function TreatmentCard({ treatment }) {
           {/* Category & Badge with fixed height for perfect vertical alignment */}
           <div className="flex items-center justify-between gap-2 h-6">
             <span className="text-[10px] uppercase tracking-widest font-semibold text-[#EC9C9D] truncate">
-              {treatment.category}
+              {treatment.category?.toLowerCase() === "all clinic facials"
+                ? "All Other Treatments"
+                : treatment.category}
             </span>
             {treatment.popular && (
               <span className="text-[10px] font-semibold text-[#EC9C9D] bg-[#EC9C9D]/10 px-2.5 py-0.5 rounded-full border border-[#EC9C9D]/20 shrink-0">

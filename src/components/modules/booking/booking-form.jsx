@@ -70,13 +70,28 @@ export function BookingForm() {
 
   // Compute categories & group treatments
   const { categories, treatmentsByCategory } = useMemo(() => {
+    const normalizeCat = (cat) => {
+      if (!cat) return "";
+      const trimmed = cat.trim();
+      if (trimmed.toLowerCase() === "all clinic facials") {
+        return "All Other Treatments";
+      }
+      return trimmed;
+    };
+
     const standardOrder = [
-      "All Clinic Facials",
       "Facial Skin Treatments",
       "Massage Therapy",
+      "All Other Treatments",
     ];
+
+    const normalizedList = treatmentsList.map((t) => ({
+      ...t,
+      category: normalizeCat(t.category),
+    }));
+
     const availableCats = [
-      ...new Set(treatmentsList.map((t) => (t.category || "").trim()).filter(Boolean)),
+      ...new Set(normalizedList.map((t) => (t.category || "").trim()).filter(Boolean)),
     ];
     const sortedCats = [
       ...standardOrder.filter((c) => availableCats.includes(c)),
@@ -84,7 +99,7 @@ export function BookingForm() {
     ];
     const grouped = {};
     sortedCats.forEach((c) => {
-      grouped[c] = treatmentsList.filter((t) => (t.category || "").trim() === c);
+      grouped[c] = normalizedList.filter((t) => (t.category || "").trim() === c);
     });
     return { categories: sortedCats, treatmentsByCategory: grouped };
   }, [treatmentsList]);

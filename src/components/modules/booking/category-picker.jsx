@@ -3,9 +3,10 @@
 import { Sparkles, Flower2, HeartHandshake, ShieldCheck } from "lucide-react";
 
 const CATEGORY_ICONS = {
-  "All Clinic Facials": Sparkles,
   "Facial Skin Treatments": ShieldCheck,
   "Massage Therapy": HeartHandshake,
+  "All Other Treatments": Sparkles,
+  "All Clinic Facials": Sparkles,
 };
 
 export function CategoryPicker({ categories, selectedCategory, onSelectCategory, treatmentsByCategory }) {

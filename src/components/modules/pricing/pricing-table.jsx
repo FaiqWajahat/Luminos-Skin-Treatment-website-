@@ -29,15 +29,29 @@ export function PricingTable() {
       .finally(() => setLoading(false));
   }, []);
 
+  const normalizeCat = (cat) => {
+    if (!cat) return "";
+    const trimmed = cat.trim();
+    if (trimmed.toLowerCase() === "all clinic facials") {
+      return "All Other Treatments";
+    }
+    return trimmed;
+  };
+
   const standardOrder = [
     "All",
-    "All Clinic Facials",
     "Facial Skin Treatments",
     "Massage Therapy",
+    "All Other Treatments",
   ];
 
+  const normalizedTreatments = treatments.map((t) => ({
+    ...t,
+    category: normalizeCat(t.category),
+  }));
+
   const existingCategories = [
-    ...new Set(treatments.map((t) => (t.category || "").trim()).filter(Boolean)),
+    ...new Set(normalizedTreatments.map((t) => (t.category || "").trim()).filter(Boolean)),
   ];
 
   const categories = [
@@ -48,8 +62,8 @@ export function PricingTable() {
 
   const filteredTreatments =
     selectedCategory === "All"
-      ? treatments
-      : treatments.filter(
+      ? normalizedTreatments
+      : normalizedTreatments.filter(
           (t) =>
             (t.category || "").trim().toLowerCase() ===
             selectedCategory.trim().toLowerCase()

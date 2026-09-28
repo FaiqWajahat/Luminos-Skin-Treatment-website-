@@ -42,7 +42,7 @@ export function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className="font-semibold text-base sm:text-lg tracking-tight text-[#1C1917] group-hover:text-[#EC9C9D] transition-colors leading-tight">
-                Luminous Skin Clinic
+                Luminous
               </span>
               <span className="text-[10px] sm:text-xs text-[#EC9C9D] font-medium tracking-tight mt-0.5">
                 🌸~Luminosity is the essence of BEAUT🌸

@@ -9,43 +9,36 @@ const ease = [0.22, 1, 0.36, 1];
 
 export function AboutHero({
   image = "/about-hero-img.png",
-  title = "Welcome to Luminous Skin Clinic,",
+  title = "Welcome to Luminous,",
   titleHighlight = "Where Beauty Meets Serenity.",
-  subtitle = "More than just a salon, it’s your personal escape to self-care and skin wellness. Step into calm sophistication and let your confidence shine — because at Luminous Skin Clinic, your skin deserves nothing less than perfection.",
+  subtitle = "Your personal escape to calm sophistication, self-care, and skin wellness.",
   highlight = "Where Beauty Meets Serenity · Leeds"
 }) {
   return (
-    <section className="relative min-h-[48vh] lg:min-h-[52vh] py-16 lg:py-20 flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[46vh] lg:min-h-[50vh] py-16 lg:py-20 flex items-center justify-center overflow-hidden">
       
       {/* ── Background Layer with Real Clinic Photography ── */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 bg-[#141211]">
         {image?.startsWith("data:") ? (
           <img
             src={image}
-            alt="Luminous Skin Clinic Leeds Sanctuary and Reception"
-            className="w-full h-full object-cover object-center scale-[1.01]"
+            alt="Luminous Leeds Sanctuary and Reception"
+            className="w-full h-full object-cover object-center"
           />
         ) : (
           <Image
             src={image || "/about-hero-img.png"}
-            alt="Luminous Skin Clinic Leeds Sanctuary and Reception"
+            alt="Luminous Leeds Sanctuary and Reception"
             fill
             priority
-            quality={90}
+            quality={95}
             sizes="100vw"
-            className="object-cover object-center scale-[1.01]"
+            className="object-cover object-center"
           />
         )}
 
-        {/* Professional Multi-Stop Dark Scrim Overlay for ultra-sharp text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#12100F]/95 via-[#141211]/65 to-[#171514]/50 backdrop-blur-[0.5px]" />
-        <div className="absolute inset-0 bg-radial-[ellipse_at_center,transparent_0%,rgba(18,16,15,0.65)_100%]" />
-
-        {/* Delicate corner luxury wireframe marks */}
-        <div className="absolute top-6 left-6 w-5 h-5 border-t border-l border-[#F0A5A2]/40" />
-        <div className="absolute top-6 right-6 w-5 h-5 border-t border-r border-[#F0A5A2]/40" />
-        <div className="absolute bottom-6 left-6 w-5 h-5 border-b border-l border-[#F0A5A2]/40" />
-        <div className="absolute bottom-6 right-6 w-5 h-5 border-b border-r border-[#F0A5A2]/40" />
+        {/* Clean, gentle overlay ensuring background photo stays bright & clear */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-black/35" />
       </div>
 
       {/* ── Foreground Centralized Content (Compact & Elegant Height) ── */}

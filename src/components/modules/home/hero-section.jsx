@@ -11,19 +11,19 @@ export function HeroSection({
   image = "/about-01.jpeg",
   title = "Clinical Precision.",
   titleHighlight = "Effortlessly Luminous.",
-  subtitle = "Bespoke one-to-one skin therapies designed to reveal your healthiest complexion. From restorative facials and collagen induction to targeted phototherapy—tailored purely to your skin.",
+  subtitle = "Bespoke one-to-one skin therapies tailored purely to reveal your healthiest complexion.",
   highlight = "Leeds LS11 · Private Clinical Sanctuary",
 }) {
   return (
-    <section className="relative min-h-[90vh] lg:min-h-[94vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[85vh] lg:min-h-[88vh] flex items-center justify-center overflow-hidden">
       
       {/* ── Background Layer with Real Clinic Photography ── */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 bg-[#141211]">
         {image?.startsWith("data:") ? (
           <img
             src={image}
             alt="Luminous Skin Clinic Leeds Private Treatment Sanctuary"
-            className="w-full h-full object-cover object-center scale-[1.01]"
+            className="w-full h-full object-cover object-center"
           />
         ) : (
           <Image
@@ -31,21 +31,14 @@ export function HeroSection({
             alt="Luminous Skin Clinic Leeds Private Treatment Sanctuary"
             fill
             priority
-            quality={90}
+            quality={95}
             sizes="100vw"
-            className="object-cover object-center scale-[1.01]"
+            className="object-cover object-center"
           />
         )}
 
-        {/* Sophisticated Multi-Stop Dark Scrim Overlay (ensures maximum text clarity while showcasing the room) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#12100F]/95 via-[#141211]/60 to-[#171514]/45 backdrop-blur-[0.5px]" />
-        <div className="absolute inset-0 bg-radial-[ellipse_at_center,transparent_0%,rgba(18,16,15,0.65)_100%]" />
-
-        {/* Delicate subtle corner luxury wireframe marks */}
-        <div className="absolute top-8 left-8 w-6 h-6 border-t border-l border-[#EC9C9D]/50" />
-        <div className="absolute top-8 right-8 w-6 h-6 border-t border-r border-[#EC9C9D]/50" />
-        <div className="absolute bottom-8 left-8 w-6 h-6 border-b border-l border-[#EC9C9D]/50" />
-        <div className="absolute bottom-8 right-8 w-6 h-6 border-b border-r border-[#EC9C9D]/50" />
+        {/* Clean, gentle overlay ensuring background photo stays bright & clear */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-black/35" />
       </div>
 
       {/* ── Foreground Centralized Content ── */}

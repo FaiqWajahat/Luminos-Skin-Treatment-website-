@@ -51,7 +51,7 @@ export function PopularTreatments() {
           className="flex flex-col md:flex-row md:items-end justify-between gap-6"
         >
           <SectionHeader
-            eyebrow="Popular Appointments"
+            eyebrow="Popular Treatments"
             title="Skin care made easier to choose."
             description="Clear treatment information, transparent starting prices, and a simple route to clinical care."
           />

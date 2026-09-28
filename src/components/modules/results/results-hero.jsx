@@ -22,19 +22,8 @@ export function ResultsHero() {
           className="object-cover object-center scale-[1.01]"
         />
 
-        {/* Ambient Warm Luxury Glows */}
-        <div className="absolute top-1/4 left-1/3 w-[500px] h-[300px] bg-[#EC9C9D]/12 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-10 right-1/4 w-[400px] h-[250px] bg-[#D97E80]/10 rounded-full blur-[90px] pointer-events-none" />
-
-        {/* Professional Multi-Stop Dark Scrim Overlay for ultra-sharp text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#12100F]/95 via-[#141211]/70 to-[#171514]/55 backdrop-blur-[0.5px]" />
-        <div className="absolute inset-0 bg-radial-[ellipse_at_center,transparent_0%,rgba(18,16,15,0.7)_100%]" />
-
-        {/* Delicate corner luxury wireframe marks */}
-        <div className="absolute top-6 left-6 w-5 h-5 border-t border-l border-[#F0A5A2]/40" />
-        <div className="absolute top-6 right-6 w-5 h-5 border-t border-r border-[#F0A5A2]/40" />
-        <div className="absolute bottom-6 left-6 w-5 h-5 border-b border-l border-[#F0A5A2]/40" />
-        <div className="absolute bottom-6 right-6 w-5 h-5 border-b border-r border-[#F0A5A2]/40" />
+        {/* Clean, gentle overlay ensuring background photo stays bright & clear */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-black/35" />
       </div>
 
       {/* ── Foreground Centralized Content ── */}
@@ -60,8 +49,8 @@ export function ResultsHero() {
           </h1>
 
           {/* Concise Subtitle */}
-          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-xl mx-auto font-normal">
-            Explore genuine before-and-after progressions and treatment journeys from patients treated at our Leeds sanctuary. Real results, zero filters.
+          <p className="text-sm sm:text-base text-neutral-200 leading-relaxed max-w-xl mx-auto font-normal drop-shadow-sm">
+            Real client transformations and progressions documented with honesty and zero filters.
           </p>
 
           {/* Compact Actions */}
