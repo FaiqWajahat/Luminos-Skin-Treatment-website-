@@ -3,11 +3,8 @@ import path from "path";
 import mongoose from "mongoose";
 import { connectToDatabase } from "./mongodb";
 import { User, Enquiry, Treatment, Result, Content, BlockedSlot } from "@/models";
-import {
-  TREATMENTS,
-  RESULTS_CASE_STUDIES,
-  FAQS,
-} from "@/constants/clinic-data";
+import { RESULTS_CASE_STUDIES, FAQS } from "@/constants/clinic-data";
+import { CATALOG_TREATMENTS } from "@/constants/treatment-catalog";
 
 const STORE_PATH = path.join(process.cwd(), "src", "data", "db-store.json");
 
@@ -38,21 +35,9 @@ function getLocalStore() {
         createdAt: new Date().toISOString(),
       },
     ],
-    treatments: TREATMENTS.map((t, idx) => ({
-      _id: "treat-" + (t.slug || idx),
-      title: t.title,
-      slug: t.slug,
-      category: t.category,
-      price: t.price,
-      duration: t.duration,
-      tagline: t.tagline || "",
-      shortDescription: t.shortDescription || "",
-      fullDescription: t.fullDescription || "",
-      benefits: t.benefits || [],
-      idealFor: t.idealFor || "",
-      image: t.image || "",
-      popular: Boolean(t.popular),
-      active: true,
+    treatments: buildTreatmentSeed().map((t) => ({
+      _id: "treat-" + t.slug,
+      ...t,
       createdAt: new Date().toISOString(),
     })),
     results: RESULTS_CASE_STUDIES.map((r, idx) => ({
@@ -127,6 +112,27 @@ function saveLocalStore(store) {
 // ─────────────────────────────────────────────
 // TREATMENTS
 // ─────────────────────────────────────────────
+export function buildTreatmentSeed() {
+  return CATALOG_TREATMENTS.map((t, idx) => ({
+    title: t.title,
+    slug: t.slug,
+    category: t.category,
+    price: t.price,
+    priceOptions: t.priceOptions || [],
+    duration: t.duration || "",
+    shortDescription: t.shortDescription,
+    journey: t.journey || [],
+    benefits: t.benefits || [],
+    idealFor: t.idealFor || "",
+    aftercare: t.aftercare || [],
+    frequency: t.frequency || "",
+    image: t.image || "",
+    popular: Boolean(t.popular),
+    active: true,
+    order: idx + 1,
+  }));
+}
+
 export async function getTreatments({ page, limit, category } = {}) {
   const isPaginated = Boolean(page || limit);
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
@@ -139,22 +145,7 @@ export async function getTreatments({ page, limit, category } = {}) {
       const count = await Treatment.countDocuments();
       if (count === 0) {
         // Auto-seed MongoDB
-        const seedData = TREATMENTS.map((t) => ({
-          title: t.title,
-          slug: t.slug,
-          category: t.category,
-          price: t.price,
-          duration: t.duration,
-          tagline: t.tagline || "",
-          shortDescription: t.shortDescription || "",
-          fullDescription: t.fullDescription || "",
-          benefits: t.benefits || [],
-          idealFor: t.idealFor || "",
-          image: t.image || "",
-          popular: Boolean(t.popular),
-          active: true,
-        }));
-        await Treatment.insertMany(seedData);
+        await Treatment.insertMany(buildTreatmentSeed());
       }
 
       const query = {};
@@ -505,32 +496,13 @@ export async function getEnquiries() {
   return store.enquiries || [];
 }
 
+// Bookings are saved to MongoDB only. If the database is unreachable the error
+// is surfaced to the client, so a booking is never "confirmed" without being stored
+// (and client details are never written into the git-tracked local store).
 export async function createEnquiry(data) {
-  let createdDoc = null;
-  try {
-    const conn = await connectToDatabase();
-    if (conn) {
-      const created = await Enquiry.create(data);
-      createdDoc = { ...created.toObject(), _id: created._id.toString() };
-    }
-  } catch (err) {
-    console.warn("MongoDB fallback (createEnquiry):", err.message);
-  }
-
-  const store = getLocalStore();
-  const newEnquiry = createdDoc || {
-    ...data,
-    _id: "enq-" + Date.now() + "-" + Math.random().toString(36).substring(2, 6),
-    createdAt: new Date().toISOString(),
-  };
-
-  if (!store.enquiries) store.enquiries = [];
-  store.enquiries = store.enquiries.filter(
-    (e) => e._id !== newEnquiry._id && e.referenceId !== newEnquiry.referenceId
-  );
-  store.enquiries.unshift(newEnquiry);
-  saveLocalStore(store);
-  return newEnquiry;
+  await connectToDatabase();
+  const created = await Enquiry.create(data);
+  return { ...created.toObject(), _id: created._id.toString() };
 }
 
 export async function updateEnquiry(id, data) {

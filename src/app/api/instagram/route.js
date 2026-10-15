@@ -1,21 +1,26 @@
-import { NextResponse } from "next/server";
-import { getLatestInstagramPosts, syncInstagramPosts } from "@/lib/instagram";
+import { NextResponse, after } from "next/server";
+import { requireAdmin } from "@/lib/auth";
+import { getInstagramFeed, syncInstagramPosts } from "@/lib/instagram";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request) {
+// Public read of the stored feed; a stale feed is refreshed after responding.
+// Forced syncs are admin-only (POST) because they launch a browser scrape.
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const forceSync = searchParams.get("sync") === "true";
+    const { posts, isStale, lastSyncedAt } = await getInstagramFeed();
+    if (isStale) after(() => syncInstagramPosts().catch(() => {}));
 
-    const posts = await getLatestInstagramPosts(forceSync);
-
-    return NextResponse.json({
-      success: true,
-      posts,
-      count: posts.length,
-      timestamp: new Date().toISOString(),
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        posts,
+        count: posts.length,
+        lastSyncedAt,
+        timestamp: new Date().toISOString(),
+      },
+      { headers: { "Cache-Control": "no-store" } }
+    );
   } catch (error) {
     console.error("GET /api/instagram error:", error);
     return NextResponse.json(
@@ -28,7 +33,10 @@ export async function GET(request) {
   }
 }
 
-export async function POST() {
+export async function POST(req) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const result = await syncInstagramPosts();
     return NextResponse.json(result);

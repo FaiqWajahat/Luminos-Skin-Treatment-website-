@@ -1,12 +1,14 @@
 "use client";
 
-import { Sparkles, Flower2, HeartHandshake, ShieldCheck } from "lucide-react";
+import { Sparkles, Flower2, HeartHandshake, Hand, Gem } from "lucide-react";
+import { getCategoryByTitle } from "@/constants/treatment-catalog";
 
 const CATEGORY_ICONS = {
-  "Facial Skin Treatments": ShieldCheck,
-  "Massage Therapy": HeartHandshake,
-  "All Other Treatments": Sparkles,
-  "All Clinic Facials": Sparkles,
+  "advanced-facial-treatments": Sparkles,
+  "ritual-facials": Flower2,
+  "facial-massage-therapies": Hand,
+  "relaxation-therapies": HeartHandshake,
+  "other-treatments": Gem,
 };
 
 export function CategoryPicker({ categories, selectedCategory, onSelectCategory, treatmentsByCategory }) {
@@ -17,9 +19,10 @@ export function CategoryPicker({ categories, selectedCategory, onSelectCategory,
         <span className="text-[#EC9C9D] font-bold text-sm">*</span>
       </label>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
         {categories.map((cat) => {
-          const Icon = CATEGORY_ICONS[cat] || Sparkles;
+          const meta = getCategoryByTitle(cat);
+          const Icon = CATEGORY_ICONS[meta?.slug] || Sparkles;
           const isSelected = selectedCategory === cat;
           const count = treatmentsByCategory[cat]?.length || 0;
 
@@ -64,11 +67,9 @@ export function CategoryPicker({ categories, selectedCategory, onSelectCategory,
                 <h4 className={`text-sm font-serif font-bold ${isSelected ? "text-[#1C1917]" : "text-[#292524]"}`}>
                   {cat}
                 </h4>
-                <p className="text-[11px] text-[#78716C] mt-0.5">
-                  {cat === "Skin & Facial Treatments" && "Glow, hydration & dermaplaning"}
-                  {cat === "Advanced Skin Treatments" && "Collagen induction & cellular repair"}
-                  {cat === "Wellness & Body Therapy" && "Deep release & holistic restore"}
-                </p>
+                {meta?.summary && (
+                  <p className="text-[11px] text-[#78716C] mt-0.5 leading-relaxed">{meta.summary}</p>
+                )}
               </div>
             </button>
           );

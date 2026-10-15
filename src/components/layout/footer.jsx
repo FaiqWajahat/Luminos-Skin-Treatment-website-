@@ -1,24 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import { CLINIC_INFO } from "@/constants/clinic-data";
+import { usePathname } from "next/navigation";
+import { CLINIC_INFO, NAV_LINKS } from "@/constants/clinic-data";
+import { TREATMENT_CATEGORIES } from "@/constants/treatment-catalog";
 import { MapPin, Phone, Mail, Clock, ArrowUpRight } from "lucide-react";
 import { WhatsAppIcon, InstagramIcon, TikTokIcon, FacebookIcon } from "@/components/shared/social-icons";
 
 export function Footer() {
-  const router = useRouter();
   const pathname = usePathname();
-
-  const handleTreatmentsClick = (e) => {
-    if (pathname === "/treatments") {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
+  // These pages end on a full-width section, so the footer sits flush against it
+  const isFlush = pathname === "/" || pathname?.startsWith("/services/");
   return (
-    <footer className="relative z-10 bg-[#1C1917] text-[#FAF8F5] border-t border-[#292524] mt-24">
+    <footer className={`relative z-10 bg-[#1C1917] text-[#FAF8F5] border-t border-[#292524] ${isFlush ? "mt-0" : "mt-24"}`}>
       {/* Top Banner Accent */}
       <div className="h-1 w-full bg-gradient-to-r from-[#F0A5A2] via-[#EC9C9D] to-[#D97E80]" />
 
@@ -98,79 +92,28 @@ export function Footer() {
                 href="/booking"
                 className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-[#F0A5A2] hover:text-white transition-colors cursor-pointer"
               >
-                <span>Reserve Appointment</span>
+                <span>Book Appointment</span>
                 <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
 
-          {/* Treatments Column */}
+          {/* Services Column */}
           <div className="space-y-4">
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#EAA59E]">
-              Treatments
+              Services
             </h4>
             <ul className="space-y-2.5 text-sm text-neutral-300">
-              <li>
-                <Link
-                  href="/treatments"
-                  scroll={true}
-                  onClick={handleTreatmentsClick}
-                  className="hover:text-[#F0A5A2] transition-colors cursor-pointer block"
-                >
-                  Rejuvenating Facial
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/treatments"
-                  scroll={true}
-                  onClick={handleTreatmentsClick}
-                  className="hover:text-[#F0A5A2] transition-colors cursor-pointer block"
-                >
-                  Dermaplaning
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/treatments"
-                  scroll={true}
-                  onClick={handleTreatmentsClick}
-                  className="hover:text-[#F0A5A2] transition-colors cursor-pointer block"
-                >
-                  Microneedling
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/treatments"
-                  scroll={true}
-                  onClick={handleTreatmentsClick}
-                  className="hover:text-[#F0A5A2] transition-colors cursor-pointer block"
-                >
-                  LED Light Treatment
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/treatments"
-                  scroll={true}
-                  onClick={handleTreatmentsClick}
-                  className="hover:text-[#F0A5A2] transition-colors cursor-pointer block"
-                >
-                  Microdermabrasion
-                </Link>
-              </li>
-              <li className="pt-1">
-                <Link
-                  href="/treatments"
-                  scroll={true}
-                  onClick={handleTreatmentsClick}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#EC9C9D] hover:text-white transition-colors cursor-pointer group"
-                >
-                  <span>View All Treatments</span>
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
-                </Link>
-              </li>
+              {TREATMENT_CATEGORIES.map((category) => (
+                <li key={category.slug}>
+                  <Link
+                    href={`/services#${category.slug}`}
+                    className="hover:text-[#F0A5A2] transition-colors cursor-pointer block"
+                  >
+                    {category.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -180,24 +123,16 @@ export function Footer() {
               Explore
             </h4>
             <ul className="space-y-2.5 text-sm text-neutral-300">
+              {NAV_LINKS.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="hover:text-[#F0A5A2] transition-colors cursor-pointer block">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
               <li>
-                <Link href="/about" className="hover:text-[#F0A5A2] transition-colors cursor-pointer block">
-                  About Clinic
-                </Link>
-              </li>
-              <li>
-                <Link href="/pricing" className="hover:text-[#F0A5A2] transition-colors cursor-pointer block">
-                  Treatment Pricing
-                </Link>
-              </li>
-              <li>
-                <Link href="/results" className="hover:text-[#F0A5A2] transition-colors cursor-pointer block">
-                  Client Results
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-[#F0A5A2] transition-colors cursor-pointer block">
-                  Contact & Location
+                <Link href="/booking" className="hover:text-[#F0A5A2] transition-colors cursor-pointer block">
+                  Book Appointment
                 </Link>
               </li>
             </ul>

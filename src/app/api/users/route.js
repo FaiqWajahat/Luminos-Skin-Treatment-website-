@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { getUsers, createUser } from "@/lib/db-store";
 
-export async function GET() {
+export async function GET(req) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const users = await getUsers();
     return NextResponse.json({ users });
@@ -11,6 +15,9 @@ export async function GET() {
 }
 
 export async function POST(req) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const { name, email, password, role } = await req.json();
     if (!name || !email || !password) {

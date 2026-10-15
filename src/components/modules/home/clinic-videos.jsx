@@ -76,7 +76,7 @@ function VideoCard({ video, onOpenModal }) {
       onClick={() => onOpenModal(video)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group relative rounded-3xl overflow-hidden bg-[#1C1917] border border-[#E8DFD5] shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer aspect-[9/16] flex flex-col justify-end"
+      className="group relative rounded-3xl overflow-hidden bg-[#1C1917] border border-[#E8DFD5] shadow-lg shadow-[#1C1917]/10 hover:shadow-2xl hover:shadow-[#D97E80]/20 hover:-translate-y-1 transition-all duration-300 cursor-pointer aspect-[9/16] flex flex-col justify-end"
     >
       <video
         ref={videoRef}
@@ -143,23 +143,23 @@ export function ClinicVideos({ videos = DEFAULT_VIDEOS }) {
   const videoList = videos && videos.length > 0 ? videos : DEFAULT_VIDEOS;
 
   return (
-    <section className="py-16 sm:py-24 bg-[#1C1917] text-white relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-white text-[#1C1917] relative overflow-hidden">
       {/* Decorative luxury glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#EC9C9D]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#FBEDEC]/70 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <FadeIn className="text-center space-y-3 max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EC9C9D]/15 border border-[#EC9C9D]/30 text-[#EC9C9D] text-xs font-semibold uppercase tracking-[0.2em]">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FBEDEC] border border-[#EC9C9D]/30 text-[#D97E80] text-xs font-semibold uppercase tracking-[0.2em]">
             <Film className="w-3.5 h-3.5" />
             <span>Clinical Reels & Patient Stories</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight text-white">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight text-[#1C1917]">
             Experience Luminous In Motion
           </h2>
 
-          <p className="text-xs sm:text-sm text-[#A8A29E] leading-relaxed">
+          <p className="text-sm sm:text-base text-[#44403C] leading-relaxed">
             Take a private look inside our Leeds clinic. Watch our bespoke facial protocols, advanced collagen therapies, and serene sanctuary atmosphere.
           </p>
         </FadeIn>

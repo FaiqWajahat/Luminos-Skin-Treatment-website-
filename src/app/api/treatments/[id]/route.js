@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { updateTreatment, deleteTreatment } from "@/lib/db-store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function PUT(req, { params }) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const body = await req.json();
     const { id } = await params;
@@ -16,7 +20,10 @@ export async function PUT(req, { params }) {
   }
 }
 
-export async function DELETE(_req, { params }) {
+export async function DELETE(req, { params }) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     await deleteTreatment(id);

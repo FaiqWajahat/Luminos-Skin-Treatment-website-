@@ -86,7 +86,9 @@ export function CustomDatePicker({ selectedDate, onSelectDate, existingEnquiries
             <button
               key={day.dateString}
               type="button"
-              onClick={() => onSelectDate(day.dateString)}
+              disabled={isDisabled}
+              aria-pressed={isSelected}
+              onClick={() => !isDisabled && onSelectDate(day.dateString)}
               className={`p-3 rounded-2xl border text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-between min-h-[90px] relative ${
                 isDisabled
                   ? "opacity-40 cursor-not-allowed bg-stone-100 border-[#E8DFD5]"

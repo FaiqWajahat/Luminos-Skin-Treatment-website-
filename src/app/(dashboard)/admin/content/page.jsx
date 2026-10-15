@@ -195,52 +195,11 @@ export default function PagesContentAdmin() {
                 </div>
               </div>
 
-              <div className="md:col-span-8 lg:col-span-8 space-y-4">
-                <div>
-                  <label className="block text-xs font-medium text-neutral-500 mb-1">Eyebrow Highlight</label>
-                  <input type="text" value={homeData.heroHighlight || ""} onChange={(e) => setHomeData(p => ({ ...p, heroHighlight: e.target.value }))} className="w-full bg-[#0E0D0C] border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-neutral-500 mb-1">Main Heading</label>
-                  <input type="text" value={homeData.heroTitle || ""} onChange={(e) => setHomeData(p => ({ ...p, heroTitle: e.target.value }))} className="w-full bg-[#0E0D0C] border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-neutral-500 mb-1">Highlighted Heading (Italicized)</label>
-                  <input type="text" value={homeData.heroTitleHighlight || ""} onChange={(e) => setHomeData(p => ({ ...p, heroTitleHighlight: e.target.value }))} className="w-full bg-[#0E0D0C] border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-neutral-500 mb-1">Subtitle / Description</label>
-                  <textarea rows={4} value={homeData.heroSubtitle || ""} onChange={(e) => setHomeData(p => ({ ...p, heroSubtitle: e.target.value }))} className="w-full bg-[#0E0D0C] border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#EC9C9D] resize-y" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Hero / Lounge Image */}
-          <div className="bg-[#161412] border border-neutral-800/80 rounded-2xl p-6">
-            <h2 className="text-lg font-medium text-white mb-4">Consultation Lounge Image</h2>
-            <div className="flex items-start gap-6">
-              <div className="relative w-48 aspect-[4/5] rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 shrink-0">
-                {homeData.consultantLoungeImage ? (
-                  <Image src={homeData.consultantLoungeImage} alt="Preview" fill className="object-cover" />
-                ) : (
-                  <div className="flex items-center justify-center h-full text-neutral-600"><ImageIcon className="w-8 h-8" /></div>
-                )}
-                {uploadingImage === "consultantLoungeImage" && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
-                    <Loader2 className="w-6 h-6 text-white animate-spin" />
-                  </div>
-                )}
-              </div>
-              <div className="space-y-3 flex-1">
-                <p className="text-sm text-neutral-400">
-                  This image appears next to the FAQs on the homepage. Recommended aspect ratio is 4:5 (portrait).
+              <div className="md:col-span-8 lg:col-span-8">
+                <p className="text-sm text-neutral-400 leading-relaxed">
+                  The homepage headline and introduction follow the clinic's brand copy
+                  (“Luminous Skin Clinic — Where your natural radiance comes first.”). Only the background photo is editable here.
                 </p>
-                <label className="inline-flex cursor-pointer items-center gap-2 px-4 py-2 rounded-xl border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-sm font-medium text-white transition-colors">
-                  <ImageIcon className="w-4 h-4" />
-                  Upload New Image
-                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "consultantLoungeImage")} disabled={uploadingImage} />
-                </label>
               </div>
             </div>
           </div>
@@ -248,7 +207,7 @@ export default function PagesContentAdmin() {
           {/* FAQs */}
           <div className="bg-[#161412] border border-neutral-800/80 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-medium text-white">Homepage FAQs</h2>
+              <h2 className="text-lg font-medium text-white">FAQs (shown on the Contact page)</h2>
               <button
                 onClick={addFaq}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-sm font-medium text-white transition-colors"

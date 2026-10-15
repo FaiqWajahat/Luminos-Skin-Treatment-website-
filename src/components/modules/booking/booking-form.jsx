@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
-import { TREATMENTS, CLINIC_INFO } from "@/constants/clinic-data";
+import { CLINIC_INFO } from "@/constants/clinic-data";
+import { CATALOG_TREATMENTS, CATEGORY_TITLES, formatTreatmentPrice } from "@/constants/treatment-catalog";
 import { CategoryPicker } from "./category-picker";
 import { TreatmentPicker } from "./treatment-picker";
 import { CustomDatePicker } from "./custom-date-picker";
@@ -29,8 +30,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 
-export function BookingForm() {
-  const [treatmentsList, setTreatmentsList] = useState(TREATMENTS);
+export function BookingForm({ initialTreatment = "" }) {
+  const [treatmentsList, setTreatmentsList] = useState(CATALOG_TREATMENTS);
   const [loadingTreatments, setLoadingTreatments] = useState(true);
   const [existingEnquiries, setExistingEnquiries] = useState([]);
   const [blockedSlots, setBlockedSlots] = useState([]);
@@ -39,7 +40,7 @@ export function BookingForm() {
   const loadEnquiries = async () => {
     try {
       const [r1, r2] = await Promise.all([
-        fetch("/api/enquiries", { cache: "no-store" }),
+        fetch("/api/enquiries?scope=availability", { cache: "no-store" }),
         fetch("/api/blocked-slots", { cache: "no-store" }),
       ]);
       const d1 = await r1.json();
@@ -52,7 +53,7 @@ export function BookingForm() {
   };
 
   useEffect(() => {
-    fetch("/api/treatments")
+    fetch("/api/treatments?scope=public", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
         if (d.treatments && d.treatments.length > 0) {
@@ -70,20 +71,8 @@ export function BookingForm() {
 
   // Compute categories & group treatments
   const { categories, treatmentsByCategory } = useMemo(() => {
-    const normalizeCat = (cat) => {
-      if (!cat) return "";
-      const trimmed = cat.trim();
-      if (trimmed.toLowerCase() === "all clinic facials") {
-        return "All Other Treatments";
-      }
-      return trimmed;
-    };
-
-    const standardOrder = [
-      "Facial Skin Treatments",
-      "Massage Therapy",
-      "All Other Treatments",
-    ];
+    const normalizeCat = (cat) => (cat || "").trim();
+    const standardOrder = CATEGORY_TITLES;
 
     const normalizedList = treatmentsList.map((t) => ({
       ...t,
@@ -161,6 +150,16 @@ export function BookingForm() {
     }
   };
 
+  // Preselect the treatment chosen on its detail page (/booking?treatment=slug)
+  useEffect(() => {
+    if (!initialTreatment || loadingTreatments) return;
+    const match = treatmentsList.find((t) => t.slug === initialTreatment);
+    if (match) {
+      setSelectedCategory((match.category || "").trim());
+      setFormData((prev) => ({ ...prev, treatmentSlug: match.slug }));
+    }
+  }, [initialTreatment, loadingTreatments, treatmentsList]);
+
   useEffect(() => {
     if (categories.length > 0 && !selectedCategory) {
       const firstCat = categories[0];
@@ -185,11 +184,42 @@ export function BookingForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
   const [referenceId, setReferenceId] = useState("");
+  const confirmationRef = useRef(null);
+
+  useEffect(() => {
+    if (!submittedData) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Always reset the viewport to the booking section so the success state is visible,
+    // and on longer pages the footer content beneath it remains in view after confirmation.
+    const frame = requestAnimationFrame(() => {
+      const confirmation = confirmationRef.current;
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+      });
+
+      if (!confirmation) return;
+      confirmation.focus({ preventScroll: true });
+      confirmation.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [submittedData]);
 
   const selectedTreatment = useMemo(() => {
     if (!formData.treatmentSlug) return treatmentsList[0] || {};
     return treatmentsList.find((t) => t.slug === formData.treatmentSlug) || treatmentsList[0] || {};
   }, [treatmentsList, formData.treatmentSlug]);
+
+  const selectedPrice = Number(selectedTreatment.price) || 0;
+  const hasFixedPrice = selectedPrice > 0 && (selectedTreatment.priceOptions || []).filter(Boolean).length <= 1;
+  const balanceLabel = hasFixedPrice ? `£${Math.max(0, selectedPrice - 10)}` : "Confirmed at your appointment";
 
   const validate = () => {
     const errs = {};
@@ -204,8 +234,11 @@ export function BookingForm() {
       errs.email = "Please enter a valid email address.";
     }
 
+    const phoneDigits = formData.phone.replace(/\D/g, "");
     if (!formData.phone.trim()) {
       errs.phone = "Telephone number is required for booking confirmation.";
+    } else if (phoneDigits.length < 10 || phoneDigits.length > 15 || !/^[+\d\s()-]+$/.test(formData.phone.trim())) {
+      errs.phone = "Please enter a valid phone number, e.g. 07950 774790.";
     }
 
     if (!formData.preferredDate) {
@@ -234,43 +267,41 @@ export function BookingForm() {
 
     setIsSubmitting(true);
 
-    const generatedId = `LUM-BK-${Math.floor(10000 + Math.random() * 90000)}`;
-
     try {
       const response = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          referenceId: generatedId,
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          category: selectedCategory,
-          treatmentTitle: selectedTreatment?.title || "Clinical Appointment",
+          treatmentSlug: selectedTreatment?.slug,
           preferredDate: formData.preferredDate,
           timeSlot: formData.timeSlot,
           message: formData.message,
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        toast.error(data.error || "This slot is no longer available. Please select another slot.");
+        toast.error(data.error || "We couldn't complete your booking. Please try again.");
+        // Slot taken or closed in the meantime: ask the client to pick again
+        if (response.status === 409) {
+          setFormData((prev) => ({ ...prev, timeSlot: "" }));
+          setErrors((prev) => ({ ...prev, timeSlot: data.error }));
+        }
         await loadEnquiries();
         return;
       }
 
-      setReferenceId(generatedId);
+      setReferenceId(data.enquiry?.referenceId || "");
       setSubmittedData({ ...formData, treatmentTitle: selectedTreatment?.title });
-      toast.success("Appointment reserved! Your slot has been secured.");
+      toast.success("Appointment booked! Your slot is reserved.");
       await loadEnquiries();
     } catch (err) {
-      console.warn("Booking submitted locally with reference:", err);
-      setReferenceId(generatedId);
-      setSubmittedData({ ...formData, treatmentTitle: selectedTreatment?.title });
-      toast.success("Appointment reference generated!");
-      await loadEnquiries();
+      console.error("Booking request failed:", err);
+      toast.error("We couldn't reach the clinic. Please check your connection and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -327,12 +358,12 @@ export function BookingForm() {
 
               {submittedData ? (
                 /* Success Confirmation State */
-                <div className="py-6 space-y-6 animate-fadeIn">
+                <div ref={confirmationRef} role="region" aria-labelledby="booking-confirmation-title" tabIndex={-1} className="py-6 space-y-6 animate-fadeIn scroll-mt-28 outline-none">
                   <div className="text-center space-y-2.5">
                     <div className="w-16 h-16 rounded-2xl bg-[#EC9C9D]/10 border border-[#EC9C9D]/25 text-[#EC9C9D] flex items-center justify-center mx-auto shadow-xs">
                       <CheckCircle2 className="w-8 h-8" />
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#1C1917] tracking-tight">
+                    <h3 id="booking-confirmation-title" className="text-2xl sm:text-3xl font-serif font-bold text-[#1C1917] tracking-tight">
                       Appointment Reserved Successfully
                     </h3>
                     <p className="text-sm sm:text-base text-[#57534E] max-w-xl mx-auto leading-relaxed">
@@ -376,9 +407,9 @@ export function BookingForm() {
                         </span>
                       </div>
                       <div className="flex justify-between py-1">
-                        <span className="text-[#78716C]">Total Price:</span>
+                        <span className="text-[#78716C]">Price:</span>
                         <span className="font-serif font-bold text-[#1C1917]">
-                          £{selectedTreatment.price}
+                          {formatTreatmentPrice(selectedTreatment)}
                         </span>
                       </div>
                       <div className="flex justify-between py-1 border-t border-[#E8DFD5]/60 pt-1.5">
@@ -390,7 +421,7 @@ export function BookingForm() {
                       <div className="flex justify-between py-1">
                         <span className="text-[#78716C]">Remaining Balance on Arrival:</span>
                         <span className="font-serif font-bold text-[#1C1917]">
-                          £{Math.max(0, (Number(selectedTreatment.price) || 0) - 10)}
+                          {balanceLabel}
                         </span>
                       </div>
                       <div className="flex justify-between py-1">
@@ -673,9 +704,9 @@ export function BookingForm() {
                 </div>
 
                 <div className="flex items-center justify-between pt-1 border-t border-[#E8DFD5]/60">
-                  <span className="text-[#78716C]">Total Price:</span>
+                  <span className="text-[#78716C]">Price:</span>
                   <span className="font-serif font-bold text-base text-[#1C1917]">
-                    £{selectedTreatment.price}
+                    {formatTreatmentPrice(selectedTreatment)}
                   </span>
                 </div>
 
@@ -689,7 +720,7 @@ export function BookingForm() {
                 <div className="flex items-center justify-between">
                   <span className="text-[#78716C]">Balance on Arrival:</span>
                   <span className="font-serif font-bold text-sm text-[#1C1917]">
-                    £{Math.max(0, (Number(selectedTreatment.price) || 0) - 10)}
+                    {balanceLabel}
                   </span>
                 </div>
               </div>

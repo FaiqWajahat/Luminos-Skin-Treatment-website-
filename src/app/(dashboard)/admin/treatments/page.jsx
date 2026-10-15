@@ -5,13 +5,24 @@ import { Plus, Pencil, Trash2, X, Sparkles, Upload, Clock, DollarSign, Search } 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Pagination } from "@/components/shared/pagination";
 
-const CATEGORIES = ["Facial Skin Treatments", "Massage Therapy", "All Other Treatments"];
+import { CATEGORY_TITLES as CATEGORIES, formatTreatmentPrice } from "@/constants/treatment-catalog";
+
+// Fields edited as one item per line
+const LIST_FIELDS = ["journey", "benefits", "priceOptions", "aftercare"];
 
 const emptyForm = {
-  title: "", slug: "", category: "Facial Skin Treatments", price: "", duration: "",
-  tagline: "", shortDescription: "", fullDescription: "", benefits: "",
-  idealFor: "", image: "", popular: false, active: true,
+  title: "", slug: "", category: CATEGORIES[0], price: "", priceOptions: "", duration: "",
+  shortDescription: "", journey: "", benefits: "", idealFor: "", aftercare: "",
+  frequency: "", order: "", image: "", popular: false, active: true,
 };
+
+const toLines = (value) =>
+  Array.isArray(value) ? value.join("\n") : typeof value === "string" ? value : "";
+
+const fromLines = (value) =>
+  Array.isArray(value)
+    ? value
+    : (value || "").split("\n").map((line) => line.trim()).filter(Boolean);
 
 const ITEMS_PER_PAGE = 9;
 
@@ -22,6 +33,24 @@ const formatImageSrc = (src) => {
   }
   return `data:image/jpeg;base64,${src}`;
 };
+
+function ListField({ label, placeholder, value, onChange }) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">{label}</label>
+        <span className="text-[9px] text-neutral-500">One item per line</span>
+      </div>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={4}
+        placeholder={placeholder}
+        className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#EC9C9D] resize-y"
+      />
+    </div>
+  );
+}
 
 export default function AdminTreatmentsPage() {
   const [treatments, setTreatments] = useState([]);
@@ -69,10 +98,13 @@ export default function AdminTreatmentsPage() {
   const openEdit = (t) => {
     setEditing(t._id);
     setForm({
+      ...emptyForm,
       ...t,
-      benefits: Array.isArray(t.benefits) ? t.benefits.join("\n") : t.benefits || "",
-      price: String(t.price || ""),
-      duration: String(t.duration || ""),
+      ...Object.fromEntries(LIST_FIELDS.map((key) => [key, toLines(t[key])])),
+      category: CATEGORIES.includes(t.category) ? t.category : CATEGORIES[0],
+      price: String(t.price ?? ""),
+      duration: t.duration && t.duration !== 0 && t.duration !== "0" ? String(t.duration) : "",
+      order: t.order ? String(t.order) : "",
     });
     setShowForm(true);
   };
@@ -105,22 +137,13 @@ export default function AdminTreatmentsPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    let benefitsArray = [];
-    if (form.benefits) {
-      if (typeof form.benefits === "string") {
-        benefitsArray = form.benefits.includes("\n")
-          ? form.benefits.split("\n").map((b) => b.trim()).filter(Boolean)
-          : [form.benefits.trim()];
-      } else if (Array.isArray(form.benefits)) {
-        benefitsArray = form.benefits;
-      }
-    }
 
     const payload = {
       ...form,
+      ...Object.fromEntries(LIST_FIELDS.map((key) => [key, fromLines(form[key])])),
       price: Number(form.price) || 0,
-      duration: Number(form.duration) || 0,
-      benefits: benefitsArray,
+      duration: form.duration.trim(),
+      order: Number(form.order) || 0,
       slug: form.slug || form.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
     };
 
@@ -276,6 +299,9 @@ export default function AdminTreatmentsPage() {
                     <div className="min-w-0">
                       <h3 className="text-base font-serif font-semibold text-white truncate">{t.title}</h3>
                       <span className="text-[10px] uppercase tracking-wider text-[#EC9C9D] font-medium">{t.category}</span>
+                      {!CATEGORIES.includes(t.category) && (
+                        <span className="block text-[10px] text-amber-400 mt-0.5">Old category — not shown on website</span>
+                      )}
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
                       <button onClick={() => openEdit(t)} className="p-1.5 rounded-lg text-neutral-400 hover:text-[#EC9C9D] hover:bg-[#EC9C9D]/10 transition-colors" title="Edit Treatment">
@@ -291,7 +317,7 @@ export default function AdminTreatmentsPage() {
 
                 <div className="pt-3 border-t border-neutral-800/70 flex items-center justify-between text-xs text-neutral-300">
                   <div className="flex items-center gap-1 text-[#F0A5A2] font-semibold">
-                    <span>£{t.price?.toLocaleString()}</span>
+                    <span>{formatTreatmentPrice(t)}</span>
                   </div>
                   <button
                     type="button"
@@ -354,14 +380,27 @@ export default function AdminTreatmentsPage() {
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Price (£) *</label>
-                  <input type="number" value={form.price} onChange={(e) => update("price", e.target.value)} required
+                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Starting Price (£) *</label>
+                  <input type="number" min="0" value={form.price} onChange={(e) => update("price", e.target.value)} required
+                    placeholder="0 = price on consultation"
                     className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Duration (minutes)</label>
-                  <input type="number" value={form.duration} onChange={(e) => update("duration", e.target.value)}
-                    placeholder="Optional"
+                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Treatment Time</label>
+                  <input value={form.duration} onChange={(e) => update("duration", e.target.value)}
+                    placeholder="e.g. 45 minutes"
+                    className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Display Order</label>
+                  <input type="number" min="0" value={form.order} onChange={(e) => update("order", e.target.value)}
+                    placeholder="Position within category"
+                    className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Recommended Frequency</label>
+                  <input value={form.frequency} onChange={(e) => update("frequency", e.target.value)}
+                    placeholder="e.g. Every 4–6 weeks"
                     className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
                 </div>
               </div>
@@ -389,33 +428,31 @@ export default function AdminTreatmentsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Short Description *</label>
+                <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Description (what it is) *</label>
                 <textarea value={form.shortDescription} onChange={(e) => update("shortDescription", e.target.value)} required rows={2}
                   className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D] resize-none" />
               </div>
 
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">
-                    Treatment Details & Aftercare
-                  </label>
-                  <span className="text-[9px] text-neutral-500">Includes, protocol steps, aftercare instructions, etc.</span>
-                </div>
-                <textarea
-                  value={form.benefits}
-                  onChange={(e) => update("benefits", e.target.value)}
-                  rows={6}
-                  placeholder={`🍂 Treatment Includes:
-1. Personal Consultation & Skin Analysis
-2. Double Cleanse Ritual
-3. Treatment Steps
+              {[
+                { key: "journey", label: "Treatment Journey / Includes", placeholder: "Skin consultation\nDouble cleanse\nTreatment steps..." },
+                { key: "benefits", label: "Benefits", placeholder: "Smoother, brighter skin\nDeep hydration..." },
+              ].map((field) => (
+                <ListField key={field.key} {...field} value={form[field.key]} onChange={(v) => update(field.key, v)} />
+              ))}
 
-✨ Aftercare:
-• Wear SPF 50 daily
-• Avoid direct sun exposure for 48 hours`}
-                  className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#EC9C9D] resize-y"
-                />
+              <div className="space-y-1.5">
+                <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Ideal For</label>
+                <input value={form.idealFor} onChange={(e) => update("idealFor", e.target.value)}
+                  placeholder="e.g. Dull, dehydrated or congested skin."
+                  className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
               </div>
+
+              {[
+                { key: "priceOptions", label: "Price Options", placeholder: "Face — £45\nFace & Neck — £65" },
+                { key: "aftercare", label: "Important Information / Aftercare", placeholder: "Avoid makeup for 24 hours\nUse SPF daily" },
+              ].map((field) => (
+                <ListField key={field.key} {...field} value={form[field.key]} onChange={(v) => update(field.key, v)} />
+              ))}
 
               <div className="flex items-center gap-6 pt-2">
                 <label className="flex items-center gap-2 cursor-pointer">

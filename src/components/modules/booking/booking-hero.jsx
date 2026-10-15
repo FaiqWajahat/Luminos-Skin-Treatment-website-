@@ -3,13 +3,13 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, ArrowRight, ShieldCheck, Sparkles, Clock, MessageSquare } from "lucide-react";
+import { Calendar, MessageSquare } from "lucide-react";
 
 const ease = [0.22, 1, 0.36, 1];
 
 export function BookingHero() {
   return (
-    <section className="relative min-h-[48vh] lg:min-h-[52vh] py-16 lg:py-20 flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[46vh] lg:min-h-[50vh] py-16 lg:py-20 flex items-center justify-center overflow-hidden">
       {/* ── Background Layer with Luxury Aesthetic & Image Slot ── */}
       <div className="absolute inset-0 z-0 bg-[#141211]">
         <Image
@@ -34,12 +34,6 @@ export function BookingHero() {
           transition={{ duration: 0.65, ease }}
           className="space-y-6"
         >
-          {/* Eyebrow Pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.22em] uppercase text-[#F0A5A2] bg-white/10 backdrop-blur-md border border-white/15 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-[#F0A5A2]" />
-            <span>Online Reservation · Leeds LS11</span>
-          </div>
-
           {/* Editorial Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-[3.35rem] font-semibold tracking-tight leading-[1.12] text-white">
             Reserve Your Private Session. <br className="hidden sm:inline" />
@@ -72,19 +66,6 @@ export function BookingHero() {
               <MessageSquare className="w-3.5 h-3.5 text-[#F0A5A2]" />
               <span>WhatsApp Concierge</span>
             </a>
-          </div>
-
-          {/* Trust Points */}
-          <div className="pt-6 border-t border-white/10 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-neutral-400">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#F0A5A2]" />
-              <span className="text-neutral-300">No Cancellation Fees</span>
-            </div>
-            <span className="w-1 h-1 rounded-full bg-white/30 hidden sm:block" />
-            <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#F0A5A2]" />
-              <span className="text-neutral-300">Instant Calendar Confirmation</span>
-            </div>
           </div>
         </motion.div>
       </div>

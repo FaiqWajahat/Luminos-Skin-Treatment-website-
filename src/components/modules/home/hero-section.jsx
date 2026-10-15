@@ -3,17 +3,12 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, ArrowRight, Star, ShieldCheck, MapPin, Sparkles } from "lucide-react";
+import { Calendar, ArrowRight, Star, ShieldCheck, MapPin } from "lucide-react";
+import { FloralDivider } from "@/components/shared/floral-accent";
 
 const ease = [0.22, 1, 0.36, 1];
 
-export function HeroSection({
-  image = "/about-01.jpeg",
-  title = "Clinical Precision.",
-  titleHighlight = "Effortlessly Luminous.",
-  subtitle = "Bespoke one-to-one skin therapies tailored purely to reveal your healthiest complexion.",
-  highlight = "Leeds LS11 · Private Clinical Sanctuary",
-}) {
+export function HeroSection({ image = "/about-01.jpeg" }) {
   return (
     <section className="relative min-h-[85vh] lg:min-h-[88vh] flex items-center justify-center overflow-hidden">
       
@@ -49,23 +44,21 @@ export function HeroSection({
           transition={{ duration: 0.75, ease }}
           className="space-y-8"
         >
-          {/* Eyebrow Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.24em] uppercase text-[#F0A5A2] bg-black/40 backdrop-blur-md border border-white/20 shadow-lg">
-            <Sparkles className="w-3.5 h-3.5 text-[#EC9C9D]" />
-            <span>{highlight}</span>
-          </div>
+          <FloralDivider className="justify-center" />
 
           {/* Editorial Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-[3.75rem] font-semibold tracking-tight leading-[1.12] text-white drop-shadow-md">
-            {title} <br className="hidden sm:inline" />
-            <em className="font-serif italic font-normal text-[#EC9C9D]">
-              {titleHighlight}
+          <h1 className="space-y-3 text-white drop-shadow-md">
+            <span className="block font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
+              Luminous Skin Clinic
+            </span>
+            <em className="block font-serif italic font-normal text-xl sm:text-3xl lg:text-[2.1rem] text-[#F6C1BF]">
+              Where your natural radiance comes first.
             </em>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm sm:text-base lg:text-lg text-neutral-200 leading-relaxed max-w-2xl mx-auto font-normal drop-shadow-xs">
-            {subtitle}
+          <p className="text-sm sm:text-base lg:text-lg text-neutral-100 leading-relaxed max-w-xl mx-auto font-normal drop-shadow-xs">
+            Personalised skin treatments and relaxing facial experiences, created to help your skin look and feel beautifully renewed.
           </p>
 
           {/* Centralized Action Buttons */}
@@ -78,17 +71,17 @@ export function HeroSection({
               <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[350%] transition-transform duration-1000 ease-out pointer-events-none" />
               
               <Calendar className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-              <span className="relative z-10">Reserve Appointment</span>
+              <span className="relative z-10">Book Appointment</span>
             </Link>
 
             <Link
-              href="/treatments"
+              href="/services"
               className="group relative overflow-hidden w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-sm font-medium text-white bg-black/40 hover:bg-white/15 backdrop-blur-md border border-white/25 hover:border-[#EC9C9D]/60 shadow-md hover:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 transition-all duration-300 ease-out active:translate-y-0 active:scale-[0.98]"
             >
               {/* Subtle warm ambient tint on hover */}
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-[#EC9C9D]/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-              <span className="relative z-10">Explore Treatments</span>
+              <span className="relative z-10">Explore Our Treatments</span>
               <ArrowRight className="w-4 h-4 text-[#EC9C9D] transition-transform duration-300 group-hover:translate-x-1.5" />
             </Link>
           </div>

@@ -11,7 +11,10 @@ export default function AdminOverviewPage() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [isSyncingInstagram, setIsSyncingInstagram] = useState(false);
   const [instagramSyncStatus, setInstagramSyncStatus] = useState(null);
+  const [resultsCount, setResultsCount] = useState(0);
   const isMounted = useRef(true);
+  const inFlight = useRef(false);
+  const abortRef = useRef(null);
 
   const handleSyncInstagram = async () => {
     setIsSyncingInstagram(true);
@@ -20,12 +23,12 @@ export default function AdminOverviewPage() {
       const res = await fetch("/api/instagram", { method: "POST" });
       const json = await res.json();
       if (json.success) {
-        setInstagramSyncStatus(`Synced ${json.count || 4} latest posts!`);
+        setInstagramSyncStatus(`Synced ${json.count} latest posts to the homepage`);
       } else {
-        setInstagramSyncStatus(json.message || "Feed updated");
+        setInstagramSyncStatus("Couldn't reach Instagram, homepage keeps the last synced posts");
       }
     } catch (e) {
-      setInstagramSyncStatus("Sync finished");
+      setInstagramSyncStatus("Sync failed, please try again");
     } finally {
       setIsSyncingInstagram(false);
       setTimeout(() => setInstagramSyncStatus(null), 4000);
@@ -33,12 +36,25 @@ export default function AdminOverviewPage() {
   };
 
   const fetchDashboardData = async (silent = false) => {
+    // Skip if a previous sync is still running, so slow requests never pile up
+    if (inFlight.current) return;
+    inFlight.current = true;
     if (!silent) setIsSyncing(true);
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const getJson = (url) =>
+      fetch(url, { cache: "no-store", signal: controller.signal }).then((r) => {
+        if (!r.ok) throw new Error(`${url} responded ${r.status}`);
+        return r.json();
+      });
+
     try {
+      // Only the count of results is needed here, so ask for a single item
       const [eq, tr, re] = await Promise.all([
-        fetch("/api/enquiries", { cache: "no-store" }).then((r) => r.json()),
-        fetch("/api/treatments", { cache: "no-store" }).then((r) => r.json()),
-        fetch("/api/results", { cache: "no-store" }).then((r) => r.json()),
+        getJson("/api/enquiries"),
+        getJson("/api/treatments"),
+        getJson("/api/results?page=1&limit=1"),
       ]);
       if (isMounted.current) {
         setData({
@@ -46,10 +62,12 @@ export default function AdminOverviewPage() {
           treatments: tr.treatments || [],
           results: re.results || [],
         });
+        setResultsCount(re.pagination?.total ?? (re.results || []).length);
       }
     } catch (err) {
-      console.warn("Dashboard sync error:", err);
+      if (err.name !== "AbortError") console.warn("Dashboard sync error:", err);
     } finally {
+      inFlight.current = false;
       if (isMounted.current) {
         setLoading(false);
         setIsSyncing(false);
@@ -61,18 +79,21 @@ export default function AdminOverviewPage() {
     isMounted.current = true;
     fetchDashboardData();
 
-    // Auto sync every 4 seconds in real-time
+    // Background sync every 30s, only while the tab is visible
     const interval = setInterval(() => {
-      fetchDashboardData(true);
-    }, 4000);
+      if (document.visibilityState === "visible") fetchDashboardData(true);
+    }, 30000);
 
-    const onFocus = () => fetchDashboardData(true);
-    window.addEventListener("focus", onFocus);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") fetchDashboardData(true);
+    };
+    document.addEventListener("visibilitychange", onVisible);
 
     return () => {
       isMounted.current = false;
       clearInterval(interval);
-      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisible);
+      abortRef.current?.abort();
     };
   }, []);
 
@@ -97,7 +118,7 @@ export default function AdminOverviewPage() {
     },
     {
       title: "Case Studies / Results",
-      value: data.results.length,
+      value: resultsCount,
       badge: "Uploaded to Cloudinary",
       icon: Images,
       color: "#D97E80",

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed:admin": "node scripts/seed-cloud-all.mjs"
+    "seed:admin": "node scripts/seed-cloud-all.mjs",
+    "migrate:treatments": "node scripts/migrate-treatments.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

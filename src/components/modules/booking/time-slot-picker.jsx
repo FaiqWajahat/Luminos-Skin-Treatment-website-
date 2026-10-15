@@ -1,34 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Clock, Check, Lock, Sparkles, CheckCircle2 } from "lucide-react";
+import { Clock, Check, Lock } from "lucide-react";
+import { CLINICAL_SLOTS, clinicNow, slotClosedReason } from "@/constants/booking-slots";
 
-// Master clinical schedule definition: 30-minute session slots
-const CLINICAL_SLOTS = [
-  // Morning 30-min slots (09:30 AM - 12:00 PM)
-  { id: "09:30", label: "09:30 AM", period: "Morning", duration: "30 min" },
-  { id: "10:00", label: "10:00 AM", period: "Morning", duration: "30 min" },
-  { id: "10:30", label: "10:30 AM", period: "Morning", duration: "30 min" },
-  { id: "11:00", label: "11:00 AM", period: "Morning", duration: "30 min" },
-  { id: "11:30", label: "11:30 AM", period: "Morning", duration: "30 min" },
-
-  // Afternoon 30-min slots (12:00 PM - 05:00 PM)
-  { id: "12:00", label: "12:00 PM", period: "Afternoon", duration: "30 min" },
-  { id: "12:30", label: "12:30 PM", period: "Afternoon", duration: "30 min" },
-  { id: "13:00", label: "01:00 PM", period: "Afternoon", duration: "30 min" },
-  { id: "13:30", label: "01:30 PM", period: "Afternoon", duration: "30 min" },
-  { id: "14:00", label: "02:00 PM", period: "Afternoon", duration: "30 min" },
-  { id: "14:30", label: "02:30 PM", period: "Afternoon", duration: "30 min" },
-  { id: "15:00", label: "03:00 PM", period: "Afternoon", duration: "30 min" },
-  { id: "15:30", label: "03:30 PM", period: "Afternoon", duration: "30 min" },
-  { id: "16:00", label: "04:00 PM", period: "Afternoon", duration: "30 min" },
-  { id: "16:30", label: "04:30 PM", period: "Afternoon", duration: "30 min" },
-
-  // Evening 30-min slots (05:00 PM - 06:30 PM)
-  { id: "17:00", label: "05:00 PM", period: "Evening", duration: "30 min" },
-  { id: "17:30", label: "05:30 PM", period: "Evening", duration: "30 min" },
-  { id: "18:00", label: "06:00 PM", period: "Evening", duration: "30 min" },
-];
 
 export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, existingEnquiries = [], blockedSlots = [] }) {
   const [activePeriod, setActivePeriod] = useState("All");
@@ -61,10 +36,7 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
   const slotsWithAvailability = useMemo(() => {
     if (!selectedDate) return [];
 
-    // Parse date for weekend rules (Saturday opens 10 AM, closes 5 PM, Sunday closed)
-    const [year, month, day] = selectedDate.split("-").map(Number);
-    const dateObj = new Date(year, month - 1, day);
-    const isSaturday = dateObj.getDay() === 6;
+    const now = clinicNow();
 
     // Collect all booked / blocked slots for the selected date
     const bookedSet = new Set();
@@ -104,7 +76,6 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
               id: slotStr,
               label: slotStr,
               period: slotLower.includes("pm") ? "Evening" : "Morning",
-              duration: "30 min",
               isAvailable: false,
               reason: b.reason || "Admin Blocked",
             });
@@ -121,14 +92,10 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
       const labelLower = slot.label.trim().toLowerCase();
       const idLower = slot.id.trim().toLowerCase();
 
-      // Saturday operating hours rules
-      if (isSaturday) {
-        if (slot.id === "09:30") {
-          return { ...slot, isAvailable: false, reason: "Opens 10:00 AM on Sat" };
-        }
-        if (["17:00", "17:30", "18:00"].includes(slot.id)) {
-          return { ...slot, isAvailable: false, reason: "Closes 5:00 PM on Sat" };
-        }
+      // Opening hours, Sundays, past times and same-day notice
+      const closedReason = slotClosedReason(selectedDate, slot, now);
+      if (closedReason) {
+        return { ...slot, isAvailable: false, reason: closedReason };
       }
 
       // Check if booked in database
@@ -140,7 +107,7 @@ export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, exist
     });
 
     return [...baseList, ...customBlockedSlots];
-  }, [selectedDate, existingEnquiries, isFullDayBlocked]);
+  }, [selectedDate, existingEnquiries, blockedSlots, isFullDayBlocked]);
 
   // Filter slots by selected period
   const displayedSlots = useMemo(() => {

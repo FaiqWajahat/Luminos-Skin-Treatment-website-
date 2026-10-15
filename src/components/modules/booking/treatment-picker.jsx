@@ -1,12 +1,13 @@
 "use client";
 
-import { Check, Sparkles } from "lucide-react";
+import { Check } from "lucide-react";
+import { formatTreatmentPrice } from "@/constants/treatment-catalog";
 
 export function TreatmentPicker({ treatments, selectedSlug, onSelectTreatment }) {
   return (
     <div className="space-y-3">
       <label className="text-xs sm:text-sm font-semibold text-[#1C1917] flex items-center gap-1.5">
-        <span>Step 2: Select Specific Clinical Protocol</span>
+        <span>Step 2: Select Your Treatment</span>
         <span className="text-[#EC9C9D] font-bold text-sm">*</span>
       </label>
 
@@ -56,7 +57,7 @@ export function TreatmentPicker({ treatments, selectedSlug, onSelectTreatment })
 
               <div className="pt-2 border-t border-[#E8DFD5]/70 flex items-center justify-between text-xs">
                 <span className="font-serif font-bold text-sm text-[#1C1917]">
-                  £{t.price}
+                  {formatTreatmentPrice(t)}
                 </span>
               </div>
             </button>

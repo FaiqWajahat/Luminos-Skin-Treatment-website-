@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { updateEnquiry, deleteEnquiry } from "@/lib/db-store";
 
 export async function PATCH(req, { params }) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const body = await req.json();
     const { id } = await params;
@@ -13,7 +17,10 @@ export async function PATCH(req, { params }) {
   }
 }
 
-export async function DELETE(_req, { params }) {
+export async function DELETE(req, { params }) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     await deleteEnquiry(id);

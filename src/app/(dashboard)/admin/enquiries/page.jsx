@@ -372,6 +372,9 @@ export default function AdminEnquiriesPage() {
                           <div className="space-y-0.5">
                             <p className="text-sm font-medium text-white">{eq.name}</p>
                             <p className="text-[11px] text-neutral-500">{eq.email} &bull; {eq.phone}</p>
+                            {eq.referenceId && (
+                              <p className="text-[10px] font-mono text-[#EC9C9D]/80">{eq.referenceId}</p>
+                            )}
                           </div>
                         </td>
                         <td className="px-6 py-4 hidden sm:table-cell">
@@ -379,6 +382,9 @@ export default function AdminEnquiriesPage() {
                             <span className="text-xs text-neutral-200 font-medium block">
                               {eq.treatmentTitle || "General Consultation"}
                             </span>
+                            {eq.category && (
+                              <span className="text-[10px] text-neutral-500 block">{eq.category}</span>
+                            )}
                             <span className="inline-flex items-center gap-1 text-[10px] text-[#EC9C9D] bg-[#EC9C9D]/10 px-2 py-0.5 rounded-full border border-[#EC9C9D]/20">
                               {eq.preferredDate || "No Date"} &bull; {eq.timeSlot || "No Slot"}
                             </span>
@@ -658,12 +664,22 @@ export default function AdminEnquiriesPage() {
               <div className="space-y-1">
                 <p className="text-[10px] uppercase tracking-wider text-neutral-500">Treatment</p>
                 <p className="text-xs text-white font-medium">{selected.treatmentTitle || "General"}</p>
+                {selected.category && <p className="text-[10px] text-neutral-500">{selected.category}</p>}
               </div>
               <div className="space-y-1">
                 <p className="text-[10px] uppercase tracking-wider text-neutral-500">Preferred Date & Slot</p>
                 <p className="text-xs text-white font-medium">{selected.preferredDate || "Flexible"} ({selected.timeSlot})</p>
               </div>
             </div>
+
+            {selected.createdAt && (
+              <p className="text-[11px] text-neutral-500">
+                Booked on{" "}
+                {new Date(selected.createdAt).toLocaleString("en-GB", {
+                  day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+                })}
+              </p>
+            )}
 
             {selected.message && (
               <div className="space-y-1.5">

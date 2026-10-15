@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { getResults, createResult } from "@/lib/db-store";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,9 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const body = await req.json();
     const result = await createResult(body);

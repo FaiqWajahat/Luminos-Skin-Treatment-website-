@@ -10,18 +10,18 @@ const ease = [0.22, 1, 0.36, 1];
 const CREDENTIALS = [
   {
     icon: Award,
-    title: "5+ Years Experience",
-    desc: "Certified Beauty Therapist & recognized as one of the leading facialists in Leeds.",
+    title: "Certified Beauty Therapist",
+    desc: "Professionally qualified in advanced facial, skin and body treatments.",
   },
   {
     icon: ShieldCheck,
-    title: "Safe & Advanced Care",
-    desc: "Targeted, evidence-backed and non-invasive treatments for naturally radiant skin.",
+    title: "5+ Years' Experience",
+    desc: "Lead facialist in Leeds, trusted for safe, effective and non-invasive care.",
   },
   {
     icon: Heart,
     title: "Calm, Kind & Friendly",
-    desc: "An attentive, welcoming atmosphere where every client feels valued and cared for.",
+    desc: "A welcoming space where every client feels valued and cared for.",
   },
 ];
 
@@ -91,7 +91,7 @@ export function PractitionerBio({ data = {} }) {
 
               <div>
                 <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1C1917] leading-tight">
-                  Meet Madiha
+                  Meet Madi
                 </h2>
               </div>
 
@@ -102,8 +102,11 @@ export function PractitionerBio({ data = {} }) {
               </div>
             </motion.div>
 
-            {/* Credentials 3-Card Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            {/* Qualifications & Experience */}
+            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D97E80] pt-2">
+              Qualifications & Experience
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {CREDENTIALS.map((c, i) => {
                 const Icon = c.icon;
                 return (

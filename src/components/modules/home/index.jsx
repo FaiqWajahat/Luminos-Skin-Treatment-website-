@@ -1,33 +1,20 @@
 import { HeroSection } from "./hero-section";
-import { ConcernsGrid } from "./concerns-grid";
-import { PopularTreatments } from "./popular-treatments";
-import { ClinicalProtocol } from "./clinical-protocol";
-import { ClinicExperience } from "./clinic-experience";
+import { SkinConcerns } from "./skin-concerns";
+import { DiscoverTreatments } from "./discover-treatments";
 import { ClinicVideos } from "./clinic-videos";
 import { ReviewsStrip } from "./reviews-strip";
 import { InstagramFeed } from "./instagram-feed";
-import { FaqsSection } from "./faqs-section";
-import { ConsultationCta } from "./consultation-cta";
 
-export function HomeView({ data = {} }) {
+// Introduction → concerns → treatments → results → reviews → social
+export function HomeView({ data = {}, categories = [], instagramPosts = [] }) {
   return (
     <div className="flex flex-col">
-      <HeroSection 
-        image={data.heroImage} 
-        title={data.heroTitle}
-        titleHighlight={data.heroTitleHighlight}
-        subtitle={data.heroSubtitle}
-        highlight={data.heroHighlight}
-      />
-      <ConcernsGrid />
-      <PopularTreatments />
-      <ClinicalProtocol />
-      <ClinicExperience />
+      <HeroSection image={data.heroImage} />
+      <SkinConcerns />
+      <DiscoverTreatments categories={categories} />
       <ClinicVideos videos={data.videos} />
       <ReviewsStrip />
-      <InstagramFeed />
-      <FaqsSection faqs={data.faqs} image={data.consultantLoungeImage} />
-      <ConsultationCta />
+      <InstagramFeed initialPosts={instagramPosts} />
     </div>
   );
 }

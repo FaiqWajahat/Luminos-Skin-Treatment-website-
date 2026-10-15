@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+// In development, hot reload keeps the old compiled model in mongoose.models, so schema
+// changes (new fields) would be silently dropped until a restart. Recompile there.
+function defineModel(name, schema) {
+  if (process.env.NODE_ENV !== "production" && mongoose.models[name]) {
+    mongoose.deleteModel(name);
+  }
+  return mongoose.models[name] || mongoose.model(name, schema);
+}
+
 const UserSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -16,6 +25,8 @@ const EnquirySchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
+    category: { type: String, default: "" },
+    treatmentSlug: { type: String, default: "" },
     treatmentTitle: { type: String, default: "General Consultation" },
     timeframe: { type: String, default: "two-weeks" },
     preferredDate: { type: String, default: "" },
@@ -38,12 +49,17 @@ const TreatmentSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true },
     category: { type: String, required: true },
     price: { type: Number, required: true },
-    duration: { type: Number, required: true },
+    priceOptions: [{ type: String }],
+    duration: { type: String, default: "" },
     tagline: { type: String, default: "" },
     shortDescription: { type: String, required: true },
     fullDescription: { type: String, default: "" },
+    journey: [{ type: String }],
     benefits: [{ type: String }],
     idealFor: { type: String, default: "" },
+    aftercare: [{ type: String }],
+    frequency: { type: String, default: "" },
+    order: { type: Number, default: 0 },
     image: { type: String, default: "" },
     popular: { type: Boolean, default: false },
     active: { type: Boolean, default: true },
@@ -83,16 +99,15 @@ const InstagramPostSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export const User = mongoose.models.User || mongoose.model("User", UserSchema);
+export const User = defineModel("User", UserSchema);
 export const Enquiry =
-  mongoose.models.Enquiry || mongoose.model("Enquiry", EnquirySchema);
+  defineModel("Enquiry", EnquirySchema);
 export const Treatment =
-  mongoose.models.Treatment || mongoose.model("Treatment", TreatmentSchema);
+  defineModel("Treatment", TreatmentSchema);
 export const Result =
-  mongoose.models.Result || mongoose.model("Result", ResultSchema);
+  defineModel("Result", ResultSchema);
 export const InstagramPost =
-  mongoose.models.InstagramPost ||
-  mongoose.model("InstagramPost", InstagramPostSchema);
+  defineModel("InstagramPost", InstagramPostSchema);
 
 const ContentSchema = new mongoose.Schema(
   {
@@ -103,7 +118,7 @@ const ContentSchema = new mongoose.Schema(
 );
 
 export const Content =
-  mongoose.models.Content || mongoose.model("Content", ContentSchema);
+  defineModel("Content", ContentSchema);
 
 const BlockedSlotSchema = new mongoose.Schema(
   {
@@ -116,4 +131,4 @@ const BlockedSlotSchema = new mongoose.Schema(
 );
 
 export const BlockedSlot =
-  mongoose.models.BlockedSlot || mongoose.model("BlockedSlot", BlockedSlotSchema);
+  defineModel("BlockedSlot", BlockedSlotSchema);

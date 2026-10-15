@@ -2,7 +2,6 @@
 
 import { ContactHero } from "./contact-hero";
 import { ContactMethods } from "./contact-methods";
-import { VisitExperience } from "./visit-experience";
 import { ConciergeBanner } from "./concierge-banner";
 import { ClinicLocation } from "./clinic-location";
 import { ContactFAQ } from "./contact-faq";
@@ -16,19 +15,16 @@ export function ContactView({ data = {} }) {
       {/* 2. Direct Channels (Phone, WhatsApp, Email, Suite) */}
       <ContactMethods />
 
-      {/* 3. The 1:1 Clinic Experience & Patient Journey */}
-      <VisitExperience />
-
-      {/* 4. Instant Online Booking & WhatsApp Concierge */}
+      {/* 3. Booking Information & WhatsApp Concierge */}
       <ConciergeBanner />
 
-      {/* 5. Leeds Clinic Sanctuary, Transit & Operating Hours */}
+      {/* 4. Location, Transit & Operating Hours */}
       <ClinicLocation />
 
-      {/* 6. Contact & Visit FAQs */}
+      {/* 5. Contact & Visit FAQs */}
       <ContactFAQ faqs={data.faqs} />
     </div>
   );
 }
 
-export { ContactHero, ContactMethods, VisitExperience, ConciergeBanner, ClinicLocation, ContactFAQ };
+export { ContactHero, ContactMethods, ConciergeBanner, ClinicLocation, ContactFAQ };

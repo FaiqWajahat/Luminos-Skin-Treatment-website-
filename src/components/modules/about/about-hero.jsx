@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, ArrowRight, ShieldCheck, MapPin, Sparkles } from "lucide-react";
+import { Calendar, ArrowRight } from "lucide-react";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -12,7 +12,6 @@ export function AboutHero({
   title = "Welcome to Luminous,",
   titleHighlight = "Where Beauty Meets Serenity.",
   subtitle = "Your personal escape to calm sophistication, self-care, and skin wellness.",
-  highlight = "Where Beauty Meets Serenity · Leeds"
 }) {
   return (
     <section className="relative min-h-[46vh] lg:min-h-[50vh] py-16 lg:py-20 flex items-center justify-center overflow-hidden">
@@ -23,7 +22,7 @@ export function AboutHero({
           <img
             src={image}
             alt="Luminous Leeds Sanctuary and Reception"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center scale-[1.01]"
           />
         ) : (
           <Image
@@ -33,7 +32,7 @@ export function AboutHero({
             priority
             quality={95}
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-center scale-[1.01]"
           />
         )}
 
@@ -49,12 +48,6 @@ export function AboutHero({
           transition={{ duration: 0.65, ease }}
           className="space-y-6"
         >
-          {/* Eyebrow Pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.22em] uppercase text-[#F0A5A2] bg-white/10 backdrop-blur-md border border-white/15 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-[#F0A5A2]" />
-            <span>{highlight}</span>
-          </div>
-
           {/* Catching Editorial Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-[3.35rem] font-semibold tracking-tight leading-[1.12] text-white">
             {title} <br className="hidden sm:inline" />
@@ -64,7 +57,7 @@ export function AboutHero({
           </h1>
 
           {/* Concise Subtitle */}
-          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl mx-auto font-normal">
+          <p className="text-sm sm:text-base text-neutral-200 leading-relaxed max-w-xl mx-auto font-normal drop-shadow-sm">
             {subtitle}
           </p>
 
@@ -79,25 +72,12 @@ export function AboutHero({
             </Link>
 
             <Link
-              href="/treatments"
+              href="/services"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-medium text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 transition-all duration-300"
             >
               <span>Explore Treatments</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#F0A5A2]" />
             </Link>
-          </div>
-
-          {/* Trust Points */}
-          <div className="pt-6 border-t border-white/10 max-w-lg mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-neutral-400">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#F0A5A2]" />
-              <span className="text-neutral-300">Certified Beauty Therapist</span>
-            </div>
-            <span className="w-1 h-1 rounded-full bg-white/30 hidden sm:block" />
-            <div className="flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#F0A5A2]" />
-              <span className="text-neutral-300">Leeds Lead Facialist</span>
-            </div>
           </div>
         </motion.div>
       </div>

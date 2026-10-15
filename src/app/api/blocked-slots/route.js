@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { getBlockedSlots, createBlockedSlot } from "@/lib/db-store";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,9 @@ export async function GET() {
 }
 
 export async function POST(req) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const body = await req.json();
     const { date, slot, reason, type } = body;

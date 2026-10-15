@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { deleteBlockedSlot } from "@/lib/db-store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function DELETE(req, { params }) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     if (!id) {

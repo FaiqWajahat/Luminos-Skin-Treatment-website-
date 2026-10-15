@@ -7,6 +7,9 @@ import { Menu, X, Calendar, Sparkles, ChevronRight } from "lucide-react";
 import { NAV_LINKS, CLINIC_INFO } from "@/constants/clinic-data";
 import { TikTokIcon, FacebookIcon } from "@/components/shared/social-icons";
 
+const isActivePath = (pathname, href) =>
+  href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -53,7 +56,7 @@ export function Navbar() {
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             {NAV_LINKS.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = isActivePath(pathname, item.href);
               return (
                 <Link
                   key={item.href}
@@ -98,7 +101,7 @@ export function Navbar() {
           <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
             <nav className="flex flex-col space-y-1">
               {NAV_LINKS.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive = isActivePath(pathname, item.href);
                 return (
                   <Link
                     key={item.href}

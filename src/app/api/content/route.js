@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { getContent, updateContent } from "@/lib/db-store";
 
 export const dynamic = "force-dynamic";
@@ -32,6 +33,9 @@ export async function GET(req) {
 }
 
 export async function PUT(req) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
+
   try {
     const body = await req.json();
     const { type, data } = body;
