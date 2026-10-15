@@ -437,7 +437,7 @@ export default function AdminTreatmentsPage() {
                 { key: "journey", label: "Treatment Journey / Includes", placeholder: "Skin consultation\nDouble cleanse\nTreatment steps..." },
                 { key: "benefits", label: "Benefits", placeholder: "Smoother, brighter skin\nDeep hydration..." },
               ].map((field) => (
-                <ListField key={field.key} {...field} value={form[field.key]} onChange={(v) => update(field.key, v)} />
+                <ListField key={field.key} label={field.label} placeholder={field.placeholder} value={form[field.key]} onChange={(v) => update(field.key, v)} />
               ))}
 
               <div className="space-y-1.5">
@@ -451,7 +451,7 @@ export default function AdminTreatmentsPage() {
                 { key: "priceOptions", label: "Price Options", placeholder: "Face — £45\nFace & Neck — £65" },
                 { key: "aftercare", label: "Important Information / Aftercare", placeholder: "Avoid makeup for 24 hours\nUse SPF daily" },
               ].map((field) => (
-                <ListField key={field.key} {...field} value={form[field.key]} onChange={(v) => update(field.key, v)} />
+                <ListField key={field.key} label={field.label} placeholder={field.placeholder} value={form[field.key]} onChange={(v) => update(field.key, v)} />
               ))}
 
               <div className="flex items-center gap-6 pt-2">

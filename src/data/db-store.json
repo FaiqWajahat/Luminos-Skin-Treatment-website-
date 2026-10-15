@@ -19,6 +19,132 @@
   ],
   "treatments": [
     {
+      "_id": "6ad0d83ed695bffc592666b0",
+      "title": "Face Threading",
+      "slug": "face-threading",
+      "category": "Other Treatments",
+      "price": 4,
+      "priceOptions": [
+        "Upper Lip or Chin — from £4",
+        "Face (sides, chin & upper lip) — £10",
+        "Full Face (including eyebrows) — £20"
+      ],
+      "duration": "",
+      "tagline": "",
+      "shortDescription": "A precise, gentle hair removal method using cotton thread — ideal for the upper lip, chin and full face.",
+      "fullDescription": "",
+      "journey": [],
+      "benefits": [
+        "A precise, clean finish",
+        "Gentle on sensitive skin",
+        "No chemicals"
+      ],
+      "idealFor": "Fine facial hair and sensitive skin.",
+      "aftercare": [],
+      "frequency": "",
+      "image": "https://res.cloudinary.com/x4j3r8wq/image/upload/v1792072709/luminous_clinic/gohbldmwoc3gpybkttag.png",
+      "popular": false,
+      "active": true,
+      "order": 27,
+      "createdAt": "2026-10-15T13:42:20.008Z",
+      "updatedAt": "2026-10-15T13:58:34.978Z"
+    },
+    {
+      "_id": "6ad0d83ed695bffc592666a6",
+      "title": "Facial Lymphatic Drainage",
+      "slug": "facial-lymphatic-drainage",
+      "category": "Facial Massage Therapies",
+      "price": 30,
+      "priceOptions": [
+        "Add-ons: High Frequency or Hydrating Sheet Mask + LED — +£10 each"
+      ],
+      "duration": "45 minutes",
+      "tagline": "",
+      "shortDescription": "A gentle, rhythmic facial massage that encourages lymphatic flow to reduce puffiness and leave skin calm and refreshed.",
+      "fullDescription": "",
+      "journey": [
+        "Double cleanse",
+        "Warm towel",
+        "Facial massage",
+        "Relaxing hand massage",
+        "10-minute mask",
+        "SPF finish"
+      ],
+      "benefits": [
+        "Reduces puffiness and fluid retention",
+        "Defines facial contours",
+        "Calms and refreshes the skin",
+        "Deeply relaxing"
+      ],
+      "idealFor": "Puffiness, congestion and dull or tired-looking skin.",
+      "aftercare": [],
+      "frequency": "",
+      "image": "https://res.cloudinary.com/x4j3r8wq/image/upload/v1792072582/luminous_clinic/auiyemnlz1clvpxdlg1z.png",
+      "popular": false,
+      "active": true,
+      "order": 17,
+      "createdAt": "2026-10-15T13:42:20.008Z",
+      "updatedAt": "2026-10-15T13:56:26.575Z"
+    },
+    {
+      "_id": "6ad0d83ed695bffc592666ad",
+      "title": "Electric Cupping Therapy",
+      "slug": "electric-cupping-therapy",
+      "category": "Relaxation Therapies",
+      "price": 0,
+      "priceOptions": [],
+      "duration": "",
+      "tagline": "",
+      "shortDescription": "Modern cupping therapy using electric suction cups to release muscle tension, boost circulation and aid relaxation.",
+      "fullDescription": "",
+      "journey": [],
+      "benefits": [
+        "Releases tight, knotted muscles",
+        "Boosts circulation",
+        "Supports lymphatic flow",
+        "Deeply relaxing"
+      ],
+      "idealFor": "Muscle tightness and back and shoulder tension.",
+      "aftercare": [],
+      "frequency": "",
+      "image": "https://res.cloudinary.com/x4j3r8wq/image/upload/v1792072429/luminous_clinic/czb28jcutesofalmvgpe.png",
+      "popular": false,
+      "active": true,
+      "order": 24,
+      "createdAt": "2026-10-15T13:42:20.008Z",
+      "updatedAt": "2026-10-15T13:53:50.326Z"
+    },
+    {
+      "_id": "6ad0d83ed695bffc592666aa",
+      "title": "Aromatherapy Relaxation",
+      "slug": "aromatherapy-relaxation",
+      "category": "Relaxation Therapies",
+      "price": 25,
+      "priceOptions": [
+        "Aromatherapy with hot oil — back, neck, shoulders, arms & hands — £25"
+      ],
+      "duration": "40 minutes",
+      "tagline": "",
+      "shortDescription": "A soothing warm-oil massage with aromatic essential oils to calm the mind and melt away tension.",
+      "fullDescription": "",
+      "journey": [],
+      "benefits": [
+        "Calms the mind and reduces stress",
+        "Relieves tension in the back, neck and shoulders",
+        "Nourishes the skin",
+        "Supports restful sleep"
+      ],
+      "idealFor": "Stress, poor sleep and muscle tension.",
+      "aftercare": [],
+      "frequency": "",
+      "image": "https://res.cloudinary.com/x4j3r8wq/image/upload/v1792072286/luminous_clinic/qj96vhyd12eoopfa5unx.png",
+      "popular": false,
+      "active": true,
+      "order": 21,
+      "createdAt": "2026-10-15T13:42:20.008Z",
+      "updatedAt": "2026-10-15T13:51:31.582Z"
+    },
+    {
       "_id": "6aad057bb64061f5e37f6714",
       "slug": "rf-skin-tightening-full-facial-treatment",
       "active": true,
