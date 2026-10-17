@@ -302,6 +302,9 @@ export default function AdminTreatmentsPage() {
                       {!CATEGORIES.includes(t.category) && (
                         <span className="block text-[10px] text-amber-400 mt-0.5">Old category — not shown on website</span>
                       )}
+                      {t.active === false && (
+                        <span className="block text-[10px] text-amber-400 mt-0.5">Inactive — not shown on website</span>
+                      )}
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
                       <button onClick={() => openEdit(t)} className="p-1.5 rounded-lg text-neutral-400 hover:text-[#EC9C9D] hover:bg-[#EC9C9D]/10 transition-colors" title="Edit Treatment">

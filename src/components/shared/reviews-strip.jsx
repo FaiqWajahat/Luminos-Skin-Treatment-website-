@@ -45,7 +45,7 @@ export function ReviewsStrip() {
   const swiperRef = useRef(null);
 
   return (
-    <section className="py-20 lg:py-28 bg-[#1C1917] text-white relative overflow-hidden">
+    <section id="reviews" className="scroll-mt-20 py-20 lg:py-28 bg-[#1C1917] text-white relative overflow-hidden">
       {/* Ambient luxury glow accents */}
       <div className="pointer-events-none absolute top-1/2 right-1/4 w-[500px] h-[500px] rounded-full bg-[#EC9C9D]/10 blur-[120px] -z-0" />
       <div className="pointer-events-none absolute bottom-10 left-10 w-[350px] h-[350px] rounded-full bg-[#D97E80]/8 blur-[90px] -z-0" />
@@ -83,8 +83,8 @@ export function ReviewsStrip() {
               <SectionHeader
                 dark
                 eyebrow="Genuine Client Feedback"
-                title="Rated 'Excellent' by our clients in Leeds."
-                description="Real experiences and unedited reviews from clients who trust Luminous for advanced facials, dermaplaning, and therapy."
+                title="What Our Clients Say"
+                description="Real, unedited reviews from our clients on Trustpilot."
               />
             </div>
 

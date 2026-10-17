@@ -71,7 +71,7 @@ export const findSlot = (value) => {
 
 /**
  * Why a slot can't be booked on a date (ignoring existing bookings), or null if it can.
- * Covers Sundays, Saturday hours, past dates and same-day notice.
+ * Covers Sundays, past dates and same-day notice. Monday–Saturday share the same hours.
  */
 export function slotClosedReason(dateStr, slot, now = clinicNow()) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr || "")) return "Invalid date";
@@ -83,8 +83,6 @@ export function slotClosedReason(dateStr, slot, now = clinicNow()) {
   if (dow === 0) return "Closed on Sundays";
 
   const start = toMinutes(slot.id);
-  if (dow === 6 && start < toMinutes("10:00")) return "Opens 10:00 AM on Sat";
-  if (dow === 6 && start >= toMinutes("17:00")) return "Closes 5:00 PM on Sat";
 
   if (dateStr === now.date && start < now.minutes + MIN_NOTICE_MINUTES) return "Too soon";
 

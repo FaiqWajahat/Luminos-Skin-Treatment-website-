@@ -1,4 +1,5 @@
 import { ServicesView } from "@/components/modules/services";
+import { SiteClosing } from "@/components/shared/site-closing";
 import { getPublicTreatments, groupByCategory } from "@/lib/treatments";
 
 export const dynamic = "force-dynamic";
@@ -13,5 +14,10 @@ export const metadata = {
 export default async function ServicesPage() {
   const treatments = await getPublicTreatments();
 
-  return <ServicesView categories={groupByCategory(treatments)} />;
+  return (
+    <>
+      <ServicesView categories={groupByCategory(treatments)} />
+      <SiteClosing />
+    </>
+  );
 }

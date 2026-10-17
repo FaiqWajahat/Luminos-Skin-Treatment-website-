@@ -1,250 +1,82 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Clock, Check, Lock } from "lucide-react";
-import { CLINICAL_SLOTS, clinicNow, slotClosedReason } from "@/constants/booking-slots";
+import { useMemo } from "react";
+import { CLINICAL_SLOTS, clinicNow, slotClosedReason, slotKey } from "@/constants/booking-slots";
 
+const isFullDay = (slot = "", type = "") => {
+  const s = slot.trim().toLowerCase();
+  return s === "full_day" || s.includes("full day") || s.includes("clinic closed") || type === "FULL_DAY";
+};
 
+// Every session time for the chosen date; ones that can't be booked are shown disabled
 export function TimeSlotPicker({ selectedDate, selectedSlot, onSelectSlot, existingEnquiries = [], blockedSlots = [] }) {
-  const [activePeriod, setActivePeriod] = useState("All");
+  const { slots, closedAllDay } = useMemo(() => {
+    const taken = new Set();
+    let closed = false;
 
-  // Check if whole day is blocked by admin (via enquiries OR dedicated blockedSlots)
-  const isFullDayBlocked = useMemo(() => {
-    if (!selectedDate) return false;
-
-    const hasEnquiryFullDay = existingEnquiries.some((eq) => {
-      const status = (eq.status || "").trim().toLowerCase();
-      if (eq.preferredDate === selectedDate && status !== "cancelled") {
-        const slotStr = (eq.timeSlot || "").trim().toLowerCase();
-        return slotStr === "full_day" || slotStr.includes("full day") || slotStr.includes("clinic closed");
-      }
-      return false;
+    existingEnquiries.forEach((eq) => {
+      if (eq.preferredDate !== selectedDate || (eq.status || "").trim().toLowerCase() === "cancelled") return;
+      if (isFullDay(eq.timeSlot)) closed = true;
+      else if (eq.timeSlot) taken.add(slotKey(eq.timeSlot));
     });
-
-    const hasBlockedSlotFullDay = blockedSlots.some((b) => {
-      if (b.date === selectedDate) {
-        const s = (b.slot || "").trim().toLowerCase();
-        return s === "full_day" || s.includes("full day") || b.type === "FULL_DAY";
-      }
-      return false;
+    blockedSlots.forEach((b) => {
+      if (b.date !== selectedDate) return;
+      if (isFullDay(b.slot, b.type)) closed = true;
+      else if (b.slot) taken.add(slotKey(b.slot));
     });
-
-    return hasEnquiryFullDay || hasBlockedSlotFullDay;
-  }, [selectedDate, existingEnquiries, blockedSlots]);
-
-  // Determine availability for each slot for the chosen date
-  const slotsWithAvailability = useMemo(() => {
-    if (!selectedDate) return [];
 
     const now = clinicNow();
+    return {
+      closedAllDay: closed,
+      slots: CLINICAL_SLOTS.map((slot) => {
+        if (taken.has(slot.id)) return { ...slot, status: "Booked" };
+        if (slotClosedReason(selectedDate, slot, now)) return { ...slot, status: "Unavailable" };
+        return { ...slot, status: null };
+      }),
+    };
+  }, [selectedDate, existingEnquiries, blockedSlots]);
 
-    // Collect all booked / blocked slots for the selected date
-    const bookedSet = new Set();
-    const customBlockedSlots = [];
+  if (closedAllDay) {
+    return (
+      <p className="py-6 text-center text-sm text-[#78716C] rounded-2xl border border-dashed border-[#E8DFD5]">
+        The clinic is closed on this date — please choose another day.
+      </p>
+    );
+  }
 
-    // 1. From existingEnquiries
-    existingEnquiries.forEach((eq) => {
-      const status = (eq.status || "").trim().toLowerCase();
-      if (eq.preferredDate === selectedDate && status !== "cancelled") {
-        if (eq.timeSlot) {
-          const slotStr = eq.timeSlot.trim();
-          const slotLower = slotStr.toLowerCase();
-          bookedSet.add(slotLower);
-          const clean = slotLower.replace(/\s*(am|pm)/i, "").trim();
-          if (clean) bookedSet.add(clean);
-        }
-      }
-    });
-
-    // 2. From dedicated blockedSlots
-    blockedSlots.forEach((b) => {
-      if (b.date === selectedDate) {
-        if (b.slot) {
-          const slotStr = b.slot.trim();
-          const slotLower = slotStr.toLowerCase();
-          bookedSet.add(slotLower);
-          const clean = slotLower.replace(/\s*(am|pm)/i, "").trim();
-          if (clean) bookedSet.add(clean);
-
-          // If custom slot not in default list, add custom slot item
-          if (
-            slotLower !== "full_day" &&
-            !slotLower.includes("full day") &&
-            !CLINICAL_SLOTS.some((cs) => cs.label.toLowerCase() === slotLower || cs.id.toLowerCase() === clean)
-          ) {
-            customBlockedSlots.push({
-              id: slotStr,
-              label: slotStr,
-              period: slotLower.includes("pm") ? "Evening" : "Morning",
-              isAvailable: false,
-              reason: b.reason || "Admin Blocked",
-            });
-          }
-        }
-      }
-    });
-
-    const baseList = CLINICAL_SLOTS.map((slot) => {
-      if (isFullDayBlocked) {
-        return { ...slot, isAvailable: false, reason: "Clinic Closed" };
-      }
-
-      const labelLower = slot.label.trim().toLowerCase();
-      const idLower = slot.id.trim().toLowerCase();
-
-      // Opening hours, Sundays, past times and same-day notice
-      const closedReason = slotClosedReason(selectedDate, slot, now);
-      if (closedReason) {
-        return { ...slot, isAvailable: false, reason: closedReason };
-      }
-
-      // Check if booked in database
-      if (bookedSet.has(labelLower) || bookedSet.has(idLower)) {
-        return { ...slot, isAvailable: false, reason: "Already Booked" };
-      }
-
-      return { ...slot, isAvailable: true };
-    });
-
-    return [...baseList, ...customBlockedSlots];
-  }, [selectedDate, existingEnquiries, blockedSlots, isFullDayBlocked]);
-
-  // Filter slots by selected period
-  const displayedSlots = useMemo(() => {
-    if (activePeriod === "All") return slotsWithAvailability;
-    return slotsWithAvailability.filter((s) => s.period === activePeriod);
-  }, [slotsWithAvailability, activePeriod]);
+  const hasAvailable = slots.some((s) => !s.status);
 
   return (
-    <div className="space-y-4">
-      {/* Header & Badges */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-        <label className="text-xs sm:text-sm font-semibold text-[#1C1917] flex items-center gap-1.5 flex-wrap">
-          <Clock className="w-4 h-4 text-[#EC9C9D]" />
-          <span>Step 4: Choose Session Time</span>
-          <span className="text-[#EC9C9D] font-bold text-sm">*</span>
-        </label>
-
-        <div className="flex items-center gap-4 text-[11px]">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[#78716C]">Available</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-rose-400" />
-            <span className="text-[#78716C] line-through">Booked / Closed</span>
-          </div>
-        </div>
+    <div className="space-y-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-2.5">
+        {slots.map((slot) => {
+          const isSelected = selectedSlot === slot.label;
+          const disabled = Boolean(slot.status);
+          return (
+            <button
+              key={slot.id}
+              type="button"
+              disabled={disabled}
+              aria-pressed={isSelected}
+              title={slot.status || undefined}
+              onClick={() => onSelectSlot(slot.label)}
+              className={`py-2 rounded-xl border text-sm font-semibold transition-all ${
+                isSelected
+                  ? "bg-gradient-to-r from-[#EAA59E] to-[#D97E80] text-white border-[#EC9C9D] shadow-md shadow-[#EC9C9D]/25 cursor-pointer"
+                  : disabled
+                  ? "bg-[#FAF8F5] border-[#F0E6E1] text-[#C9BFB8] cursor-not-allowed"
+                  : "bg-white border-[#E8DFD5] hover:border-[#EC9C9D] text-[#1C1917] cursor-pointer"
+              }`}
+            >
+              <span className={disabled ? "line-through decoration-[#D6CFC9]" : ""}>{slot.label}</span>
+              {disabled && <span className="block text-[10px] font-medium">{slot.status}</span>}
+            </button>
+          );
+        })}
       </div>
-
-      {isFullDayBlocked && (
-        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 space-y-1 animate-fadeIn">
-          <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-amber-800">
-            <Lock className="w-4 h-4 text-amber-600" />
-            <span>Clinic Closed / Full Day Blocked on {selectedDate}</span>
-          </div>
-          <p className="text-xs text-amber-700 leading-relaxed">
-            The clinic is closed or fully reserved on this date. Please choose another date above to view available consultation slots.
-          </p>
-        </div>
+      {!hasAvailable && (
+        <p className="text-xs text-center text-[#78716C]">No times left on this date — please choose another day.</p>
       )}
-
-      {/* Period Filter Tabs */}
-      <div className="flex items-center gap-1.5 p-1 bg-[#F5F0EB]/60 border border-[#E8DFD5] rounded-xl overflow-x-auto">
-        {["All", "Morning", "Afternoon", "Evening"].map((period) => (
-          <button
-            key={period}
-            type="button"
-            onClick={() => setActivePeriod(period)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
-              activePeriod === period
-                ? "bg-white text-[#1C1917] shadow-xs font-semibold"
-                : "text-[#78716C] hover:text-[#1C1917]"
-            }`}
-          >
-            {period === "All" ? "All Time Slots" : period}
-          </button>
-        ))}
-      </div>
-
-      {/* Time Slots Matrix */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-h-[340px] overflow-y-auto pr-1">
-        {displayedSlots.length === 0 ? (
-          <div className="col-span-full py-8 text-center text-sm text-[#78716C]">
-            No available slots for this selection.
-          </div>
-        ) : (
-          displayedSlots.map((slot) => {
-            const isSelected = selectedSlot === slot.label;
-            const isBooked = !slot.isAvailable && slot.reason === "Already Booked";
-            const isClosed = !slot.isAvailable && !isBooked;
-
-            return (
-              <button
-                key={slot.id}
-                type="button"
-                disabled={!slot.isAvailable}
-                onClick={() => {
-                  if (slot.isAvailable) {
-                    onSelectSlot(slot.label);
-                  }
-                }}
-                className={`p-3.5 rounded-2xl border text-left transition-all duration-200 relative flex flex-col justify-between min-h-[76px] ${
-                  isSelected
-                    ? "bg-gradient-to-r from-[#EAA59E] via-[#EC9C9D] to-[#D97E80] text-white border-[#EC9C9D] shadow-md shadow-[#EC9C9D]/25 scale-[1.02] cursor-pointer"
-                    : isBooked
-                    ? "bg-rose-50/50 border-rose-200/60 text-rose-400 opacity-75 cursor-not-allowed"
-                    : isClosed
-                    ? "bg-stone-100/60 border-stone-200/60 text-stone-300 opacity-50 cursor-not-allowed"
-                    : "bg-white border-[#E8DFD5] hover:border-[#EC9C9D] hover:bg-[#FAF8F5] cursor-pointer text-[#1C1917]"
-                }`}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span
-                    className={`text-sm font-mono font-bold tracking-tight ${
-                      isSelected
-                        ? "text-white"
-                        : isBooked
-                        ? "text-rose-400 line-through decoration-rose-400/80 decoration-2"
-                        : isClosed
-                        ? "text-stone-300 line-through"
-                        : "text-[#1C1917]"
-                    }`}
-                  >
-                    {slot.label}
-                  </span>
-
-                  {isSelected && (
-                    <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-white">
-                      <Check className="w-3 h-3" />
-                    </span>
-                  )}
-                </div>
-
-                <div className="pt-1.5 flex items-center justify-between text-[10px]">
-                  <span
-                    className={
-                      isSelected
-                        ? "text-white/80 font-medium"
-                        : isBooked
-                        ? "text-rose-300 font-medium"
-                        : "text-[#78716C] font-medium"
-                    }
-                  >
-                    {slot.period}
-                  </span>
-                  {isBooked && (
-                    <span className="text-[9.5px] text-rose-400/90 font-medium">Booked</span>
-                  )}
-                  {isClosed && (
-                    <span className="text-[9.5px] text-stone-400">Closed</span>
-                  )}
-                </div>
-              </button>
-            );
-          })
-        )}
-      </div>
     </div>
   );
 }

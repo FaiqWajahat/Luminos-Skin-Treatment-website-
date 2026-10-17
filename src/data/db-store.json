@@ -1804,6 +1804,26 @@
   ],
   "blockedSlots": [
     {
+      "date": "2026-10-17",
+      "slot": "12:00 PM",
+      "reason": "Admin Blocked",
+      "type": "SLOT",
+      "_id": "6ad237aa1f04fe77cfddd9da",
+      "createdAt": "2026-10-16T14:41:46.423Z",
+      "updatedAt": "2026-10-16T14:41:46.423Z",
+      "__v": 0
+    },
+    {
+      "date": "2026-10-17",
+      "slot": "09:30 AM",
+      "reason": "Admin Blocked",
+      "type": "SLOT",
+      "_id": "6ad22c0c1f04fe77cfddd9d8",
+      "createdAt": "2026-10-16T13:52:12.774Z",
+      "updatedAt": "2026-10-16T13:52:12.774Z",
+      "__v": 0
+    },
+    {
       "date": "2026-10-13",
       "slot": "FULL_DAY",
       "reason": "Admin Blocked",

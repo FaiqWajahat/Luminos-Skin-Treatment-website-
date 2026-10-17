@@ -1,0 +1,12 @@
+import fs from "fs";
+import mongoose from "mongoose";
+const env = fs.readFileSync(".env.local","utf8");
+const uri = env.match(/^MONGODB_URI=(.*)$/m)[1].trim().replace(/^["']|["']$/g,"");
+await mongoose.connect(uri);
+const docs = await mongoose.connection.db.collection("treatments").find({}, {projection:{title:1,category:1,active:1,order:1,createdAt:1,slug:1}}).sort({createdAt:-1}).toArray();
+console.log("total", docs.length);
+const counts = {};
+for (const d of docs) counts[d.category+"|active="+d.active] = (counts[d.category+"|active="+d.active]||0)+1;
+console.log(counts);
+console.log(docs.slice(0,8));
+await mongoose.disconnect();

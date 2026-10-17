@@ -10,12 +10,15 @@ export const CLINIC_INFO = {
   subTagline: "Personalised skin, facial and wellness treatments in Leeds.",
   location: "Leeds, West Yorkshire, United Kingdom",
   address: "Near Elland Road Stadium, Beeston, Leeds, LS11",
+  area: "Beeston, Leeds LS11",
+  mapQuery: "Elland Road Stadium, Beeston, Leeds LS11",
   email: "info@luminousskinclinic.co.uk",
   phone: "+44 7950 774790",
+  phoneDisplay: "07950 774790",
+  // Must match the booking rules in constants/booking-slots.js
   hours: [
-    { days: "Monday - Friday", time: "9:30 AM - 6:30 PM" },
-    { days: "Saturday", time: "10:00 AM - 5:00 PM" },
-    { days: "Sunday", time: "By Appointment Only" },
+    { days: "Monday – Saturday", time: "9:30 AM – 6:30 PM" },
+    { days: "Sunday", time: "Closed" },
   ],
   socials: {
     whatsapp: "https://wa.me/447950774790",
@@ -40,7 +43,7 @@ export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact & Booking", href: "/contact" },
 ];
 
 export const REVIEWS = [

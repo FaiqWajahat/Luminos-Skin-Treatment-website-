@@ -19,7 +19,7 @@ export const metadata = {
     template: "%s | Luminous Skin Clinic Leeds",
   },
   description:
-    "Personalised skin, facial and wellness treatments in Leeds. Explore clinical treatments, targeted skin concerns, transparent pricing, and instant online booking at Luminous Skin Clinic.",
+    "Personalised skin, facial and wellness treatments in Leeds. Explore clinical treatments, targeted skin concerns, transparent pricing and online booking at Luminous Skin Clinic.",
   keywords: [
     "Luminous Skin Clinic",
     "Leeds Skin Clinic",
@@ -46,7 +46,7 @@ export const metadata = {
   manifest: "/site.webmanifest",
   openGraph: {
     title: "Luminous Skin Clinic Leeds | Personalised Skin & Wellness",
-    description: "Bespoke skin, facial and wellness treatments in Leeds. Instant online booking.",
+    description: "Bespoke skin, facial and wellness treatments in Leeds. Book online.",
     siteName: "Luminous Skin Clinic Leeds",
     images: [
       {

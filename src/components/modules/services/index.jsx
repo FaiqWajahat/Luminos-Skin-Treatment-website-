@@ -1,83 +1,85 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { Calendar, ArrowRight } from "lucide-react";
-import { CategorySection } from "./category-section";
-import { CategoryNavigation } from "./category-navigation";
-
-const ease = [0.22, 1, 0.36, 1];
+import { useEffect, useRef, useState } from "react";
+import { FadeIn } from "@/components/shared/animations";
+import { PageHero, heroText } from "@/components/shared/page-hero";
+import { CategoryTiles } from "./category-tiles";
+import { TreatmentCard } from "./treatment-card";
 
 export function ServicesView({ categories }) {
+  const [activeSlug, setActiveSlug] = useState(categories[0]?.slug);
+  const listRef = useRef(null);
+  const active = categories.find((c) => c.slug === activeSlug) || categories[0];
+
+  const showCategory = (slug) => {
+    setActiveSlug(slug);
+    requestAnimationFrame(() => listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
+
+  // /services#ritual-facials (e.g. from the home page) opens that category's list
+  useEffect(() => {
+    const slug = window.location.hash.slice(1);
+    if (!categories.some((c) => c.slug === slug)) return;
+    const frame = requestAnimationFrame(() => {
+      setActiveSlug(slug);
+      listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [categories]);
+
   return (
     <div className="flex flex-col">
-      {/* ── Services Hero (Styled identically to About Us Hero) ── */}
-      <section className="relative min-h-[46vh] lg:min-h-[50vh] py-16 lg:py-20 flex items-center justify-center overflow-hidden">
-        {/* Background Layer with Dark Luxury Ambiance */}
-        <div className="absolute inset-0 z-0 bg-[#141211]">
-          <Image
-            src="/treatmentpage-hero.png"
-            alt="Treatments at Luminous Skin Clinic"
-            fill
-            priority
-            quality={95}
-            sizes="100vw"
-            className="object-cover object-center"
+      <PageHero
+        title="Our Services"
+        tagline="Expert treatments. Real results."
+        image="/service_hero.jpg"
+        alt="Treatments at Luminous Skin Clinic"
+      >
+        <p className={heroText}>
+          Five treatment categories, each tailored to your skin. Choose a category below, then select a treatment
+          to see its full details.
+        </p>
+      </PageHero>
+
+      <section className="py-16 lg:py-20 bg-[#FAF8F5]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FadeIn className="text-center mb-10">
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#1C1917]">
+              Our Treatment Categories
+            </h2>
+          </FadeIn>
+
+          <CategoryTiles categories={categories} activeSlug={active?.slug} getHref={(category) => `#${category.slug}`}
+            onSelect={showCategory}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-black/35" />
-        </div>
 
-        {/* Foreground Centralized Content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease }}
-            className="space-y-6"
-          >
-            {/* Catching Editorial Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-[3.35rem] font-semibold tracking-tight leading-[1.12] text-white">
-              Our Services, <br className="hidden sm:inline" />
-              <em className="font-serif italic font-normal text-[#F0A5A2]">
-                Tailored to Your Glow.
-              </em>
-            </h1>
+          {active && (
+            <div ref={listRef} id="treatments" className="scroll-mt-28 mt-14 lg:mt-16">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-5 mb-8 border-b border-[#E8DFD5]">
+                <div className="space-y-1.5">
+                  <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#1C1917]">{active.title}</h2>
+                  <p className="text-sm text-[#44403C]">{active.summary}</p>
+                </div>
+                <span className="text-xs font-medium text-[#57534E] shrink-0">
+                  {active.treatments.length} {active.treatments.length === 1 ? "treatment" : "treatments"}
+                </span>
+              </div>
 
-            {/* Concise Subtitle */}
-            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl mx-auto font-normal">
-              Choose a category, select a treatment and view its full details.
-            </p>
-
-            {/* Compact Actions */}
-            <div className="pt-1 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-              <Link
-                href="/booking"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-[#EAA59E] via-[#EC9C9D] to-[#D97E80] hover:brightness-105 shadow-md hover:shadow-xl transition-all duration-300"
-              >
-                <Calendar className="w-3.5 h-3.5" />
-                <span>Book Appointment</span>
-              </Link>
-
-              <a
-                href="#categories-nav"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-medium text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 transition-all duration-300"
-              >
-                <span>Explore Treatments</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#F0A5A2]" />
-              </a>
+              {active.treatments.length > 0 ? (
+                <div key={active.slug} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                  {active.treatments.map((treatment, i) => (
+                    <FadeIn key={treatment.slug} delay={Math.min(i, 5) * 0.05} className="h-full">
+                      <TreatmentCard treatment={treatment} />
+                    </FadeIn>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-[#57534E] text-center py-10">Treatments for this category are coming soon.</p>
+              )}
             </div>
-          </motion.div>
+          )}
         </div>
       </section>
-
-      <CategoryNavigation categories={categories.filter((category) => category.treatments.length > 0)} />
-
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-14 lg:py-20 space-y-20 lg:space-y-24">
-        {categories.map((category, i) => (
-          <CategorySection key={category.slug} category={category} number={i + 1} />
-        ))}
-      </div>
     </div>
   );
 }
