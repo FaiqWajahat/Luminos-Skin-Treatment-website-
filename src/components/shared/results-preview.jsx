@@ -71,13 +71,10 @@ export function ResultsPreview({ videos, beforeAfter = [] }) {
             <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#1C1917]">
               See the Results
             </h2>
-            <p className={`text-sm sm:text-base text-[#44403C] leading-relaxed max-w-md mx-auto ${withPhotos ? "" : "md:mx-0"}`}>
-              Watch real client results and see the difference our treatments can make.
-            </p>
             <button
               type="button"
               onClick={() => setActiveIndex(0)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-[#D97E80] bg-white border border-[#EC9C9D]/50 hover:bg-[#EC9C9D] hover:text-white hover:border-[#EC9C9D] shadow-xs transition-all cursor-pointer"
+              className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-[#D97E80] bg-white border border-[#EC9C9D]/50 hover:bg-[#EC9C9D] hover:text-white hover:border-[#EC9C9D] shadow-xs transition-all cursor-pointer"
             >
               Watch Our Results Videos
               <Play className="w-3.5 h-3.5 fill-current" />

@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronRight } from "lucide-react";
-import { NAV_LINKS, CLINIC_INFO } from "@/constants/clinic-data";
-import { TikTokIcon, FacebookIcon } from "@/components/shared/social-icons";
+import { NAV_LINKS } from "@/constants/clinic-data";
 import { SiteSearch } from "./site-search";
 
 // The booking page belongs to "Contact & Booking"
@@ -27,9 +26,11 @@ export function Navbar() {
   }, []);
 
   // Close mobile menu on route change
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
     setIsOpen(false);
-  }, [pathname]);
+  }
 
   return (
     <header
@@ -114,29 +115,6 @@ export function Navbar() {
                 );
               })}
             </nav>
-
-            <div className="pt-3 border-t border-[#E8DFD5] space-y-3">
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <a
-                  href={CLINIC_INFO.socials.tiktok}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-2 px-1 rounded-xl bg-white border border-[#E8DFD5] text-neutral-800 flex flex-col items-center gap-1 text-[10px] font-medium"
-                >
-                  <TikTokIcon className="w-4 h-4" />
-                  <span>TikTok</span>
-                </a>
-                <a
-                  href={CLINIC_INFO.socials.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-2 px-1 rounded-xl bg-white border border-[#E8DFD5] text-[#1877F2] flex flex-col items-center gap-1 text-[10px] font-medium"
-                >
-                  <FacebookIcon className="w-4 h-4" />
-                  <span>Facebook</span>
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       )}

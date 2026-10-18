@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Calendar, Clock, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowRight, Clock, Mail, Phone } from "lucide-react";
 import { FadeIn } from "@/components/shared/animations";
 import { PageHero, heroText } from "@/components/shared/page-hero";
 import { WhatsAppIcon } from "@/components/shared/social-icons";
@@ -26,13 +26,6 @@ const CONTACT_ITEMS = [
     label: "Email",
     value: CLINIC_INFO.email,
     href: `mailto:${CLINIC_INFO.email}`,
-  },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: CLINIC_INFO.address,
-    href: `https://maps.google.com/?q=${mapQuery}`,
-    external: true,
   },
 ];
 
@@ -83,18 +76,6 @@ export function ContactView() {
 
             {/* Booking */}
             <div className="rounded-2xl bg-white border border-[#E8DFD5] p-6 space-y-5">
-              <div className="flex items-start gap-3.5">
-                <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FBEDEC] text-[#D97E80] shrink-0">
-                  <Calendar className="w-5 h-5" />
-                </span>
-                <div>
-                  <h2 className="text-sm font-semibold text-[#1C1917]">Booking</h2>
-                  <p className="text-sm text-[#57534E] leading-relaxed">
-                    Appointments are available by phone, WhatsApp or through the online booking form.
-                  </p>
-                </div>
-              </div>
-
               <div className="flex items-start gap-3.5">
                 <span className="flex items-center justify-center w-11 h-11 rounded-full bg-[#FBEDEC] text-[#D97E80] shrink-0">
                   <Clock className="w-5 h-5" />
