@@ -224,8 +224,8 @@ export default function AdminResultsPage() {
                 <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="text-base font-serif font-semibold text-white truncate">{r.title}</h3>
-                      <div className="flex items-center gap-1 shrink-0">
+                      <h3 className="hidden text-base font-serif font-semibold text-white truncate">{r.title}</h3>
+                      <div className="flex items-center gap-1 shrink-0 ml-auto">
                         <button
                           onClick={() => openEdit(r)}
                           className="p-1.5 rounded-lg text-neutral-400 hover:text-[#EC9C9D] hover:bg-[#EC9C9D]/10 transition-colors"
@@ -242,13 +242,13 @@ export default function AdminResultsPage() {
                         </button>
                       </div>
                     </div>
-                    <span className="text-[10px] uppercase tracking-wider text-[#EC9C9D] font-medium block mt-0.5">
+                    <span className="hidden text-[10px] uppercase tracking-wider text-[#EC9C9D] font-medium mt-0.5">
                       {r.treatment}
                     </span>
-                    <p className="text-xs text-neutral-400 mt-2 line-clamp-2">{r.outcome}</p>
+                    <p className="hidden text-xs text-neutral-400 mt-2 line-clamp-2">{r.outcome}</p>
                   </div>
-                  <div className="pt-3 border-t border-neutral-800/70 flex items-center justify-between gap-2">
-                    <span className="text-[11px] text-neutral-500 truncate">
+                  <div className="pt-3 border-t border-neutral-800/70 flex items-center justify-end gap-2">
+                    <span className="hidden text-[11px] text-neutral-500 truncate">
                       Concern: <strong className="text-neutral-300">{r.concern}</strong>
                     </span>
                     <button
@@ -297,21 +297,21 @@ export default function AdminResultsPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-1.5">
+              <div className="hidden space-y-1.5">
                 <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Case Title *</label>
-                <input value={form.title} onChange={(e) => update("title", e.target.value)} required placeholder="e.g. Severe Acne Clarifying Journey"
+                <input value={form.title} onChange={(e) => update("title", e.target.value)} placeholder="e.g. Severe Acne Clarifying Journey"
                   className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="hidden grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Treatment *</label>
-                  <input value={form.treatment} onChange={(e) => update("treatment", e.target.value)} required placeholder="HydraFacial Elite"
+                  <input value={form.treatment} onChange={(e) => update("treatment", e.target.value)} placeholder="HydraFacial Elite"
                     className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Skin Concern *</label>
-                  <input value={form.concern} onChange={(e) => update("concern", e.target.value)} required placeholder="Hyperpigmentation & Texture"
+                  <input value={form.concern} onChange={(e) => update("concern", e.target.value)} placeholder="Hyperpigmentation & Texture"
                     className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D]" />
                 </div>
               </div>
@@ -403,9 +403,9 @@ export default function AdminResultsPage() {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
+              <div className="hidden space-y-1.5">
                 <label className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Outcome Description *</label>
-                <textarea value={form.outcome} onChange={(e) => update("outcome", e.target.value)} required rows={3} placeholder="Patient reported 85% clearer complexion..."
+                <textarea value={form.outcome} onChange={(e) => update("outcome", e.target.value)} rows={3} placeholder="Patient reported 85% clearer complexion..."
                   className="w-full bg-[#0F0E0D] border border-neutral-700/80 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#EC9C9D] resize-none" />
               </div>
 

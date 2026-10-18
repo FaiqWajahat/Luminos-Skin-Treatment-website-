@@ -207,8 +207,8 @@ export default function AdminOverviewPage() {
         })}
       </div>
 
-      {/* Instagram Real-Time Live Sync Card */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#161412] via-[#1c1716] to-[#161412] border border-[#EC9C9D]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Instagram Real-Time Live Sync Card (hidden for now) */}
+      <div className="hidden p-6 rounded-3xl bg-gradient-to-r from-[#161412] via-[#1c1716] to-[#161412] border border-[#EC9C9D]/25 flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-[#EC9C9D]/15 border border-[#EC9C9D]/30 flex items-center justify-center text-[#EC9C9D] shrink-0">
             <InstagramIcon className="w-6 h-6" />
