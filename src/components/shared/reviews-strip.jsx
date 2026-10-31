@@ -82,9 +82,9 @@ export function ReviewsStrip() {
 
               <SectionHeader
                 dark
-                eyebrow="Genuine Client Feedback"
+                eyebrow=""
                 title="What Our Clients Say"
-                description="Real, unedited reviews from our clients on Trustpilot."
+                description=""
               />
             </div>
 
