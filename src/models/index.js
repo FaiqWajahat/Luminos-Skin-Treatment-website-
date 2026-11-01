@@ -69,11 +69,11 @@ const TreatmentSchema = new mongoose.Schema(
 
 const ResultSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    treatment: { type: String, required: true },
+    title: { type: String, default: "" },
+    treatment: { type: String, default: "" },
     duration: { type: String, default: "" },
-    concern: { type: String, required: true },
-    outcome: { type: String, required: true },
+    concern: { type: String, default: "" },
+    outcome: { type: String, default: "" },
     imageBefore: { type: String, default: "" },
     imageAfter: { type: String, default: "" },
     featured: { type: Boolean, default: true },
